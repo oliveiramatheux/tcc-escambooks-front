@@ -5,7 +5,8 @@
     },
     "extends": [
         "plugin:react/recommended",
-        "standard-with-typescript"
+        "standard-with-typescript",
+        "plugin:@typescript-eslint/recommended"
     ],
     "overrides": [
     ],
@@ -18,8 +19,16 @@
         }
     },
     "plugins": [
-        "react"
+        "react",
+        "@typescript-eslint",
+        "react-hooks"
     ],
     "rules": {
-    }
+    },
+    "settings": {
+      "import/resolver": {
+          "typescript": {
+          }
+      }
+  }
 }
