@@ -1,46 +1,52 @@
-# Getting Started with Create React App
+#### Front-end para web site, plataforma Rede social para troca de livros
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- 💬 Descrição e objetivo: Criar a interface da rede social.
 
-## Available Scripts
+#### 🚧 Status do Projeto 🚀 Em andamento, início dia 30/03/2023 🚧
 
-In the project directory, you can run:
+# Tabela de conteúdos
 
-### `yarn start`
+<!--ts-->
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [Sobre](#Descrição)
+- [Tabela de Conteudo](#tabela-de-conteudo)
+- [Pré Requisitos](#pre-requisitos)
+- [Configurações](#Configurações)
+- [Tecnologias](#tecnologias)
+- [Autor](#autor)
+  <!--te-->
+  <br>
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- Interface
 
-### `yarn test`
+![Interface](WIP)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Pré-Requisitos
 
-### `yarn build`
+Antes de começar, você vai precisar ter instalado em sua máquina as seguintes ferramentas:
+[Nodejs](https://nodejs.org/en/).<br>
+Além disto é bom ter um editor para trabalhar com o código como o [Visual Studio Code](https://code.visualstudio.com/).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🎲 Configurações
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+# TODO
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
 
-### `yarn eject`
+### 🛠 Tecnologias
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+As seguintes ferramentas foram usadas na construção do projeto:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [Nodejs](https://nodejs.org/en/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Autor
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+<a href="https://www.linkedin.com/in/oliveiramatheux/">
+<img style="border-radius: 50%;" src="https://media-exp1.licdn.com/dms/image/C4D03AQEN5MndpcR7Rg/profile-displayphoto-shrink_200_200/0/1613396219696?e=1626307200&v=beta&t=nmXKQ72UNHTEQtAwcbzL3oEs5e-W-I5k10lVxFfF9uQ" width="100px;" alt=""/>
+<br/>
+<sub><b>Matheus de Oliveira</b></sub></a>🚀
+<sub><b>Eric Nielsen</b></sub></a>🚀
+<sub><b>João Guilherme</b></sub></a>🚀
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Feito por Matheus de Oliveira, Eric Nielsen e João Guilherme 👋🏽 Entre em contato!
