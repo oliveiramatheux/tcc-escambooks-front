@@ -2,12 +2,12 @@ import { createStyles, makeStyles, createTheme } from '@material-ui/core/styles'
 
 declare module '@material-ui/core/styles/createBreakpoints' {
   interface BreakpointOverrides {
-    xs: true;
-    sm: true;
-    md: true;
-    lg: true;
-    xl: true;
-    notWeb: true;
+    xs: true
+    sm: true
+    md: true
+    lg: true
+    xl: true
+    notWeb: true
   }
 }
 

@@ -14,7 +14,7 @@ if (localStorage.token) {
 }
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: baseURL,
+  baseURL,
   headers
 })
 
