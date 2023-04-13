@@ -24,6 +24,7 @@
         "react-hooks"
     ],
     "rules": {
+      "no-duplicate-imports": "off"
     },
     "settings": {
       "import/resolver": {
