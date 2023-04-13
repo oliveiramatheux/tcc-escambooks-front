@@ -1,6 +1,3 @@
-import dotenv from 'dotenv'
-dotenv.config()
-
 const {
   REACT_APP_APP_PORT,
   REACT_APP_FIREBASE_CONFIG_API_KEY,
