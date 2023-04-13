@@ -5,8 +5,8 @@ import { IUserState } from './users/types'
 import { IBooksState } from './books/types'
 
 export interface ApplicationState {
-  user: IUserState;
-  books: IBooksState;
+  user: IUserState
+  books: IBooksState
 }
 
 export default combineReducers({

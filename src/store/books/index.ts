@@ -11,27 +11,27 @@ export default function booksReducer (
   action: IBookActions
 ): IBooksState {
   switch (action.type) {
-  case BookTypes.CREATE_BOOK:
-    return {
-      ...state,
-      loading: true
-    }
+    case BookTypes.CREATE_BOOK:
+      return {
+        ...state,
+        loading: true
+      }
 
-  case BookTypes.CREATE_BOOK_SUCCESS:
-    return {
-      ...state,
-      ...action.payload,
-      loading: false
-    }
+    case BookTypes.CREATE_BOOK_SUCCESS:
+      return {
+        ...state,
+        ...action.payload,
+        loading: false
+      }
 
-  case BookTypes.CREATE_BOOK_FAILURE:
-    return {
-      ...state,
-      loading: false,
-      failure: true
-    }
+    case BookTypes.CREATE_BOOK_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        failure: true
+      }
 
-  default:
-    return state
+    default:
+      return state
   }
 }

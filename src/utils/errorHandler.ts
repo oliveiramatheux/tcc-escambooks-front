@@ -1,9 +1,9 @@
 export interface errorInterface {
-  errorStatusCode?: string;
-  errorMessage?: string;
+  errorStatusCode?: string
+  errorMessage?: string
 }
 
-const errorHandler = (status: string, message: string) => {
+const errorHandler = (status: string, message: string): string => {
   if (status === '400' && message === 'Error: Invalid password') {
     return 'Email ou senha incorretos.'
   }
