@@ -15,12 +15,12 @@ import { userCreate } from '../../../routes/services/user'
 import Modal from '../Modal'
 import TermsAndConditions from '../TermsAndConditions'
 
-interface RegisterFormState{
-  email: string;
-  name: string;
-  password: string;
-  confirmPassword: string;
-  acceptTerms: boolean;
+interface RegisterFormState {
+  email: string
+  name: string
+  password: string
+  confirmPassword: string
+  acceptTerms: boolean
 }
 
 const RegisterForm = (): JSX.Element => {
@@ -57,7 +57,7 @@ const RegisterForm = (): JSX.Element => {
   useEffect(() => {
     addInterceptor(
       (response: AxiosResponse) => response,
-      (error: AxiosError) => {
+      async (error: AxiosError) => {
         const errorUserCreate =
           error.response?.config.url === '/users' &&
           error.response?.config.method === 'post'
@@ -67,7 +67,7 @@ const RegisterForm = (): JSX.Element => {
           setValue('confirmPassword', '')
           setValue('acceptTerms', false)
         }
-        return Promise.reject(error)
+        return await Promise.reject(error)
       }
     )
   }, [])
@@ -195,7 +195,7 @@ const RegisterForm = (): JSX.Element => {
                       checked={value}
                       id="controller-acceptTerms"
                       inputRef={ref}
-                      onChange={e => onChange(e.target.checked)}
+                      onChange={e => { onChange(e.target.checked) }}
                       name="acceptTerms"
                       color="primary"
                     />

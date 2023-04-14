@@ -2,9 +2,9 @@ import React, { Suspense } from 'react'
 import { Routes, Route, BrowserRouter } from 'react-router-dom'
 import LoadingSimple from '../modules/components/LoadingSimple'
 
-const Login = React.lazy(() => import('../modules/pages/Login'))
-const NotFound = React.lazy(() => import('../modules/pages/NotFound'))
-const LoadingAnimation = React.lazy(() => import('../modules/components/Loading'))
+const Login = React.lazy(async () => await import('../modules/pages/Login'))
+const NotFound = React.lazy(async () => await import('../modules/pages/NotFound'))
+const LoadingAnimation = React.lazy(async () => await import('../modules/components/Loading'))
 
 const AppRoutes = (): JSX.Element => {
   return (

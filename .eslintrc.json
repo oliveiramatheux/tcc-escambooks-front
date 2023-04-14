@@ -31,12 +31,11 @@
     "@typescript-eslint/prefer-nullish-coalescing": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
-    "@typescript-eslint/triple-slash-reference": "off"
-  },
-  "settings": {
-    "import/resolver": {
-        "typescript": {
-        }
-    }
+    "@typescript-eslint/triple-slash-reference": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/no-misused-promises": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/member-delimiter-style": "warn",
+    "react/no-unescaped-entities": "warn"
   }
 }

@@ -7,10 +7,10 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { Button } from '@material-ui/core'
 
 interface InterfaceModalProps {
-  open: boolean;
-  title: string;
-  description: string | React.ReactNode;
-  closeAction: () => void;
+  open: boolean
+  title: string
+  description: string | React.ReactNode
+  closeAction: () => void
 }
 
 const Modal = (props: InterfaceModalProps): JSX.Element => {
