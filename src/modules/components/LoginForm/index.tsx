@@ -24,10 +24,10 @@ import { errorHandler, errorInterface } from '../../../utils/errorHandler'
 import { authSendEmailVerify } from '../../../routes/services/auth'
 
 interface LoginFormState {
-  email: string;
-  password: string;
-  showPassword: boolean;
-  checkedEmail: boolean;
+  email: string
+  password: string
+  showPassword: boolean
+  checkedEmail: boolean
 }
 
 const LoginForm = (): JSX.Element => {
@@ -93,7 +93,7 @@ const LoginForm = (): JSX.Element => {
   useEffect(() => {
     addInterceptor(
       (response: AxiosResponse) => response,
-      (error: AxiosError) => {
+      async (error: AxiosError) => {
         const errorAuthLogin =
           error.response?.config.url === '/auth' &&
           error.response?.config.method === 'post'
@@ -103,7 +103,7 @@ const LoginForm = (): JSX.Element => {
           }
           setErrorsResponse({ errorStatusCode: String(error.response?.status), errorMessage: error.response?.data as string | undefined })
         }
-        return Promise.reject(error)
+        return await Promise.reject(error)
       }
     )
   }, [])
@@ -209,7 +209,7 @@ const LoginForm = (): JSX.Element => {
                       id="controller-rememberMe"
                       checked={value}
                       inputRef={ref}
-                      onChange={e => onChange(e.target.checked)}
+                      onChange={e => { onChange(e.target.checked) }}
                       name="checkedEmail"
                       color="primary"
                     />

@@ -8,11 +8,11 @@ import DialogTitle from '@mui/material/DialogTitle'
 import { Button } from '@material-ui/core'
 
 interface InterfaceModalProps {
-  open: boolean;
-  title: string;
-  description: string;
-  closeAction: () => void;
-  confirmAction?: () => void;
+  open: boolean
+  title: string
+  description: string
+  closeAction: () => void
+  confirmAction?: () => void
 }
 
 const Modal = (props: InterfaceModalProps): JSX.Element => {
