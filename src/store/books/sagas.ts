@@ -1,8 +1,7 @@
-// eslint-disable-next-line import/no-duplicates
-import { all, takeLatest, type StrictEffect, put, call } from 'redux-saga/effects'
-import { BookTypes, type ICreateBookAction } from './types'
-import { bookCreateService, type BookCreateRetunData } from '../../routes/services/books'
-import { type AxiosResponse } from 'axios'
+import { all, takeLatest, StrictEffect, put, call } from 'redux-saga/effects'
+import { BookTypes, ICreateBookAction } from './types'
+import { bookCreateService, BookCreateRetunData } from '../../routes/services/books'
+import { AxiosResponse } from 'axios'
 
 export function * bookCreate (action: ICreateBookAction): Generator<StrictEffect> {
   try {

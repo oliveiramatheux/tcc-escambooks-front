@@ -1,4 +1,4 @@
-import { type BookCreateRetunData, type PayloadBookCreate } from '../../routes/services/books'
+import { BookCreateRetunData, PayloadBookCreate } from '../../routes/services/books'
 
 export enum BookTypes {
   CREATE_BOOK = '@BOOK/CREATE_BOOK',
