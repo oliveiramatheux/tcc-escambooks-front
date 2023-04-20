@@ -85,8 +85,7 @@ const LoginForm = (): JSX.Element => {
 
   useEffect(() => {
     if (user.isAuthenticated) {
-      console.log('autenticado')
-      // setredirect('/loading')
+      setredirect('/loading')
     }
   }, [user])
 

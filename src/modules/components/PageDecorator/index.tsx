@@ -2,8 +2,8 @@ import React from 'react'
 import { Helmet } from 'react-helmet-async'
 
 interface InterfacePageDecorator {
-  title: string;
-  description: string;
+  title: string
+  description: string
 }
 
 const PageDecorator = (props: InterfacePageDecorator): JSX.Element => {
