@@ -26,6 +26,10 @@ const TermsAndConditions = (props: InterfaceTermsAndConditionsProps): JSX.Elemen
             será tomado as devidas diretrizes administrativas.</p>
             <p className={classes.textModalScroll}>4. Após o match na plataforma, não nos responsabilizamos por entregas ou recebimentos
             de livros trocados pelos usuários da plataforma, cabe aos mesmos se responsabilizar.</p>
+            <p className={classes.textModalScroll}>5. Não nos responsabilizamos pelo uso indevido dos livros publicados pelos
+            pequenos autores</p>
+            <p className={classes.textModalScroll}>6. As Atualizações sobre os livros para vestibulares acontencerão a cada 6 meses para
+            as universidades contempladas</p>
           </div>
         }
         closeAction={closeAction}

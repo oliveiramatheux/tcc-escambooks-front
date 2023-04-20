@@ -20,8 +20,8 @@ import { useForm, Controller } from 'react-hook-form'
 import { regexEmail, regexPassword } from '../../../utils/regex'
 import { AxiosResponse, AxiosError } from 'axios'
 import { addInterceptor } from '../../../routes/services/axios'
-import { errorHandler, errorInterface } from '../../../utils/errorHandler'
 import { authSendEmailVerify } from '../../../routes/services/auth'
+import { errorHandler, errorInterface } from '../../../utils/errorHandler'
 
 interface LoginFormState {
   email: string
