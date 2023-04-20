@@ -5,6 +5,7 @@ import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Button } from '@material-ui/core'
+import Grid from '@material-ui/core/Grid/Grid'
 
 interface InterfaceModalProps {
   open: boolean
@@ -31,6 +32,11 @@ const Modal = (props: InterfaceModalProps): JSX.Element => {
             {description}
           </DialogContent>
           <DialogActions>
+            <Grid container justifyContent="flex-start">
+              <Grid item>
+                <label className={classes.rightsFooter}>@{new Date().getFullYear()} Escambooks, All rights reserved</label>
+              </Grid>
+            </Grid>
             <Button onClick={closeAction}>Fechar</Button>
           </DialogActions>
         </Dialog>
