@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { getStorage } from 'firebase/storage'
+import { getStorage, ref } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: `${config.firebaseConfigApiKey}`,
@@ -25,11 +25,14 @@ const googleProvider = new GoogleAuthProvider()
 const firestore = getFirestore(app)
 const storage = getStorage(app)
 
+const getStorageRef = (refUrl: string) => ref(storage, refUrl)
+
 export {
   firebaseDatabase,
   auth,
   googleProvider,
   firestore,
   storage,
-  signInWithPopup
+  signInWithPopup,
+  getStorageRef
 }

@@ -1,5 +1,5 @@
 import axiosInstance from '../axios'
-import { AxiosPromise } from 'axios'
+import { UploadBookByIdPayload } from './types'
 
 export interface PayloadBookCreate {
   title: string
@@ -33,8 +33,52 @@ export interface BookCreateRetunData {
   previewLink?: string
 }
 
-const bookCreateService = async (payload: PayloadBookCreate): AxiosPromise => {
-  return await axiosInstance.post('/books', payload)
+export interface Book {
+  id: string
+  userId: string
+  title: string
+  authors: string[]
+  publisher: string
+  publishedDate: string
+  description: string
+  pageCount: number
+  categories: string[]
+  imageLink?: string
+  language: string
+  previewLink?: string
+  date: string
 }
 
-export { bookCreateService }
+export interface BooksData {
+  items: Book[]
+  totalItems: number
+}
+
+const bookCreateService = async (payload: PayloadBookCreate): Promise<BookCreateRetunData | undefined> => {
+  try {
+    const { data } = await axiosInstance.post<BookCreateRetunData>('/books', payload)
+    return data
+  } catch {
+    return undefined
+  }
+}
+
+const getAllBooks = async (): Promise<Book[]> => {
+  try {
+    const { data } = await axiosInstance.get<BooksData>('/books/list')
+    return data.items || []
+  } catch {
+    return []
+  }
+}
+
+const uploadBookById = async (bookId: string, payload: UploadBookByIdPayload): Promise<Book | undefined> => {
+  try {
+    const { data } = await axiosInstance.patch<Book>(`/books/${bookId}`, payload)
+    return data
+  } catch {
+    return undefined
+  }
+}
+
+export { bookCreateService, getAllBooks, uploadBookById }

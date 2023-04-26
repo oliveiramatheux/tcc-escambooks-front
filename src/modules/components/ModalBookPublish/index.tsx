@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useStyles from './styles'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -13,11 +11,12 @@ import { useTheme, styled } from '@mui/material/styles'
 import { useForm } from 'react-hook-form'
 import { regexNumber } from '../../../utils/regex'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
-import { storage } from '../../../config/firebase'
+import { getStorageRef } from '../../../config/firebase'
 import Modal from '../Modal'
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { ApplicationState } from '../../../store/rootReducer'
-import { createBookAction } from '../../../store/books/actions'
+import { bookCreateService, uploadBookById } from '../../../routes/services/books'
+import { uploadBytes, getDownloadURL } from 'firebase/storage'
 
 const Input = styled('input')({
   display: 'none'
@@ -30,8 +29,8 @@ interface InterfaceModalProps {
 
 export interface BookFormState {
   title: string
-  categories: string[]
-  authors: string[]
+  categories: string
+  authors: string
   publisher: string
   publishedDate: string
   pageCount: number
@@ -49,7 +48,6 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
   const { user } = useSelector(
     (state: ApplicationState) => state
   )
-  const dispatch = useDispatch()
 
   const { register, handleSubmit, reset, getValues, formState: { errors, dirtyFields } } = useForm<BookFormState>({ mode: 'onBlur' })
 
@@ -70,22 +68,28 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
     }
   }, [getValues('image') || dirtyFields])
 
-  // const uploadBookImages = async (image: any, bookId: string) => {
-  //   const ref = storage.ref()
-  //   const imageRef = ref.child(`images/user/${user.email}/books/${bookId}/${image.name}`)
-  //   imageRef.put(image).then(async () => {
-  //     const url = await imageRef.getDownloadURL()
-  //     const bookRef = firestore.collection('books').doc(`${bookId}`)
-  //     return bookRef.update({
-  //       imageUrl: url,
-  //       imageName: image.name
-  //     })
-  //   })
-  // }
+  const uploadBookImages = async (image: any, bookId: string) => {
+    const imageRef = getStorageRef(`images/user/${user.email}/books/${bookId}/${image.name}`)
+
+    uploadBytes(imageRef, image, { contentType: image.type }).then(async (imageUploaded) => {
+      const imageUrl = await getDownloadURL(imageUploaded.ref)
+      await uploadBookById(bookId, { imageLinks: { thumbnail: imageUrl } })
+    })
+  }
 
   const onSubmit = async (data: BookFormState) => {
-    console.log('data antes de enviar', data)
-    dispatch(createBookAction({ ...data, authors: ['teste'], categories: ['teste'], language: 'teste' }))
+    const payload = { ...data, image: undefined }
+
+    const bookCreateResponse = await bookCreateService({ ...payload, authors: [data.authors], categories: [data.categories], language: 'PT-BR' })
+
+    if (!bookCreateResponse) {
+      setErrorUploadBook(true)
+      setOpenModal(true)
+      return
+    }
+
+    await uploadBookImages(data.image[0], bookCreateResponse.id)
+
     setOpenModal(true)
   }
 
@@ -134,7 +138,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                     }
                   })}
                 />
-                {/* {errors.categories && (<FormHelperText id="outlined-helper-text-categories" className={classes.errorHelperText}>{errors.categories[0].message}</FormHelperText>)} */}
+                {errors.categories && (<FormHelperText id="outlined-helper-text-categories" className={classes.errorHelperText}>{errors.categories.message}</FormHelperText>)}
               </FormControl>
               <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
                 {!errors.authors ? (<InputLabel htmlFor="outlined-authors">Autor</InputLabel>) : (<InputLabel htmlFor="outlined-authors" className={classes.errorHelperText}>Autor</InputLabel>)}
@@ -150,7 +154,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                     }
                   })}
                 />
-                {/* {errors.authors && (<FormHelperText id="outlined-helper-text-authors" className={classes.errorHelperText}>{errors.authors[0].message}</FormHelperText>)} */}
+                {errors.authors && (<FormHelperText id="outlined-helper-text-authors" className={classes.errorHelperText}>{errors.authors.message}</FormHelperText>)}
               </FormControl>
               <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
                 {!errors.publisher ? (<InputLabel htmlFor="outlined-publisher">Editora</InputLabel>) : (<InputLabel htmlFor="outlined-publisher" className={classes.errorHelperText}>Editora</InputLabel>)}
