@@ -77,7 +77,7 @@ const LoginForm = (): JSX.Element => {
 
   useEffect(() => {
     auth.onAuthStateChanged(async (user) => {
-      if (user) {
+      if (user?.emailVerified) {
         dispatch(checkUserAuthGoogle({ email: user.email, name: user.displayName, photoURL: user.photoURL }))
       }
     })
