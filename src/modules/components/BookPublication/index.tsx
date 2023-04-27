@@ -16,9 +16,15 @@ import ModalBookPublish from '../ModalBookPublish'
 import LoadingSimple from '../LoadingSimple'
 import { differenceBetweenTwoDates } from '../../../utils/helpers'
 import { Book, getAllBooks } from '../../../routes/services/books'
+import { ApplicationState } from '../../../store/rootReducer'
+import { useSelector } from 'react-redux'
+import FavoriteIcon from '@mui/icons-material/Favorite'
 
 const BookPublication = (): JSX.Element => {
   const classes = useStyles()
+  const { user } = useSelector(
+    (state: ApplicationState) => state
+  )
 
   const [openModalBookPublish, setOpenModalBookPublish] = useState<boolean>(false)
   const [books, setBooks] = useState<Book[]>([])
@@ -66,10 +72,10 @@ const BookPublication = (): JSX.Element => {
                 <Card className={classes.card}>
                   <CardHeader
                     avatar={
-                      <img src={userDefault} alt="User photo" className={classes.userPhoto}/>
+                      <img src={user.photoURL || userDefault} alt="User photo" className={classes.userPhoto}/>
                     }
                     action={''}
-                    title={'Teste'}
+                    title={value.userName}
                     subheader={<div className={classes.publicationDate}>
                       <AccessTimeRoundedIcon fontSize="small"/>{differenceBetweenTwoDates(new Date(value.date))}
                     </div>}
@@ -93,7 +99,9 @@ const BookPublication = (): JSX.Element => {
                     </Typography>
                   </CardContent>
                   <CardActions disableSpacing>
-                    {''}
+                    <IconButton aria-label="add to favorites">
+                      <FavoriteIcon />
+                    </IconButton>
                     <IconButton aria-label="share">
                       <ShareIcon />
                     </IconButton>

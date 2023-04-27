@@ -26,7 +26,7 @@ export default makeStyles((theme: Theme) =>
       fontFamily: 'system-ui'
     },
     errorHelperText: {
-      color: '#f50057'
+      color: '#f50057 !important'
     },
     divButtons: {
       display: 'flex',

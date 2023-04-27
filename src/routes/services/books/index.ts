@@ -47,6 +47,8 @@ export interface Book {
   language: string
   previewLink?: string
   date: string
+  userName?: string
+  userEmail?: string
 }
 
 export interface BooksData {
