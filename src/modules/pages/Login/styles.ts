@@ -45,8 +45,8 @@ export default makeStyles(() =>
     gridAbout: {
       borderRadius: '10px',
       border: 0,
-      marginTop: '7.5%',
-      marginBottom: '7.5%',
+      marginTop: '7.5% !important',
+      marginBottom: '7.5% !important',
       backgroundColor: 'white',
       padding: '30px',
       maxWidth: '100%',
@@ -58,21 +58,21 @@ export default makeStyles(() =>
       alignItems: 'center',
       overflow: 'hidden',
       [theme.breakpoints.between('xs', 'sm')]: {
-        marginBottom: '0',
+        marginBottom: '0 !important',
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
         height: 'auto'
       },
       [theme.breakpoints.between('md', 'lg')]: {
-        marginTop: '1.5%',
-        marginBottom: '1.5%'
+        marginTop: '1.5% !important',
+        marginBottom: '1.5% !important'
       }
     },
     gridLogin: {
       borderRadius: '10px',
       border: 0,
-      marginTop: '7.5%',
-      marginBottom: '7.5%',
+      marginTop: '7.5% !important',
+      marginBottom: '7.5% !important',
       backgroundColor: 'white',
       padding: '30px',
       maxWidth: '100%',
@@ -84,14 +84,14 @@ export default makeStyles(() =>
       alignItems: 'center',
       overflow: 'hidden',
       [theme.breakpoints.between('xs', 'sm')]: {
-        marginTop: '0',
+        marginTop: '0 !important',
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         height: 'auto'
       },
       [theme.breakpoints.between('md', 'lg')]: {
-        marginTop: '1.5%',
-        marginBottom: '1.5%'
+        marginTop: '1.5% !important',
+        marginBottom: '1.5% !important'
       }
     }
   })
