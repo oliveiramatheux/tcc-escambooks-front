@@ -38,7 +38,7 @@ export default makeStyles((theme: Theme) =>
       }
     },
     errorHelperText: {
-      color: '#f50057'
+      color: '#f50057 !important'
     },
     link: {
       margin: theme.spacing(1),

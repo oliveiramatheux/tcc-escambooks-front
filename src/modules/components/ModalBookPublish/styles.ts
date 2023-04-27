@@ -32,7 +32,7 @@ export default makeStyles((theme: Theme) =>
       display: 'flex'
     },
     errorHelperText: {
-      color: '#f50057'
+      color: '#f50057 !important'
     },
     dialog: {
       padding: theme.spacing(2),

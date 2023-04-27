@@ -47,7 +47,7 @@ export default makeStyles((theme: Theme) =>
       alignItems: 'center'
     },
     errorHelperText: {
-      color: '#f50057'
+      color: '#f50057 !important'
     },
     successHelperText: {
       color: '#66bb6a'
