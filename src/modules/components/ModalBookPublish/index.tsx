@@ -52,7 +52,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
 
   const [authors, setAuthors] = useState<string[]>([])
 
-  const { register, handleSubmit, reset, getValues, formState: { errors, dirtyFields } } = useForm<BookFormState>({ mode: 'onBlur' })
+  const { register, handleSubmit, reset, getValues, clearErrors, setError, formState: { errors, dirtyFields } } = useForm<BookFormState>({ mode: 'onBlur' })
 
   const [errorUploadBook, setErrorUploadBook] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -98,6 +98,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
 
   const handleAddAuthor = () => {
     if (getValues('authors').trim().length > 0) {
+      clearErrors('authors')
       setAuthors((current) => [...current, getValues('authors')])
     }
   }
@@ -109,6 +110,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
   }
 
   const handleDeleteAuthor = (index: number) => {
+    if (authors.length === 1) setError('authors', { message: 'O autor do livro é obrigatório.' })
     setAuthors(authors.filter((item, i) => i !== index))
   }
 
