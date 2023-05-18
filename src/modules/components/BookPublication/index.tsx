@@ -89,7 +89,7 @@ const BookPublication = (): JSX.Element => {
                     alt="Book image"
                   />
                   <CardContent>
-                    Autor: <Chip label={value.authors} />
+                    Autores: {value.authors.map((author, index) => <Chip key={`${author}-${index}`} label={author} />)}
                     Gênero: <Chip label={value.categories} />
                     Páginas: <Chip label={value.pageCount} />
                     Editora: <Chip label={value.publisher} />
