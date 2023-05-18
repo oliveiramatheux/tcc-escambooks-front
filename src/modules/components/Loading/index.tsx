@@ -6,6 +6,7 @@ import seta02 from '../../../images/splash/seta02.png'
 import ks from '../../../images/splash/ks.png'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router-dom'
+import { Box } from '@material-ui/core'
 
 const Img = styled.img`
   position: relative;
@@ -32,14 +33,14 @@ const LoadingAnimation = (): JSX.Element => {
   }, [])
 
   return (
-    <>
-      <div className={classes.container}>
+    <div className={classes.container}>
+      <Box display="flex" width="60%" maxWidth={500}>
         <img src={escamb} alt="escamb" className={classes.image}/>
         <Img src={seta01} alt="escamb" className={classes.image}/>
         <Img src={seta02} alt="escamb" className={classes.image}/>
         <img src={ks} alt="escamb" className={classes.image}/>
-      </div>
-    </>
+      </Box>
+    </div>
   )
 }
 
