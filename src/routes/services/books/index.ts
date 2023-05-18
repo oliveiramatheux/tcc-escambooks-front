@@ -9,9 +9,8 @@ export interface PayloadBookCreate {
   description: string
   pageCount: number
   categories: string[]
-  imageLinks?: {
-    thumbnail: string
-  }
+  imageUrl?: string
+  imageName?: string
   language: string
   previewLink?: string
 }
@@ -26,9 +25,8 @@ export interface BookCreateRetunData {
   description: string
   pageCount: number
   categories: string[]
-  imageLinks?: {
-    thumbnail: string
-  }
+  imageUrl?: string
+  imageName?: string
   language: string
   previewLink?: string
 }
@@ -43,7 +41,8 @@ export interface Book {
   description: string
   pageCount: number
   categories: string[]
-  imageLink?: string
+  imageUrl?: string
+  imageName?: string
   language: string
   previewLink?: string
   date: string
@@ -74,7 +73,7 @@ const getAllBooks = async (): Promise<Book[]> => {
   }
 }
 
-const uploadBookById = async (bookId: string, payload: UploadBookByIdPayload): Promise<Book | undefined> => {
+const updateBookById = async (bookId: string, payload: UploadBookByIdPayload): Promise<Book | undefined> => {
   try {
     const { data } = await axiosInstance.patch<Book>(`/books/${bookId}`, payload)
     return data
@@ -83,4 +82,13 @@ const uploadBookById = async (bookId: string, payload: UploadBookByIdPayload): P
   }
 }
 
-export { bookCreateService, getAllBooks, uploadBookById }
+const deleteBookById = async (bookId: string): Promise<Book | undefined> => {
+  try {
+    const { data } = await axiosInstance.delete<Book>(`/books/${bookId}`)
+    return data
+  } catch {
+    return undefined
+  }
+}
+
+export { bookCreateService, getAllBooks, updateBookById, deleteBookById }

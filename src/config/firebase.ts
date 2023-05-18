@@ -4,7 +4,7 @@ import { initializeApp } from 'firebase/app'
 import { getDatabase } from 'firebase/database'
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
-import { getStorage, ref } from 'firebase/storage'
+import { getStorage, ref, deleteObject as deleteFile, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 const firebaseConfig = {
   apiKey: `${config.firebaseConfigApiKey}`,
@@ -34,5 +34,8 @@ export {
   firestore,
   storage,
   signInWithPopup,
-  getStorageRef
+  getStorageRef,
+  deleteFile,
+  uploadBytes,
+  getDownloadURL
 }
