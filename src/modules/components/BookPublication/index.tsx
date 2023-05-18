@@ -19,6 +19,7 @@ import { Book, getAllBooks } from '../../../routes/services/books'
 import { ApplicationState } from '../../../store/rootReducer'
 import { useSelector } from 'react-redux'
 import FavoriteIcon from '@mui/icons-material/Favorite'
+import BookSettings from '../BookSettings'
 
 const BookPublication = (): JSX.Element => {
   const classes = useStyles()
@@ -74,7 +75,11 @@ const BookPublication = (): JSX.Element => {
                     avatar={
                       <img src={user.photoURL || userDefault} alt="User photo" className={classes.userPhoto}/>
                     }
-                    action={''}
+                    action={
+                      value.userEmail === user.email
+                        ? <BookSettings listBooks={listBooks} bookData={value} />
+                        : ''
+                    }
                     title={value.userName}
                     subheader={<div className={classes.publicationDate}>
                       <AccessTimeRoundedIcon fontSize="small"/>{differenceBetweenTwoDates(new Date(value.date))}
@@ -85,7 +90,7 @@ const BookPublication = (): JSX.Element => {
                     component="img"
                     width="600"
                     height="400"
-                    image={value.imageLink}
+                    image={value.imageUrl}
                     alt="Book image"
                   />
                   <CardContent>

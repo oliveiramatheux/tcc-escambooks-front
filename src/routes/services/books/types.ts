@@ -6,9 +6,8 @@ export interface UploadBookByIdPayload {
   description?: string
   pageCount?: number
   categories?: string[]
-  imageLinks?: {
-    thumbnail?: string
-  }
+  imageUrl?: string
+  imageName?: string
   language?: string
   previewLink?: string
 }
