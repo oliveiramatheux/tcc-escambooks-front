@@ -14,10 +14,12 @@ import { errorHandler, errorInterface } from '../../../utils/errorHandler'
 import { userCreate } from '../../../routes/services/user'
 import Modal from '../Modal'
 import TermsAndConditions from '../TermsAndConditions'
+import { FormDatePicker } from '../FormDatePicker'
 
 interface RegisterFormState {
   email: string
   name: string
+  birthDate: string
   password: string
   confirmPassword: string
   acceptTerms: boolean
@@ -76,13 +78,15 @@ const RegisterForm = (): JSX.Element => {
     const payload = {
       email: data.email,
       name: data.name,
-      password: data.password
+      password: data.password,
+      birthDate: data.birthDate
     }
     const response = await userCreate(payload)
 
     if (response.status === 201 && response.data) {
       setValue('email', '')
       setValue('name', '')
+      setValue('birthDate', '')
       setValue('password', '')
       setValue('confirmPassword', '')
       setValue('acceptTerms', false)
@@ -133,6 +137,9 @@ const RegisterForm = (): JSX.Element => {
                 })}
               />
               {errors.name && (<FormHelperText id="outlined-helper-text-name" className={classes.errorHelperText}>{errors.name.message}</FormHelperText>)}
+            </FormControl>
+            <FormControl className={classes.formControl} variant="outlined">
+              <FormDatePicker registerOnForm={(value) => { setValue('birthDate', value) }}/>
             </FormControl>
             <FormControl className={classes.formControl} variant="outlined">
               {!errors.password ? (<InputLabel htmlFor="outlined-password">Senha</InputLabel>) : (<InputLabel htmlFor="outlined-password" className={classes.errorHelperText}>Senha</InputLabel>)}

@@ -5,6 +5,7 @@ export interface payloadUserCreate {
   email: string
   name: string
   password: string
+  birthDate?: string
 }
 
 const userCreate = async (payload: payloadUserCreate): AxiosPromise => {
