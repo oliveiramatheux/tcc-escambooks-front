@@ -52,7 +52,15 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
 
   const [authors, setAuthors] = useState<string[]>([])
 
-  const { register, handleSubmit, reset, getValues, clearErrors, setError, formState: { errors, dirtyFields } } = useForm<BookFormState>({ mode: 'onBlur' })
+  const {
+    register,
+    handleSubmit,
+    reset,
+    getValues,
+    clearErrors,
+    setError,
+    formState: { errors, dirtyFields }
+  } = useForm<BookFormState>({ mode: 'onBlur' })
 
   const [errorUploadBook, setErrorUploadBook] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
@@ -129,7 +137,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
               <DialogContentText>
               Preencha as informações do Livro.
               </DialogContentText>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 {!errors.title ? (<InputLabel htmlFor="outlined-title">Título</InputLabel>) : (<InputLabel htmlFor="outlined-title" className={classes.errorHelperText}>Título</InputLabel>)}
                 <OutlinedInput
                   id="outlined-title"
@@ -145,7 +153,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.title && (<FormHelperText id="outlined-helper-text-title" className={classes.errorHelperText}>{errors.title.message}</FormHelperText>)}
               </FormControl>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 {!errors.categories ? (<InputLabel htmlFor="outlined-categories">Gênero</InputLabel>) : (<InputLabel htmlFor="outlined-categories" className={classes.errorHelperText}>Gênero</InputLabel>)}
                 <OutlinedInput
                   id="outlined-categories"
@@ -161,7 +169,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.categories && (<FormHelperText id="outlined-helper-text-categories" className={classes.errorHelperText}>{errors.categories.message}</FormHelperText>)}
               </FormControl>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 <InputLabel htmlFor="authors" className={errors.authors ? classes.errorHelperText : ''}>Autores</InputLabel>
                 <OutlinedInput
                   id="authors"
@@ -186,7 +194,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                   ))}
                 </Box>
               </FormControl>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 {!errors.publisher ? (<InputLabel htmlFor="outlined-publisher">Editora</InputLabel>) : (<InputLabel htmlFor="outlined-publisher" className={classes.errorHelperText}>Editora</InputLabel>)}
                 <OutlinedInput
                   id="outlined-publisher"
@@ -202,7 +210,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.publisher && (<FormHelperText id="outlined-helper-text-publisher" className={classes.errorHelperText}>{errors.publisher.message}</FormHelperText>)}
               </FormControl>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 {!errors.publishedDate ? (<InputLabel htmlFor="outlined-publishedDate">Ano de Publicação</InputLabel>) : (<InputLabel htmlFor="outlined-publishedDate" className={classes.errorHelperText}>Ano de Publicação</InputLabel>)}
                 <OutlinedInput
                   id="outlined-publishedDate"
@@ -226,7 +234,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.publishedDate && (<FormHelperText id="outlined-helper-text-publisher" className={classes.errorHelperText}>{errors.publishedDate.message}</FormHelperText>)}
               </FormControl>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 {!errors.pageCount ? (<InputLabel htmlFor="outlined-pageCount">Número de páginas</InputLabel>) : (<InputLabel htmlFor="outlined-pageCount" className={classes.errorHelperText}>Número de páginas</InputLabel>)}
                 <OutlinedInput
                   id="outlined-pageCount"
@@ -246,7 +254,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.pageCount && (<FormHelperText id="outlined-helper-text-publisher" className={classes.errorHelperText}>{errors.pageCount.message}</FormHelperText>)}
               </FormControl>
-              <FormControl style={{ margin: '20px', width: '35ch' }} className={classes.formControl} variant="outlined">
+              <FormControl className={classes.formControl} variant="outlined">
                 {!errors.description ? (<InputLabel htmlFor="outlined-description">Descrição</InputLabel>) : (<InputLabel htmlFor="outlined-description" className={classes.errorHelperText}>Descrição</InputLabel>)}
                 <OutlinedInput
                   id="outlined-description"
