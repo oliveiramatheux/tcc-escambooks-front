@@ -14,11 +14,13 @@ import { errorHandler, errorInterface } from '../../../utils/errorHandler'
 import { userCreate } from '../../../routes/services/user'
 import Modal from '../Modal'
 import TermsAndConditions from '../TermsAndConditions'
+import { isDisabled } from '@testing-library/user-event/dist/utils'
 
 interface RegisterFormState {
   email: string
   name: string
   password: string
+  birthDate: Date
   confirmPassword: string
   acceptTerms: boolean
 }
@@ -65,6 +67,7 @@ const RegisterForm = (): JSX.Element => {
           setErrorsResponse({ errorStatusCode: String(error.response?.status), errorMessage: error.response?.data as string | undefined })
           setValue('password', '')
           setValue('confirmPassword', '')
+          setValue('birthDate', new Date(''))
           setValue('acceptTerms', false)
         }
         return await Promise.reject(error)
@@ -76,7 +79,8 @@ const RegisterForm = (): JSX.Element => {
     const payload = {
       email: data.email,
       name: data.name,
-      password: data.password
+      password: data.password,
+      birthDate: data.birthDate
     }
     const response = await userCreate(payload)
 
@@ -85,6 +89,7 @@ const RegisterForm = (): JSX.Element => {
       setValue('name', '')
       setValue('password', '')
       setValue('confirmPassword', '')
+      setValue('birthDate', new Date(''))
       setValue('acceptTerms', false)
       setOpen(true)
     }
@@ -133,6 +138,25 @@ const RegisterForm = (): JSX.Element => {
                 })}
               />
               {errors.name && (<FormHelperText id="outlined-helper-text-name" className={classes.errorHelperText}>{errors.name.message}</FormHelperText>)}
+            </FormControl>
+            <FormControl className={classes.formControl} variant="outlined">
+              {!errors.birthDate ? (<InputLabel htmlFor="outlined-birthDate">Data de Nascimento</InputLabel>) : (<InputLabel htmlFor="outlined-birthDate" className={classes.errorHelperText}>Data de Nascimento</InputLabel>)}
+              <OutlinedInput
+                id="outlined-birthDate"
+                type={'Date'}
+                onKeyDown={(e) => { e.preventDefault() }}
+                inputProps={{ min: `${new Date().getFullYear() - 120}-01-01` }}
+                error={!!errors.birthDate}
+                onMouseDown={handleMouseDown}
+                {...register('birthDate', {
+                  required: 'A data de nascimento é obrigatória.',
+                  maxLength: {
+                    value: 10,
+                    message: 'A data de nascimento tem que conter no máximo 10 caracteres.'
+                  }
+                })}
+              />
+              {errors.birthDate && (<FormHelperText id="outlined-helper-text-birthDate" className={classes.errorHelperText}>{errors.birthDate.message}</FormHelperText>)}
             </FormControl>
             <FormControl className={classes.formControl} variant="outlined">
               {!errors.password ? (<InputLabel htmlFor="outlined-password">Senha</InputLabel>) : (<InputLabel htmlFor="outlined-password" className={classes.errorHelperText}>Senha</InputLabel>)}
