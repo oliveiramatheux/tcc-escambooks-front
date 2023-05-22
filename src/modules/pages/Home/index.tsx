@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { Grid } from '@material-ui/core'
 import { useNavigate } from 'react-router-dom'
 import { ApplicationState } from '../../../store/rootReducer'
@@ -8,6 +8,7 @@ import HeaderMenu from '../../components/HeaderMenu'
 import PageDecorator from '../../components/PageDecorator'
 import UserInfo from '../../components/UserInfo'
 import BookPublication from '../../components/BookPublication'
+import { handleEventUserInfos, handleEventScreen } from 'utils/analytics/analytics'
 
 const Home = (): JSX.Element => {
   const { user } = useSelector(
@@ -22,6 +23,9 @@ const Home = (): JSX.Element => {
       navigate('/login')
     }
   }, [user])
+
+  handleEventUserInfos(user)
+  handleEventScreen('escambooks_home', 'home')
 
   return (
     <>

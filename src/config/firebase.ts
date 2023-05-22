@@ -5,6 +5,7 @@ import { getDatabase } from 'firebase/database'
 import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 import { getStorage, ref, deleteObject as deleteFile, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { getAnalytics, logEvent } from 'firebase/analytics'
 
 const firebaseConfig = {
   apiKey: `${config.firebaseConfigApiKey}`,
@@ -18,6 +19,9 @@ const firebaseConfig = {
 }
 
 const app = initializeApp(firebaseConfig)
+const analytics = getAnalytics(app)
+
+logEvent(analytics, 'notification_received')
 
 const firebaseDatabase = getDatabase(app)
 const auth = getAuth(app)
@@ -37,5 +41,7 @@ export {
   getStorageRef,
   deleteFile,
   uploadBytes,
-  getDownloadURL
+  getDownloadURL,
+  analytics,
+  logEvent
 }
