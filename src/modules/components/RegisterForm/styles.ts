@@ -3,12 +3,26 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export default makeStyles((theme: Theme) =>
   createStyles({
     paper: {
-      padding: theme.spacing(2),
+      padding: '0 16px',
       textAlign: 'center',
       color: theme.palette.text.secondary,
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
         padding: theme.spacing(0)
+      },
+      overflowY: 'auto',
+      '&::-webkit-scrollbar': {
+        width: '6px'
+      },
+      '&::-webkit-scrollbar-track': {
+        background: '#f1f1f1'
+      },
+      '&::-webkit-scrollbar-thumb': {
+        background: '#3f51b5',
+        borderRadius: '6px'
+      },
+      '&::-webkit-scrollbar-thumb:hover': {
+        background: '#007fff'
       }
     },
     root: {

@@ -98,7 +98,7 @@ const RegisterForm = (): JSX.Element => {
     <>
       <Paper elevation={0} className={classes.paper}>
         <div className={classes.root}>
-          <h2>Criar conta</h2>
+          <h2 style={{ margin: '0 0 10px 0' }}> Criar conta</h2>
           <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
             <FormControl className={classes.formControl} variant="outlined">
               {!errors.email ? (<InputLabel htmlFor="outlined-email">Email</InputLabel>) : (<InputLabel htmlFor="outlined-email" className={classes.errorHelperText}>Email</InputLabel>)}
