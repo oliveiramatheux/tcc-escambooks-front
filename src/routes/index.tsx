@@ -6,6 +6,7 @@ const Login = React.lazy(async () => await import('../modules/pages/Login'))
 const NotFound = React.lazy(async () => await import('../modules/pages/NotFound'))
 const LoadingAnimation = React.lazy(async () => await import('../modules/components/Loading'))
 const Home = React.lazy(async () => await import('../modules/pages/Home'))
+const UserProfile = React.lazy(async () => await import('../modules/pages/UserProfile'))
 const CheckEmail = React.lazy(async () => await import('../modules/pages/CheckEmail'))
 const ForgotPassword = React.lazy(async () => await import('../modules/pages/ForgotPassword'))
 const ResetPassword = React.lazy(async () => await import('../modules/pages/ResetPassword'))
@@ -19,6 +20,8 @@ const AppRoutes = (): JSX.Element => {
           <Route path="/login" element={<Login/>} />
           <Route path="/loading" element={<LoadingAnimation/>} />
           <Route path="*" element={<NotFound/>} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/profile/:id?" element={<UserProfile />} />
           <Route path="/home" element={<Home />} />
           <Route path="/verify-email" element={<CheckEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
