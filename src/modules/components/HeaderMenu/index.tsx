@@ -1,4 +1,4 @@
-import React, { useState, createRef } from 'react'
+import React, { useState, createRef, useEffect } from 'react'
 import {
   AppBar, Toolbar, IconButton, Typography,
   InputBase, Badge, MenuItem, Menu, Fab
@@ -21,6 +21,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import BackToTop from '../BackToTop'
 import TermsAndConditions from '../TermsAndConditions'
 import Tooltip from '@mui/material/Tooltip'
+import { getUserLikes, Like, updateLike } from '../../../routes/services'
 
 const HeaderMenu = (): JSX.Element => {
   const classes = useStyles()
@@ -33,10 +34,14 @@ const HeaderMenu = (): JSX.Element => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState<null | HTMLElement>(null)
+  const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null)
   const [openModalScroll, setOpenModalScroll] = useState<boolean>(false)
+  const [notifications, setNotifications] = useState<Like[]>([])
+  const [notificationsNotVisualized, setNotificationsNotVisualized] = useState<number>(0)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
+  const isNotificationMenuOpen = Boolean(notificationAnchorEl)
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -44,11 +49,6 @@ const HeaderMenu = (): JSX.Element => {
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null)
-  }
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-    handleMobileMenuClose()
   }
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -80,6 +80,65 @@ const HeaderMenu = (): JSX.Element => {
   }
 
   const inputRef = createRef()
+
+  const listNotifications = async () => {
+    const notifications = await getUserLikes(user.id)
+
+    if (!notifications) return
+
+    setNotifications(notifications.items)
+
+    setNotificationsNotVisualized(notifications.totalItemsNotVisualized)
+  }
+
+  const updateVisualizedNotifications = async () => {
+    notifications.forEach(async notification => {
+      if (!notification.isVisualized) {
+        await updateLike(notification.id, {
+          isVisualized: true
+        })
+      }
+    })
+  }
+
+  const handleNotificationMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setNotificationAnchorEl(event.currentTarget)
+    updateVisualizedNotifications()
+  }
+
+  const handleNotificationMenuClose = () => {
+    setNotificationAnchorEl(null)
+    listNotifications()
+  }
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+    handleMobileMenuClose()
+    handleNotificationMenuClose()
+  }
+
+  const menuNotificationId = 'notification-menu'
+
+  const renderNotificationMenu = () => {
+    return (<Menu
+        anchorEl={notificationAnchorEl}
+        ref={inputRef}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        id={menuNotificationId}
+        keepMounted
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        open={isNotificationMenuOpen}
+        onClose={handleNotificationMenuClose}
+      >
+        {notifications.length
+          ? notifications.map((notification) => {
+            return (<MenuItem key={notification.id} onClick={handleNotificationMenuClose}>O usuário {notification.userLikedName} deu um like no seu livro {notification.bookTitle}</MenuItem>)
+          })
+          : (<MenuItem onClick={handleNotificationMenuClose}>Nenhuma notificação</MenuItem>)}
+
+      </Menu>)
+  }
+
   const menuId = 'primary-search-account-menu'
   const renderMenu = (
     <Menu
@@ -125,15 +184,16 @@ const HeaderMenu = (): JSX.Element => {
       </MenuItem>
       <MenuItem>
         <IconButton aria-label="messages" color="inherit">
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={0} color="secondary">
             <MailIcon />
           </Badge>
         </IconButton>
         <p>Mensagens</p>
       </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
+      <MenuItem onClick={handleNotificationMenuOpen}>
+        <IconButton aria-label="notifications" color="inherit" aria-controls={menuNotificationId}
+          aria-haspopup="true">
+          <Badge badgeContent={notificationsNotVisualized} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -152,6 +212,10 @@ const HeaderMenu = (): JSX.Element => {
       </MenuItem>
     </Menu>
   )
+
+  useEffect(() => {
+    if (user) listNotifications()
+  }, [user])
 
   return (
     <>
@@ -198,14 +262,17 @@ const HeaderMenu = (): JSX.Element => {
               </Tooltip>
               <Tooltip title="Mensagens">
                 <IconButton aria-label="show new messages" color="inherit">
-                  <Badge badgeContent={4} color="secondary">
+                  <Badge badgeContent={0} color="secondary">
                     <MailIcon />
                   </Badge>
                 </IconButton>
               </Tooltip>
               <Tooltip title="Notificações">
-                <IconButton aria-label="show new notifications" color="inherit">
-                  <Badge badgeContent={17} color="secondary">
+                <IconButton aria-label="show new notifications" color="inherit"
+                  aria-controls={menuNotificationId}
+                  aria-haspopup="true"
+                  onClick={handleNotificationMenuOpen}>
+                  <Badge badgeContent={notificationsNotVisualized} color="secondary">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
@@ -238,6 +305,7 @@ const HeaderMenu = (): JSX.Element => {
         </AppBar>
         {renderMobileMenu}
         {renderMenu}
+        {renderNotificationMenu()}
       </div>
       <BackToTop>
         <Fab color="primary" size="medium" aria-label="scroll back to top">

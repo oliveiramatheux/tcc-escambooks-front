@@ -8,14 +8,13 @@ import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import ShareIcon from '@mui/icons-material/Share'
 import userDefault from '../../../images/user-default.png'
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
 import PublishRoundedIcon from '@mui/icons-material/PublishRounded'
 import ModalBookPublish from '../ModalBookPublish'
 import LoadingSimple from '../LoadingSimple'
 import { differenceBetweenTwoDates } from '../../../utils/helpers'
-import { Book, getAllBooks } from '../../../routes/services/books'
+import { Book, createLike, deleteLike, getAllBooks, getLikesThatUserLiked } from '../../../routes/services'
 import { ApplicationState } from '../../../store/rootReducer'
 import { useSelector } from 'react-redux'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -34,13 +33,38 @@ const BookPublication = (): JSX.Element => {
     setOpenModalBookPublish(true)
   }
 
+  const booksWithUserLikes = async (books: Book[]) => {
+    const likes = await getLikesThatUserLiked(user.id)
+
+    likes.forEach(like => {
+      books.forEach(book => {
+        if (like.bookId === book.id) {
+          const index = books.indexOf(book)
+          books[index] = { ...book, alreadyLike: { likeId: like.id } }
+        }
+      })
+    })
+
+    setBooks(books)
+  }
+
   const listBooks = async () => {
     const booksData = await getAllBooks()
-    setBooks(booksData)
+    booksWithUserLikes(booksData)
   }
 
   const handleCloseModalBookPublish = () => {
     setOpenModalBookPublish(false)
+    listBooks()
+  }
+
+  const onClickFavoriteButton = async (book: Book) => {
+    if (book.alreadyLike) {
+      await deleteLike(book.alreadyLike.likeId)
+      listBooks()
+      return
+    }
+    await createLike({ bookId: book.id, bookTitle: book.title, bookUserId: book.userId, userLikedId: user.id, userLikedName: user.name || '' })
     listBooks()
   }
 
@@ -103,13 +127,12 @@ const BookPublication = (): JSX.Element => {
                       Descrição: {value.description}
                     </Typography>
                   </CardContent>
-                  <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites">
-                      <FavoriteIcon />
-                    </IconButton>
-                    <IconButton aria-label="share">
-                      <ShareIcon />
-                    </IconButton>
+                  <CardActions>
+                    {value.userEmail !== user.email
+                      ? (<IconButton aria-label="add to favorites" color={value.alreadyLike ? 'error' : undefined} onClick={async () => { await onClickFavoriteButton(value) }}>
+                          <FavoriteIcon />
+                        </IconButton>)
+                      : ''}
                   </CardActions>
                 </Card>
               </div>
