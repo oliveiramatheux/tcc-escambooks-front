@@ -48,6 +48,9 @@ export interface Book {
   date: string
   userName?: string
   userEmail?: string
+  alreadyLike?: {
+    likeId: string
+  }
 }
 
 export interface BooksData {
