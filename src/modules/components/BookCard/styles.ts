@@ -15,6 +15,9 @@ export default makeStyles((theme: Theme) =>
     },
     link: {
       textDecoration: 'none'
+    },
+    liked: {
+      color: theme.palette.error.main
     }
   })
 )

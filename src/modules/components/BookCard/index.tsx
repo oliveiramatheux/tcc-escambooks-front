@@ -11,13 +11,29 @@ import { ApplicationState } from '../../../store/rootReducer'
 import { differenceBetweenTwoDates } from '../../../utils/helpers'
 import useStyles from './styles'
 import { Link } from 'react-router-dom'
+import { createLike, deleteLike } from '../../../routes/services'
 
-const BookCard = ({ book, listBooks }: { book: Book, listBooks: () => void }) => {
+interface BookCardProps {
+  book: Book
+  listBooks: () => void
+}
+
+const BookCard = ({ book, listBooks }: BookCardProps) => {
   const classes = useStyles()
 
   const { user } = useSelector(
     (state: ApplicationState) => state
   )
+
+  const onClickFavoriteButton = async (book: Book) => {
+    if (book.alreadyLike) {
+      await deleteLike(book.alreadyLike.likeId)
+      listBooks()
+      return
+    }
+    await createLike({ bookId: book.id, bookTitle: book.title, bookUserId: book.userId, userLikedId: user.id, userLikedName: user.name || '' })
+    listBooks()
+  }
 
   return (
     <div>
@@ -58,10 +74,15 @@ const BookCard = ({ book, listBooks }: { book: Book, listBooks: () => void }) =>
         </CardContent>
         <CardActions disableSpacing>
           <IconButton aria-label="add to favorites">
-            <FavoriteIcon />
-          </IconButton>
-          <IconButton aria-label="share">
-            <ShareIcon />
+          {book.userEmail !== user.email && (
+            <IconButton
+              aria-label="add to favorites"
+              className={book.alreadyLike ? classes.liked : undefined}
+              onClick={async () => { await onClickFavoriteButton(book) }}
+            >
+              <FavoriteIcon />
+            </IconButton>
+          )}
           </IconButton>
         </CardActions>
       </Card>

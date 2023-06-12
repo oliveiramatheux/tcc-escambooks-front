@@ -7,9 +7,16 @@ import ModalBookPublish from '../ModalBookPublish'
 import LoadingSimple from '../LoadingSimple'
 import { Book, getAllBooks } from '../../../routes/services/books'
 import BookCard from '../BookCard'
+import { getLikesThatUserLiked } from '../../../routes/services'
+import { useSelector } from 'react-redux'
+import { ApplicationState } from '../../../store/rootReducer'
 
 const BookPublication = (): JSX.Element => {
   const classes = useStyles()
+
+  const { user } = useSelector(
+    (state: ApplicationState) => state
+  )
 
   const [openModalBookPublish, setOpenModalBookPublish] = useState<boolean>(false)
   const [books, setBooks] = useState<Book[]>([])
@@ -18,9 +25,24 @@ const BookPublication = (): JSX.Element => {
     setOpenModalBookPublish(true)
   }
 
+  const booksWithUserLikes = async (books: Book[]) => {
+    const likes = await getLikesThatUserLiked(user.id)
+
+    likes.forEach(like => {
+      books.forEach(book => {
+        if (like.bookId === book.id) {
+          const index = books.indexOf(book)
+          books[index] = { ...book, alreadyLike: { likeId: like.id } }
+        }
+      })
+    })
+
+    setBooks(books)
+  }
+
   const listBooks = async () => {
     const booksData = await getAllBooks()
-    setBooks(booksData)
+    booksWithUserLikes(booksData)
   }
 
   const handleCloseModalBookPublish = () => {
