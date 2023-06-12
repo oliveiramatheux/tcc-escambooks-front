@@ -73,6 +73,15 @@ const getAllBooks = async (): Promise<Book[]> => {
   }
 }
 
+const getAllBooksByUserId = async (userId: string): Promise<Book[]> => {
+  try {
+    const { data } = await axiosInstance.get<BooksData>(`/users/${userId}/books`)
+    return data.items || []
+  } catch {
+    return []
+  }
+}
+
 const updateBookById = async (bookId: string, payload: UploadBookByIdPayload): Promise<Book | undefined> => {
   try {
     const { data } = await axiosInstance.patch<Book>(`/books/${bookId}`, payload)
@@ -91,4 +100,4 @@ const deleteBookById = async (bookId: string): Promise<Book | undefined> => {
   }
 }
 
-export { bookCreateService, getAllBooks, updateBookById, deleteBookById }
+export { bookCreateService, getAllBooks, updateBookById, deleteBookById, getAllBooksByUserId }

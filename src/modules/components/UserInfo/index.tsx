@@ -32,7 +32,7 @@ const UserInfo = ({ disableLink }: UserInfoProps): JSX.Element => {
       <Paper className={classes.paper}>
         <img src={user.photoURL || userDefault} alt="User photo" className={classes.userPhoto}/>
         <div>
-          <p>{user.name} - 19 anos</p>
+          <p>{user.name}</p>
           <p>0 Seguindo</p>
           <p>0 Seguidores</p>
         </div>

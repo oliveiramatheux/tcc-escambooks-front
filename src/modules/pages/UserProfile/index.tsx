@@ -9,6 +9,9 @@ import PageDecorator from '../../components/PageDecorator'
 import userDefault from '../../../images/user-default.png'
 import useStyles from './styles'
 import { calculateAge } from '../../../utils/helpers'
+import { Book, getAllBooksByUserId } from '../../../routes/services/books'
+import BookCard from '../../components/BookCard'
+import LoadingSimple from '../../components/LoadingSimple'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -50,6 +53,7 @@ const UserProfile = () => {
   const navigate = useNavigate()
   const [value, setValue] = useState(0)
   const [user, setUser] = useState<User>()
+  const [userBooks, setUserBooks] = useState<Book[]>([])
 
   const { user: userState } = useSelector(
     (state: ApplicationState) => state
@@ -70,9 +74,21 @@ const UserProfile = () => {
     setUser(booksData)
   }, [id])
 
+  const getUserBooks = useCallback(async () => {
+    if (id) {
+      const booksData = await getAllBooksByUserId(id)
+
+      setUserBooks(booksData)
+    }
+  }, [id])
+
   useEffect(() => {
     getUser()
   }, [getUser])
+
+  useEffect(() => {
+    getUserBooks()
+  }, [])
 
   useEffect(() => {
     if (!userState.isAuthenticated) {
@@ -116,7 +132,13 @@ const UserProfile = () => {
               {/* <Tab label="Meus matches" {...a11yProps(2)} /> */}
             </Tabs>
             <TabPanel value={value} index={0}>
-              Meus livros
+            {userBooks
+              ? userBooks.map((value) => {
+                return (
+                  <BookCard key={value.id} book={value} listBooks={getUserBooks} />
+                )
+              })
+              : <LoadingSimple/>}
             </TabPanel>
             <TabPanel value={value} index={1}>
               Livros que curti
