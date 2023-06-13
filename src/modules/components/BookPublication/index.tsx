@@ -14,7 +14,7 @@ import PublishRoundedIcon from '@mui/icons-material/PublishRounded'
 import ModalBookPublish from '../ModalBookPublish'
 import LoadingSimple from '../LoadingSimple'
 import { differenceBetweenTwoDates } from '../../../utils/helpers'
-import { Book, createLike, deleteLike, getAllBooks, getLikesThatUserLiked } from '../../../routes/services'
+import { Book, createLike, deleteLike, getAllBooks } from '../../../routes/services'
 import { ApplicationState } from '../../../store/rootReducer'
 import { useSelector } from 'react-redux'
 import FavoriteIcon from '@mui/icons-material/Favorite'
@@ -33,24 +33,9 @@ const BookPublication = (): JSX.Element => {
     setOpenModalBookPublish(true)
   }
 
-  const booksWithUserLikes = async (books: Book[]) => {
-    const likes = await getLikesThatUserLiked(user.id)
-
-    likes.forEach(like => {
-      books.forEach(book => {
-        if (like.bookId === book.id) {
-          const index = books.indexOf(book)
-          books[index] = { ...book, alreadyLike: { likeId: like.id } }
-        }
-      })
-    })
-
-    setBooks(books)
-  }
-
   const listBooks = async () => {
     const booksData = await getAllBooks()
-    booksWithUserLikes(booksData)
+    setBooks(booksData)
   }
 
   const handleCloseModalBookPublish = () => {
@@ -90,7 +75,7 @@ const BookPublication = (): JSX.Element => {
             Publicar
           </Button>
         </Paper>
-        {books
+        {books.length
           ? books.map((value) => {
             return (
               <div key={value.id}>
