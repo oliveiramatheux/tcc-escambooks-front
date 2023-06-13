@@ -67,6 +67,10 @@ export default makeStyles((theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         display: 'none'
       }
+    },
+    link: {
+      textDecoration: 'none',
+      color: theme.palette.text.primary
     }
   })
 )

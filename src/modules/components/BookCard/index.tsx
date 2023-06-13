@@ -3,7 +3,6 @@ import { Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton
 import userDefault from '../../../images/user-default.png'
 import { Book } from '../../../routes/services/books'
 import BookSettings from '../BookSettings'
-import ShareIcon from '@mui/icons-material/Share'
 import FavoriteIcon from '@mui/icons-material/Favorite'
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded'
 import { useSelector } from 'react-redux'
@@ -12,6 +11,7 @@ import { differenceBetweenTwoDates } from '../../../utils/helpers'
 import useStyles from './styles'
 import { Link } from 'react-router-dom'
 import { createLike, deleteLike } from '../../../routes/services'
+import { useState } from 'react'
 
 interface BookCardProps {
   book: Book
@@ -19,6 +19,7 @@ interface BookCardProps {
 }
 
 const BookCard = ({ book, listBooks }: BookCardProps) => {
+  const [likeId, setLikeId] = useState(book.alreadyLike?.likeId)
   const classes = useStyles()
 
   const { user } = useSelector(
@@ -26,13 +27,13 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
   )
 
   const onClickFavoriteButton = async (book: Book) => {
-    if (book.alreadyLike) {
-      await deleteLike(book.alreadyLike.likeId)
-      listBooks()
+    if (likeId) {
+      const response = await deleteLike(likeId)
+      if (response) setLikeId(undefined)
       return
     }
-    await createLike({ bookId: book.id, bookTitle: book.title, bookUserId: book.userId, userLikedId: user.id, userLikedName: user.name || '' })
-    listBooks()
+    const like = await createLike({ bookId: book.id, bookTitle: book.title, bookUserId: book.userId, userLikedId: user.id, userLikedName: user.name || '' })
+    setLikeId(like?.id)
   }
 
   return (
@@ -73,17 +74,15 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
           </Typography>
         </CardContent>
         <CardActions disableSpacing>
-          <IconButton aria-label="add to favorites">
           {book.userEmail !== user.email && (
             <IconButton
               aria-label="add to favorites"
-              className={book.alreadyLike ? classes.liked : undefined}
+              className={likeId ? classes.liked : undefined}
               onClick={async () => { await onClickFavoriteButton(book) }}
             >
               <FavoriteIcon />
             </IconButton>
           )}
-          </IconButton>
         </CardActions>
       </Card>
     </div>

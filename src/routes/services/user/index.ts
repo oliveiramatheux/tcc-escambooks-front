@@ -1,11 +1,19 @@
 import axiosInstance from '../axios'
 import { AxiosPromise } from 'axios'
 
-export interface payloadUserCreate {
+export interface PayloadUserCreate {
   email: string
   name: string
   password: string
   birthDate?: string
+}
+
+export interface PayloadUserUpdate {
+  email?: string
+  name?: string
+  birthDate?: string
+  imageUrl?: string
+  imageName?: string
 }
 
 export interface User {
@@ -14,10 +22,15 @@ export interface User {
   email: string
   birthDate: string
   imageUrl?: string
+  imageName?: string
 }
 
-const userCreate = async (payload: payloadUserCreate): AxiosPromise => {
+const userCreate = async (payload: PayloadUserCreate): AxiosPromise => {
   return await axiosInstance.post('/users', payload)
+}
+
+const userUpdate = async (id: string, payload: PayloadUserUpdate): AxiosPromise => {
+  return await axiosInstance.patch(`/users/${id}`, payload)
 }
 
 const getUserById = async (id: string): Promise<User | undefined> => {
@@ -29,13 +42,4 @@ const getUserById = async (id: string): Promise<User | undefined> => {
   }
 }
 
-const getCurrentUser = async (): Promise<User | undefined> => {
-  try {
-    const { data } = await axiosInstance.get('/users')
-    return data
-  } catch {
-    return undefined
-  }
-}
-
-export { userCreate, getUserById, getCurrentUser }
+export { userCreate, getUserById, userUpdate }

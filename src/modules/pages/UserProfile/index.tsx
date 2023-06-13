@@ -2,7 +2,7 @@ import { Box, Grid, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getCurrentUser, getUserById, User } from '../../../routes/services/user'
+import { getUserById, User, userUpdate } from '../../../routes/services/user'
 import { ApplicationState } from '../../../store/rootReducer'
 import HeaderMenu from '../../components/HeaderMenu'
 import PageDecorator from '../../components/PageDecorator'
@@ -12,6 +12,7 @@ import { calculateAge } from '../../../utils/helpers'
 import { Book, getAllBooksByUserId } from '../../../routes/services/books'
 import BookCard from '../../components/BookCard'
 import LoadingSimple from '../../components/LoadingSimple'
+import { getDownloadURL, getStorageRef, uploadBytes } from '../../../config/firebase'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -59,28 +60,31 @@ const UserProfile = () => {
     (state: ApplicationState) => state
   )
 
+  const showLikedBooksTab = !id || id === userState.id
+
   const handleChange = (_: React.ChangeEvent<unknown>, newValue: number) => {
     setValue(newValue)
   }
 
   const getUser = useCallback(async () => {
-    if (id) {
-      const booksData = await getUserById(id)
-      setUser(booksData)
-      return
-    }
-
-    const booksData = await getCurrentUser()
+    const booksData = await getUserById(id || userState.id)
     setUser(booksData)
   }, [id])
 
   const getUserBooks = useCallback(async () => {
-    if (id) {
-      const booksData = await getAllBooksByUserId(id)
+    const booksData = await getAllBooksByUserId(id || userState.id)
 
-      setUserBooks(booksData)
-    }
+    setUserBooks(booksData)
   }, [id])
+
+  const uploadBookImages = async (image: any) => {
+    const imageRef = getStorageRef(`images/user/${userState.email}/avatar/${image.name}`)
+
+    await uploadBytes(imageRef, image, { contentType: image.type }).then(async (imageUploaded) => {
+      const imageUrl = await getDownloadURL(imageUploaded.ref)
+      await userUpdate(userState.id, { imageUrl, imageName: image.name })
+    })
+  }
 
   useEffect(() => {
     getUser()
@@ -88,7 +92,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     getUserBooks()
-  }, [])
+  }, [getUserBooks])
 
   useEffect(() => {
     if (!userState.isAuthenticated) {
@@ -128,8 +132,7 @@ const UserProfile = () => {
               className=''
             >
               <Tab label="Meus livros" {...a11yProps(0)} />
-              <Tab label="Livros que curti" {...a11yProps(1)} />
-              {/* <Tab label="Meus matches" {...a11yProps(2)} /> */}
+              {showLikedBooksTab && <Tab label="Livros que curti" {...a11yProps(1)} /> }
             </Tabs>
             <TabPanel value={value} index={0}>
             {userBooks
@@ -143,9 +146,6 @@ const UserProfile = () => {
             <TabPanel value={value} index={1}>
               Livros que curti
             </TabPanel>
-            {/* <TabPanel value={value} index={2}>
-              Meus matches
-            </TabPanel> */}
           </Box>
         </Grid>
       </Grid>

@@ -12,7 +12,7 @@ import MenuBookRoundedIcon from '@material-ui/icons/MenuBookRounded'
 import CreateRoundedIcon from '@material-ui/icons/CreateRounded'
 import useStyles from './styles'
 import { ApplicationState } from '../../../store/rootReducer'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { userAuthLogout } from '../../../store/users/actions'
 import { auth } from '../../../config/firebase'
 import { useDispatch, useSelector } from 'react-redux'
@@ -136,7 +136,11 @@ const HeaderMenu = (): JSX.Element => {
       >
         {notifications.length
           ? notifications.map((notification) => {
-            return (<MenuItem key={notification.id} onClick={handleNotificationMenuClose}>O usuário {notification.userLikedName} deu um like no seu livro {notification.bookTitle}</MenuItem>)
+            return (
+              <Link to={`/profile/${notification.userLikedId}`} key={notification.id} className={classes.link}>
+                <MenuItem>O usuário {notification.userLikedName} deu um like no seu livro {notification.bookTitle}</MenuItem>
+              </Link>
+            )
           })
           : (<MenuItem onClick={handleNotificationMenuClose}>Nenhuma notificação</MenuItem>)}
 
