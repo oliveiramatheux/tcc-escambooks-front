@@ -42,7 +42,7 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
         <Link to={`/profile/${book.userId}`} className={classes.link}>
           <CardHeader
             avatar={
-              <img src={user.photoURL || userDefault} alt="User photo" className={classes.userPhoto}/>
+              <img src={userDefault} alt="User photo" className={classes.userPhoto}/>
             }
             action={
               book.userEmail === user.email

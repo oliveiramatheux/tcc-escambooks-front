@@ -1,15 +1,7 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles((theme: Theme) =>
+export default makeStyles((theme) =>
   createStyles({
-    userPhoto: {
-      maxWidth: '96px',
-      height: 'auto',
-      display: 'flex',
-      margin: 'auto',
-      borderRadius: 50,
-      border: '3px solid white'
-    },
     paper: {
       margin: theme.spacing(5),
       padding: theme.spacing(2),
@@ -22,6 +14,13 @@ export default makeStyles((theme: Theme) =>
         marginBottom: theme.spacing(0),
         marginLeft: theme.spacing(0)
       }
+    },
+    userPhoto: {
+      display: 'flex',
+      margin: 'auto',
+      width: `${theme.spacing(12)}px !important`,
+      height: `${theme.spacing(12)}px !important`,
+      border: '3px solid white'
     },
     link: {
       textDecoration: 'none'

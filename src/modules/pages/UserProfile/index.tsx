@@ -1,4 +1,4 @@
-import { Box, Grid, Paper, Tab, Tabs, Typography } from '@material-ui/core'
+import { Avatar, Box, Grid, IconButton, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -13,6 +13,8 @@ import { Book, getAllBooksByUserId } from '../../../routes/services/books'
 import BookCard from '../../components/BookCard'
 import LoadingSimple from '../../components/LoadingSimple'
 import { getDownloadURL, getStorageRef, uploadBytes } from '../../../config/firebase'
+import { PhotoCamera } from '@material-ui/icons'
+import { styled } from '@mui/material/styles'
 
 interface TabPanelProps {
   children?: React.ReactNode
@@ -20,6 +22,10 @@ interface TabPanelProps {
   index: number
   value: number
 }
+
+const Input = styled('input')({
+  display: 'none'
+})
 
 const TabPanel = (props: TabPanelProps) => {
   const { children, value, index, ...other } = props
@@ -60,7 +66,7 @@ const UserProfile = () => {
     (state: ApplicationState) => state
   )
 
-  const showLikedBooksTab = !id || id === userState.id
+  const isProfileFromLoggedUser = !id || id === userState.id
 
   const handleChange = (_: React.ChangeEvent<unknown>, newValue: number) => {
     setValue(newValue)
@@ -77,7 +83,7 @@ const UserProfile = () => {
     setUserBooks(booksData)
   }, [id])
 
-  const uploadBookImages = async (image: any) => {
+  const uploadBookImages = async (image: File) => {
     const imageRef = getStorageRef(`images/user/${userState.email}/avatar/${image.name}`)
 
     await uploadBytes(imageRef, image, { contentType: image.type }).then(async (imageUploaded) => {
@@ -111,7 +117,22 @@ const UserProfile = () => {
       >
         <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
-            <img src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>
+            <Box position="relative" display="flex" alignItems="center" justifyContent="center" >
+                <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>
+                {isProfileFromLoggedUser && (
+                  <label htmlFor="icon-button-file" className={classes.photoButton}>
+                    <Input
+                      accept="image/*"
+                      id="icon-button-file"
+                      type="file"
+                      onChange={async (e) => await (e.target.files && uploadBookImages(e.target.files[0])) }
+                    />
+                    <IconButton color="primary" aria-label="upload picture" component="span">
+                      <PhotoCamera />
+                    </IconButton>
+                  </label>
+                )}
+            </Box>
             <div>
               <p>{user?.name}</p>
               {user?.birthDate && <p>{calculateAge(user.birthDate)} anos</p>}
@@ -132,7 +153,7 @@ const UserProfile = () => {
               className=''
             >
               <Tab label="Meus livros" {...a11yProps(0)} />
-              {showLikedBooksTab && <Tab label="Livros que curti" {...a11yProps(1)} /> }
+              {isProfileFromLoggedUser && <Tab label="Livros que curti" {...a11yProps(1)} /> }
             </Tabs>
             <TabPanel value={value} index={0}>
             {userBooks
