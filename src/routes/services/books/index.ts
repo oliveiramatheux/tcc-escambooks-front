@@ -48,6 +48,7 @@ export interface Book {
   date: string
   userName?: string
   userEmail?: string
+  userImageUrl?: string
   alreadyLike?: {
     likeId: string
   }
@@ -85,6 +86,15 @@ const getAllBooksByUserId = async (userId: string): Promise<Book[]> => {
   }
 }
 
+const getLikedBooks = async (): Promise<Book[]> => {
+  try {
+    const { data } = await axiosInstance.get<BooksData>('/books/liked')
+    return data.items || []
+  } catch {
+    return []
+  }
+}
+
 const updateBookById = async (bookId: string, payload: UploadBookByIdPayload): Promise<Book | undefined> => {
   try {
     const { data } = await axiosInstance.patch<Book>(`/books/${bookId}`, payload)
@@ -103,4 +113,4 @@ const deleteBookById = async (bookId: string): Promise<Book | undefined> => {
   }
 }
 
-export { bookCreateService, getAllBooks, updateBookById, deleteBookById, getAllBooksByUserId }
+export { bookCreateService, getAllBooks, updateBookById, deleteBookById, getAllBooksByUserId, getLikedBooks }

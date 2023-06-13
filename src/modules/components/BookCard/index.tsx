@@ -1,5 +1,5 @@
 
-import { Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton, Typography } from '@material-ui/core'
+import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton, Typography } from '@material-ui/core'
 import userDefault from '../../../images/user-default.png'
 import { Book } from '../../../routes/services/books'
 import BookSettings from '../BookSettings'
@@ -41,9 +41,7 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
       <Card className={classes.card}>
         <Link to={`/profile/${book.userId}`} className={classes.link}>
           <CardHeader
-            avatar={
-              <img src={userDefault} alt="User photo" className={classes.userPhoto}/>
-            }
+            avatar={<Avatar src={book.userImageUrl || userDefault} alt="User photo" className={classes.userPhoto} />}
             action={
               book.userEmail === user.email
                 ? <BookSettings listBooks={listBooks} bookData={book} />

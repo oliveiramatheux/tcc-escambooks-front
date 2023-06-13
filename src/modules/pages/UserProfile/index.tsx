@@ -9,7 +9,7 @@ import PageDecorator from '../../components/PageDecorator'
 import userDefault from '../../../images/user-default.png'
 import useStyles from './styles'
 import { calculateAge } from '../../../utils/helpers'
-import { Book, getAllBooksByUserId } from '../../../routes/services/books'
+import { Book, getAllBooksByUserId, getLikedBooks as getLikedBooksRequest } from '../../../routes/services/books'
 import BookCard from '../../components/BookCard'
 import LoadingSimple from '../../components/LoadingSimple'
 import { getDownloadURL, getStorageRef, uploadBytes } from '../../../config/firebase'
@@ -61,6 +61,9 @@ const UserProfile = () => {
   const [value, setValue] = useState(0)
   const [user, setUser] = useState<User>()
   const [userBooks, setUserBooks] = useState<Book[]>([])
+  const [likedBooks, setLikedBooks] = useState<Book[]>([])
+  const [loadingUserBooks, setLoadingUserBooks] = useState(true)
+  const [loadingLikedBooks, setLoadingLikedBooks] = useState(true)
 
   const { user: userState } = useSelector(
     (state: ApplicationState) => state
@@ -68,8 +71,13 @@ const UserProfile = () => {
 
   const isProfileFromLoggedUser = !id || id === userState.id
 
+  const booksTabLabel = isProfileFromLoggedUser ? 'Meus livros' : `Livros de ${user?.name.split(' ')[0] || '...'}`
+
   const handleChange = (_: React.ChangeEvent<unknown>, newValue: number) => {
     setValue(newValue)
+    if (newValue === 1) {
+      getLikedBooks()
+    }
   }
 
   const getUser = useCallback(async () => {
@@ -78,10 +86,20 @@ const UserProfile = () => {
   }, [id])
 
   const getUserBooks = useCallback(async () => {
+    setLoadingUserBooks(true)
     const booksData = await getAllBooksByUserId(id || userState.id)
 
     setUserBooks(booksData)
+    setLoadingUserBooks(false)
   }, [id])
+
+  const getLikedBooks = useCallback(async () => {
+    setLoadingLikedBooks(true)
+    const booksData = await getLikedBooksRequest()
+
+    setLikedBooks(booksData)
+    setLoadingLikedBooks(false)
+  }, [])
 
   const uploadBookImages = async (image: File) => {
     const imageRef = getStorageRef(`images/user/${userState.email}/avatar/${image.name}`)
@@ -94,11 +112,9 @@ const UserProfile = () => {
 
   useEffect(() => {
     getUser()
-  }, [getUser])
-
-  useEffect(() => {
     getUserBooks()
-  }, [getUserBooks])
+    getLikedBooks()
+  }, [getUser, getUserBooks, getLikedBooks])
 
   useEffect(() => {
     if (!userState.isAuthenticated) {
@@ -112,7 +128,7 @@ const UserProfile = () => {
       <HeaderMenu />
       <Grid
         container
-        justifyContent="center"
+        justifyContent="flex-start"
         alignContent="center"
       >
         <Grid item xs={12} md={3}>
@@ -141,7 +157,7 @@ const UserProfile = () => {
             </div>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={6}>
           <Box p={5}>
             <Tabs
               value={value}
@@ -152,20 +168,28 @@ const UserProfile = () => {
               aria-label="tabs"
               className=''
             >
-              <Tab label="Meus livros" {...a11yProps(0)} />
+              <Tab label={booksTabLabel} {...a11yProps(0)} />
               {isProfileFromLoggedUser && <Tab label="Livros que curti" {...a11yProps(1)} /> }
             </Tabs>
             <TabPanel value={value} index={0}>
-            {userBooks
-              ? userBooks.map((value) => {
-                return (
-                  <BookCard key={value.id} book={value} listBooks={getUserBooks} />
-                )
-              })
-              : <LoadingSimple/>}
+              {!loadingUserBooks
+                ? userBooks.map((value) => {
+                  return (
+                    <BookCard key={value.id} book={value} listBooks={getUserBooks} />
+                  )
+                })
+                : <LoadingSimple/>
+              }
             </TabPanel>
             <TabPanel value={value} index={1}>
-              Livros que curti
+              {!loadingLikedBooks
+                ? likedBooks.map((value) => {
+                  return (
+                    <BookCard key={value.id} book={value} listBooks={getLikedBooks} />
+                  )
+                })
+                : <LoadingSimple/>
+              }
             </TabPanel>
           </Box>
         </Grid>
