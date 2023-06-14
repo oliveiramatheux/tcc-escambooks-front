@@ -15,7 +15,7 @@ export interface IUserState {
   id: string
   email: string | null
   name?: string | null
-  photoURL?: string | null
+  imageUrl?: string | null
   loading: boolean
   failure: boolean
   isAuthenticated: boolean
@@ -33,6 +33,7 @@ export interface IUserLogin {
   name: string
   email: string
   token: string
+  imageUrl?: string
 }
 
 export interface IGetUserAction {

@@ -18,12 +18,16 @@ export default makeStyles((theme) =>
     userPhoto: {
       display: 'flex',
       margin: 'auto',
-      width: `${theme.spacing(12)}px !important`,
-      height: `${theme.spacing(12)}px !important`,
+      width: theme.spacing(12),
+      height: theme.spacing(12),
       border: '3px solid white'
     },
+    photoButton: {
+      position: 'absolute'
+    },
     link: {
-      textDecoration: 'none'
+      textDecoration: 'none',
+      color: theme.palette.primary.main
     }
   })
 )

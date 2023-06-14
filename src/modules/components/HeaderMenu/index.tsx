@@ -1,6 +1,6 @@
 import React, { useState, createRef, useEffect } from 'react'
 import {
-  AppBar, Toolbar, IconButton, Typography,
+  AppBar, Toolbar, IconButton,
   InputBase, Badge, MenuItem, Menu, Fab
 } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
@@ -12,7 +12,7 @@ import MenuBookRoundedIcon from '@material-ui/icons/MenuBookRounded'
 import CreateRoundedIcon from '@material-ui/icons/CreateRounded'
 import useStyles from './styles'
 import { ApplicationState } from '../../../store/rootReducer'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { userAuthLogout } from '../../../store/users/actions'
 import { auth } from '../../../config/firebase'
 import { useDispatch, useSelector } from 'react-redux'
@@ -75,6 +75,10 @@ const HeaderMenu = (): JSX.Element => {
     setOpenModalScroll(true)
   }
 
+  const handleClickProfile = () => {
+    navigate('/profile')
+  }
+
   const handleClickIcon = () => {
     navigate('/home')
   }
@@ -132,7 +136,11 @@ const HeaderMenu = (): JSX.Element => {
       >
         {notifications.length
           ? notifications.map((notification) => {
-            return (<MenuItem key={notification.id} onClick={handleNotificationMenuClose}>O usuário {notification.userLikedName} deu um like no seu livro {notification.bookTitle}</MenuItem>)
+            return (
+              <Link to={`/profile/${notification.userLikedId}`} key={notification.id} className={classes.link}>
+                <MenuItem>O usuário {notification.userLikedName} deu um like no seu livro {notification.bookTitle}</MenuItem>
+              </Link>
+            )
           })
           : (<MenuItem onClick={handleNotificationMenuClose}>Nenhuma notificação</MenuItem>)}
 
@@ -151,7 +159,7 @@ const HeaderMenu = (): JSX.Element => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Perfil</MenuItem>
+      <MenuItem onClick={handleClickProfile}>Perfil</MenuItem>
       <MenuItem onClick={handleMenuClose}>Configurações</MenuItem>
       <MenuItem onClick={handleOpenTermsAndConditions}>Termos e condições</MenuItem>
       <MenuItem onClick={handleClickLogOut}>Sair</MenuItem>
@@ -232,9 +240,6 @@ const HeaderMenu = (): JSX.Element => {
             >
               <img src={icon} alt="Escambooks icon" className={classes.icon} />
             </IconButton>
-            <Typography className={classes.title} variant="h6" noWrap>
-              {user.name !== '' || user.name !== undefined ? user.name : 'Escambooks'}
-            </Typography>
             <div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

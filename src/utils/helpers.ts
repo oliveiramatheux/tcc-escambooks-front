@@ -17,4 +17,16 @@ const differenceBetweenTwoDates = (date: Date) => {
   return `${Math.round(diffHours)} h`
 }
 
-export { differenceBetweenTwoDates }
+const calculateAge = (birthday: string) => {
+  const date = birthday.split('/')
+  const today = new Date()
+  const birthDate = new Date(+date[2], +date[0], +date[1])
+  let age = today.getFullYear() - birthDate.getFullYear()
+  const m = today.getMonth() - birthDate.getMonth()
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--
+  }
+  return age
+}
+
+export { differenceBetweenTwoDates, calculateAge }

@@ -4,7 +4,7 @@ const initialState: IUserState = {
   id: '',
   email: '',
   name: '',
-  photoURL: null,
+  imageUrl: null,
   loading: false,
   failure: false,
   isAuthenticated: false,
@@ -47,7 +47,7 @@ export default function userReducer (
         ...state,
         email: action.payload.email,
         name: action.payload.name,
-        photoURL: action.payload.photoURL,
+        imageUrl: action.payload.photoURL,
         isGoogleLogin: true,
         isAuthenticated: true,
         loading: false
@@ -65,6 +65,7 @@ export default function userReducer (
         id: action.payload._id,
         name: action.payload.name,
         email: action.payload.email,
+        imageUrl: action.payload.imageUrl,
         isAuthenticated: true,
         loading: false
       }

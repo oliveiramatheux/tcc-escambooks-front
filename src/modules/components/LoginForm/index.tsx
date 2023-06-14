@@ -245,7 +245,7 @@ const LoginForm = (): JSX.Element => {
                 className={classes.button}
                 startIcon={<img src={iconGoogle} alt="Icon google" />}
                 onClick={handleClickLoginWithGoogleButton}
-                disabled={true}
+                disabled
               >
                 Entrar com o Google
               </Button>
