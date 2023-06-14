@@ -3,7 +3,6 @@ import { Grid } from '@material-ui/core'
 import { useNavigate } from 'react-router-dom'
 import { ApplicationState } from '../../../store/rootReducer'
 import { useSelector } from 'react-redux'
-import useStyles from './styles'
 import HeaderMenu from '../../components/HeaderMenu'
 import PageDecorator from '../../components/PageDecorator'
 import UserInfo from '../../components/UserInfo'
@@ -14,8 +13,7 @@ const Home = (): JSX.Element => {
   const { user } = useSelector(
     (state: ApplicationState) => state
   )
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const classes = useStyles()
+
   const navigate = useNavigate()
 
   useEffect(() => {

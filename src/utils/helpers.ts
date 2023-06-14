@@ -21,10 +21,10 @@ const calculateAge = (birthday: string) => {
   const date = birthday.split('/')
   const today = new Date()
   const birthDate = new Date(+date[2], +date[0], +date[1])
-  let age = today.getFullYear() - birthDate.getFullYear()
-  const m = today.getMonth() - birthDate.getMonth()
-  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-    age--
+  const age = today.getFullYear() - birthDate.getFullYear()
+  const month = today.getMonth() - birthDate.getMonth()
+  if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+    return age - 1
   }
   return age
 }

@@ -24,6 +24,7 @@ export function * userAuthLogin (action: IUserAuthLoginAction): Generator<Strict
       type: UserTypes.USER_AUTH_LOGIN_SUCCESS,
       payload: data
     })
+    window.location.reload()
   } catch {
     yield put({
       type: UserTypes.USER_AUTH_LOGIN_FAILURE
@@ -36,6 +37,7 @@ export function * userAuthLogout (): Generator<StrictEffect> {
     type: UserTypes.USER_AUTH_LOGOUT_SUCCESS
   })
   localStorage.removeItem('state')
+  localStorage.removeItem('token')
 }
 
 export default function * userSagas (): Generator<StrictEffect> {

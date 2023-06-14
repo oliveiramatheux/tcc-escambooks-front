@@ -71,17 +71,17 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
             Descrição: {book.description}
           </Typography>
         </CardContent>
-        <CardActions disableSpacing>
-          {book.userEmail !== user.email && (
-            <IconButton
-              aria-label="add to favorites"
-              className={likeId ? classes.liked : undefined}
-              onClick={async () => { await onClickFavoriteButton(book) }}
-            >
-              <FavoriteIcon />
-            </IconButton>
-          )}
-        </CardActions>
+        {book.userEmail !== user.email && (
+          <CardActions disableSpacing>
+              <IconButton
+                aria-label="add to favorites"
+                className={likeId ? classes.liked : undefined}
+                onClick={async () => { await onClickFavoriteButton(book) }}
+              >
+                <FavoriteIcon />
+              </IconButton>
+          </CardActions>
+        )}
       </Card>
     </div>
   )
