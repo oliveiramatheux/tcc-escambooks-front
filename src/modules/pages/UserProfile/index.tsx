@@ -1,4 +1,4 @@
-import { Avatar, Box, Grid, IconButton, Paper, Tab, Tabs } from '@material-ui/core'
+import { Avatar, Box, CircularProgress, Grid, IconButton, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -61,6 +61,8 @@ const UserProfile = () => {
     setLoadingUser(true)
     const userById = await getUserById(id || userState.id)
 
+    if (!userById) navigate('/home')
+
     setUser(userById)
     setLoadingUser(false)
   }, [id])
@@ -101,6 +103,55 @@ const UserProfile = () => {
     })
   }
 
+  const centeredLoading = () => {
+    return (
+      <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+        <CircularProgress />
+      </div>
+    )
+  }
+
+  const renderLikedBooks = () => {
+    if (loadingLikedBooks) return centeredLoading()
+
+    if (!likedBooks.length) {
+      return (
+        <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+          <Typography variant="subtitle1" color="textPrimary">
+              Você ainda não curtiu nenhum livro
+          </Typography>
+        </div>
+
+      )
+    }
+
+    if (likedBooks.length) {
+      return (likedBooks.map((book) => <BookCard key={book.id} book={book} listBooks={getLikedBooks} />))
+    }
+
+    return centeredLoading()
+  }
+
+  const renderUserBooks = () => {
+    if (loadingUserBooks) return centeredLoading()
+
+    if (!userBooks.length) {
+      return (
+        <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+          <Typography variant="subtitle1" color="textPrimary">
+              Nenhum livro publicado
+          </Typography>
+        </div>
+      )
+    }
+
+    if (userBooks.length) {
+      return (userBooks.map((book) => <BookCard key={book.id} book={book} listBooks={getUserBooks} />))
+    }
+
+    return centeredLoading()
+  }
+
   useEffect(() => {
     getUser()
     getUserBooks()
@@ -115,7 +166,7 @@ const UserProfile = () => {
 
   useEffect(() => {
     setValue(0)
-  }, [user])
+  }, [user?.id])
 
   return (
     <>
@@ -133,10 +184,10 @@ const UserProfile = () => {
             <Box position="relative" display="flex" alignItems="center" justifyContent="center" >
                 <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>
                 {isProfileFromLoggedUser && (
-                  <label htmlFor="icon-button-file" className={classes.photoButton}>
+                  <label htmlFor="icon-photo-user-url" className={classes.photoButton}>
                     <Input
                       accept="image/*"
-                      id="icon-button-file"
+                      id="icon-photo-user-url"
                       type="file"
                       onChange={async (e) => await (e.target.files?.length && uploadUserImage(e.target.files[0])) }
                     />
@@ -166,24 +217,10 @@ const UserProfile = () => {
               {isProfileFromLoggedUser && <Tab label="Livros que curti" {...tabProps(1)} /> }
             </Tabs>
             <TabMenu value={value} index={0}>
-              {!loadingUserBooks
-                ? userBooks.map((book) => {
-                  return (
-                    <BookCard key={book.id} book={book} listBooks={getUserBooks} />
-                  )
-                })
-                : <LoadingSimple/>
-              }
+              {renderUserBooks()}
             </TabMenu>
             {isProfileFromLoggedUser && <TabMenu value={value} index={1}>
-              {!loadingLikedBooks
-                ? likedBooks.map((book) => {
-                  return (
-                    <BookCard key={book.id} book={book} listBooks={getLikedBooks} />
-                  )
-                })
-                : <LoadingSimple/>
-              }
+              {renderLikedBooks()}
             </TabMenu>}
           </Box>
         </Grid>

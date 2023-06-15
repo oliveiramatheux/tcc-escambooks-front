@@ -1,5 +1,5 @@
 import axiosInstance from '../axios'
-import { Like, LikesResponse, CreateLikePayload, UpdateLikePayload } from './types'
+import { Like, LikesResponse, CreateLikePayload, UpdateLikePayload, DeleteLikesByBookId } from './types'
 
 const getLikesThatUserLiked = async (userLikedId: string): Promise<Like[]> => {
   try {
@@ -46,4 +46,13 @@ const updateLike = async (likeId: string, like: UpdateLikePayload): Promise<Like
   }
 }
 
-export { getLikesThatUserLiked, createLike, deleteLike, getUserLikes, updateLike }
+const deleteLikesByBookId = async (bookId: string): Promise<number> => {
+  try {
+    const { data } = await axiosInstance.delete<DeleteLikesByBookId>(`/likes/bookId/${bookId}`)
+    return data.totalItemsDeleted
+  } catch {
+    return 0
+  }
+}
+
+export { getLikesThatUserLiked, createLike, deleteLike, getUserLikes, updateLike, deleteLikesByBookId }

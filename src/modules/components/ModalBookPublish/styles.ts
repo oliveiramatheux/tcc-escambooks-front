@@ -22,7 +22,7 @@ export default makeStyles((theme: Theme) =>
       width: '35ch'
     },
     formControlWithoutWidth: {
-      margin: theme.spacing(2.5),
+      margin: `${theme.spacing(2.5)}px !important`,
       width: '35ch'
     },
     button: {

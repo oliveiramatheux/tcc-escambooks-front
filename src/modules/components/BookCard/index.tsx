@@ -26,6 +26,8 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
     (state: ApplicationState) => state
   )
 
+  const headerLink = book.userId === user.id ? '/profile' : `/profile/${book.userId}`
+
   const onClickFavoriteButton = async (book: Book) => {
     if (likeId) {
       const response = await deleteLike(likeId)
@@ -39,20 +41,18 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
   return (
     <div>
       <Card className={classes.card}>
-        <Link to={`/profile/${book.userId}`} className={classes.link}>
-          <CardHeader
-            avatar={<Avatar src={book.userImageUrl || userDefault} alt="User photo" className={classes.userPhoto} />}
-            action={
-              book.userEmail === user.email
-                ? <BookSettings listBooks={listBooks} bookData={book} />
-                : ''
-            }
-            title={book.userName}
-            subheader={<div className={classes.publicationDate}>
-              <AccessTimeRoundedIcon fontSize="small"/>{differenceBetweenTwoDates(new Date(book.date))}
-            </div>}
-          />
-        </Link>
+        <CardHeader
+          avatar={<Link to={headerLink} className={classes.link}><Avatar src={book.userImageUrl || userDefault} alt="User photo" className={classes.userPhoto} /></Link>}
+          action={
+            book.userEmail === user.email
+              ? <BookSettings listBooks={listBooks} bookData={book}/>
+              : ''
+          }
+          title={<Link to={headerLink} className={classes.link}>{book.userName}</Link>}
+          subheader={<div className={classes.publicationDate}>
+            <AccessTimeRoundedIcon fontSize="small"/>{differenceBetweenTwoDates(new Date(book.date))}
+          </div>}
+        />
         {book.title}
         <CardMedia
           component="img"
