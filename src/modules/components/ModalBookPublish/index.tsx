@@ -18,6 +18,8 @@ import { useSelector } from 'react-redux'
 import { ApplicationState } from '../../../store/rootReducer'
 import { bookCreateService, updateBookById } from '../../../routes/services/books'
 import { Add } from '@material-ui/icons'
+import SaveIcon from '@mui/icons-material/Save'
+import { LoadingButton } from '@mui/lab'
 
 const Input = styled('input')({
   display: 'none'
@@ -66,6 +68,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
   const [errorUploadBook, setErrorUploadBook] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [imageName, setImageName] = useState<string>('')
+  const [loading, setLoading] = useState(false)
 
   const handleClose = () => {
     setOpenModal(false)
@@ -91,18 +94,21 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
   }
 
   const onSubmit = async (data: BookFormState) => {
+    setLoading(true)
     const payload = { ...data, image: undefined }
 
     const bookCreateResponse = await bookCreateService({ ...payload, authors, categories: [data.categories], language: 'PT-BR' })
 
     if (!bookCreateResponse) {
       setErrorUploadBook(true)
+      setLoading(false)
       setOpenModal(true)
       return
     }
 
     await uploadBookImages(data.image[0], bookCreateResponse.id)
 
+    setLoading(false)
     setOpenModal(true)
   }
 
@@ -279,15 +285,17 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
             </DialogContent>
             <DialogActions>
               <div className={classes.divButtons}>
-                <Button
+                <LoadingButton
                   variant="contained"
                   color="primary"
-                  size="medium"
-                  className={classes.button}
+                  sx={{ margin: '16px' }}
                   type={'submit'}
+                  loading={loading}
+                  loadingPosition="start"
+                  startIcon={<SaveIcon />}
                 >
                   Publicar
-                </Button>
+                </LoadingButton>
                 <Button
                   variant="outlined"
                   color="default"
