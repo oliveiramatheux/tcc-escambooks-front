@@ -42,10 +42,11 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   const [imageName, setImageName] = useState<string>('')
 
   const handleClose = () => {
+    setImageName('')
+    setValue('image', undefined)
+    reset({})
     setOpenModal(false)
     closeAction()
-    reset()
-    setImageName('')
   }
 
   useEffect(() => {

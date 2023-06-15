@@ -72,6 +72,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
     closeAction()
     reset()
     setImageName('')
+    setAuthors([])
   }
 
   useEffect(() => {

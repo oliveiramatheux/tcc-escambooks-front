@@ -26,7 +26,11 @@ const FormDatePicker = (props: FormDatePickerProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
       <DatePicker
+        views={['year', 'month', 'day']}
+        openTo='year'
         disableFuture
+        yearsPerRow={4}
+        monthsPerRow={4}
         slotProps={{
           textField: {
             InputProps: {
