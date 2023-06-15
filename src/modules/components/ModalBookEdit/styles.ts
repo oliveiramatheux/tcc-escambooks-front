@@ -29,7 +29,9 @@ export default makeStyles((theme: Theme) =>
       margin: theme.spacing(2)
     },
     divButtons: {
-      display: 'flex'
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center'
     },
     errorHelperText: {
       color: '#f50057 !important'

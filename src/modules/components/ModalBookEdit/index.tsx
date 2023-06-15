@@ -17,6 +17,8 @@ import Modal from '../Modal'
 import { BookFormState } from '../ModalBookPublish'
 import { Book, updateBookById } from '../../../routes/services/books'
 import { Add } from '@material-ui/icons'
+import SaveIcon from '@mui/icons-material/Save'
+import { LoadingButton } from '@mui/lab'
 
 const Input = styled('input')({
   display: 'none'
@@ -40,6 +42,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   const [errorUploadBook, setErrorUploadBook] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
   const [imageName, setImageName] = useState<string>('')
+  const [loading, setLoading] = useState(false)
 
   const handleClose = () => {
     setImageName('')
@@ -69,17 +72,21 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   }
 
   const onSubmit = async (data: BookFormState) => {
+    setLoading(true)
     const payload = { ...data, image: undefined }
 
     const bookUpdateResponse = await updateBookById(bookData.id, { ...payload, authors, categories: [data.categories] })
 
     if (!bookUpdateResponse) {
       setErrorUploadBook(true)
+      setLoading(false)
       setOpenModal(true)
       return
     }
 
     await uploadBookImages(data.image[0], bookData.id)
+
+    setLoading(false)
     setOpenModal(true)
   }
 
@@ -262,15 +269,17 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
             </DialogContent>
             <DialogActions>
               <div className={classes.divButtons}>
-                <Button
+                <LoadingButton
                   variant="contained"
                   color="primary"
-                  size="medium"
-                  className={classes.button}
+                  sx={{ margin: '16px' }}
                   type={'submit'}
+                  loading={loading}
+                  loadingPosition="start"
+                  startIcon={<SaveIcon />}
                 >
                   Editar
-                </Button>
+                </LoadingButton>
                 <Button
                   variant="outlined"
                   color="default"
