@@ -139,9 +139,6 @@ const RegisterForm = (): JSX.Element => {
               {errors.name && (<FormHelperText id="outlined-helper-text-name" className={classes.errorHelperText}>{errors.name.message}</FormHelperText>)}
             </FormControl>
             <FormControl className={classes.formControl} variant="outlined">
-              <FormDatePicker registerOnForm={(value) => { setValue('birthDate', value) }}/>
-            </FormControl>
-            <FormControl className={classes.formControl} variant="outlined">
               {!errors.password ? (<InputLabel htmlFor="outlined-password">Senha</InputLabel>) : (<InputLabel htmlFor="outlined-password" className={classes.errorHelperText}>Senha</InputLabel>)}
               <OutlinedInput
                 id="outlined-password"
@@ -188,6 +185,9 @@ const RegisterForm = (): JSX.Element => {
                 labelWidth={130}
               />
               {errors.confirmPassword && (<FormHelperText id="outlined-helper-text-confirmPassword" className={classes.errorHelperText}>{errors.confirmPassword.message}</FormHelperText>)}
+            </FormControl>
+            <FormControl className={classes.formControl} variant="outlined">
+              <FormDatePicker registerOnForm={(value) => { setValue('birthDate', value) }}/>
             </FormControl>
             <FormControlLabel
               className={classes.formControl}
