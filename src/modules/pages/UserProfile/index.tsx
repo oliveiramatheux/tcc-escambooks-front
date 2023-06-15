@@ -1,8 +1,8 @@
-import { Avatar, Box, Grid, IconButton, Paper, Tab, Tabs, Typography } from '@material-ui/core'
+import { Avatar, Box, CircularProgress, Grid, IconButton, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import { useCallback, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
-import { getUserById, User, userUpdate } from '../../../routes/services/user'
+import { getUserById, User, updateUserById } from '../../../routes/services/user'
 import { ApplicationState } from '../../../store/rootReducer'
 import HeaderMenu from '../../components/HeaderMenu'
 import PageDecorator from '../../components/PageDecorator'
@@ -12,47 +12,14 @@ import { calculateAge } from '../../../utils/helpers'
 import { Book, getAllBooksByUserId, getLikedBooks as getLikedBooksRequest } from '../../../routes/services/books'
 import BookCard from '../../components/BookCard'
 import LoadingSimple from '../../components/LoadingSimple'
-import { getDownloadURL, getStorageRef, uploadBytes } from '../../../config/firebase'
+import { deleteFile, getDownloadURL, getStorageRef, uploadBytes } from '../../../config/firebase'
 import { PhotoCamera } from '@material-ui/icons'
 import { styled } from '@mui/material/styles'
-
-interface TabPanelProps {
-  children?: React.ReactNode
-  dir?: string
-  index: number
-  value: number
-}
+import { TabMenu } from 'modules/components'
 
 const Input = styled('input')({
   display: 'none'
 })
-
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`full-width-tabpanel-${index}`}
-      aria-labelledby={`full-width-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box p={3}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  )
-}
-
-const a11yProps = (index: number) => {
-  return {
-    id: `simple-tab-${index}`,
-    'aria-controls': `simple-tabpanel-${index}`
-  }
-}
 
 const UserProfile = () => {
   const { id } = useParams()
@@ -62,6 +29,7 @@ const UserProfile = () => {
   const [user, setUser] = useState<User>()
   const [userBooks, setUserBooks] = useState<Book[]>([])
   const [likedBooks, setLikedBooks] = useState<Book[]>([])
+  const [loadingUser, setLoadingUser] = useState(true)
   const [loadingUserBooks, setLoadingUserBooks] = useState(true)
   const [loadingLikedBooks, setLoadingLikedBooks] = useState(true)
 
@@ -71,49 +39,123 @@ const UserProfile = () => {
 
   const isProfileFromLoggedUser = !id || id === userState.id
 
-  const booksTabLabel = isProfileFromLoggedUser ? 'Meus livros' : `Livros de ${user?.name.split(' ')[0] || '...'}`
+  const userFirstName = user?.name.split(' ')[0]
+
+  const booksTabLabel = isProfileFromLoggedUser ? 'Meus livros' : `Livros de ${userFirstName || '...'}`
+
+  const tabProps = (index: number) => {
+    return {
+      id: `simple-tab-${index}`,
+      'aria-controls': `simple-tabpanel-${index}`
+    }
+  }
 
   const handleChange = (_: React.ChangeEvent<unknown>, newValue: number) => {
     setValue(newValue)
-    if (newValue === 1) {
+    if (newValue === 1 && isProfileFromLoggedUser) {
       getLikedBooks()
     }
   }
 
   const getUser = useCallback(async () => {
-    const booksData = await getUserById(id || userState.id)
-    setUser(booksData)
+    setLoadingUser(true)
+    const userById = await getUserById(id || userState.id)
+
+    if (!userById) navigate('/home')
+
+    setUser(userById)
+    setLoadingUser(false)
   }, [id])
 
   const getUserBooks = useCallback(async () => {
     setLoadingUserBooks(true)
-    const booksData = await getAllBooksByUserId(id || userState.id)
+    const books = await getAllBooksByUserId(id || userState.id)
 
-    setUserBooks(booksData)
+    setUserBooks(books)
     setLoadingUserBooks(false)
   }, [id])
 
   const getLikedBooks = useCallback(async () => {
     setLoadingLikedBooks(true)
-    const booksData = await getLikedBooksRequest()
+    const books = await getLikedBooksRequest()
 
-    setLikedBooks(booksData)
+    setLikedBooks(books)
     setLoadingLikedBooks(false)
   }, [])
 
-  const uploadBookImages = async (image: File) => {
+  const uploadUserImage = async (image: File) => {
+    if (user?.imageUrl) {
+      const imageDeleteRef = getStorageRef(`images/user/${user.email}/avatar/${user.imageName}`)
+
+      await deleteFile(imageDeleteRef)
+    }
+
     const imageRef = getStorageRef(`images/user/${userState.email}/avatar/${image.name}`)
 
     await uploadBytes(imageRef, image, { contentType: image.type }).then(async (imageUploaded) => {
       const imageUrl = await getDownloadURL(imageUploaded.ref)
-      await userUpdate(userState.id, { imageUrl, imageName: image.name })
+      const response = await updateUserById(userState.id, { imageUrl, imageName: image.name })
+
+      if (response) {
+        setUser(response)
+        getUserBooks()
+      }
     })
+  }
+
+  const centeredLoading = () => {
+    return (
+      <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+        <CircularProgress />
+      </div>
+    )
+  }
+
+  const renderLikedBooks = () => {
+    if (loadingLikedBooks) return centeredLoading()
+
+    if (!likedBooks.length) {
+      return (
+        <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+          <Typography variant="subtitle1" color="textPrimary">
+              Você ainda não curtiu nenhum livro
+          </Typography>
+        </div>
+
+      )
+    }
+
+    if (likedBooks.length) {
+      return (likedBooks.map((book) => <BookCard key={book.id} book={book} listBooks={getLikedBooks} />))
+    }
+
+    return centeredLoading()
+  }
+
+  const renderUserBooks = () => {
+    if (loadingUserBooks) return centeredLoading()
+
+    if (!userBooks.length) {
+      return (
+        <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+          <Typography variant="subtitle1" color="textPrimary">
+              Nenhum livro publicado
+          </Typography>
+        </div>
+      )
+    }
+
+    if (userBooks.length) {
+      return (userBooks.map((book) => <BookCard key={book.id} book={book} listBooks={getUserBooks} />))
+    }
+
+    return centeredLoading()
   }
 
   useEffect(() => {
     getUser()
     getUserBooks()
-    getLikedBooks()
+    isProfileFromLoggedUser && getLikedBooks()
   }, [getUser, getUserBooks, getLikedBooks])
 
   useEffect(() => {
@@ -122,26 +164,32 @@ const UserProfile = () => {
     }
   }, [userState])
 
+  useEffect(() => {
+    setValue(0)
+  }, [user?.id])
+
   return (
     <>
-      <PageDecorator title={'Escambooks'} description={'Escambooks - profile'} />
+      <PageDecorator title={userFirstName ? `${userFirstName} | Escambooks - Perfil de usuário` : 'Escambooks - Perfil de usuário'} description={'Escambooks - profile'} />
       <HeaderMenu />
       <Grid
         container
-        justifyContent="flex-start"
+        justifyContent={loadingUser ? 'center' : 'flex-start'}
         alignContent="center"
       >
-        <Grid item xs={12} md={3}>
+        {!loadingUser
+          ? <>
+          <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
             <Box position="relative" display="flex" alignItems="center" justifyContent="center" >
                 <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>
                 {isProfileFromLoggedUser && (
-                  <label htmlFor="icon-button-file" className={classes.photoButton}>
+                  <label htmlFor="icon-photo-user-url" className={classes.photoButton}>
                     <Input
                       accept="image/*"
-                      id="icon-button-file"
+                      id="icon-photo-user-url"
                       type="file"
-                      onChange={async (e) => await (e.target.files && uploadBookImages(e.target.files[0])) }
+                      onChange={async (e) => await (e.target.files?.length && uploadUserImage(e.target.files[0])) }
                     />
                     <IconButton color="primary" aria-label="upload picture" component="span">
                       <PhotoCamera />
@@ -152,8 +200,6 @@ const UserProfile = () => {
             <div>
               <p>{user?.name}</p>
               {user?.birthDate && <p>{calculateAge(user.birthDate)} anos</p>}
-              <p>0 Seguindo</p>
-              <p>0 Seguidores</p>
             </div>
           </Paper>
         </Grid>
@@ -166,33 +212,20 @@ const UserProfile = () => {
               textColor="primary"
               variant="fullWidth"
               aria-label="tabs"
-              className=''
             >
-              <Tab label={booksTabLabel} {...a11yProps(0)} />
-              {isProfileFromLoggedUser && <Tab label="Livros que curti" {...a11yProps(1)} /> }
+              <Tab label={booksTabLabel} {...tabProps(0)} />
+              {isProfileFromLoggedUser && <Tab label="Livros que curti" {...tabProps(1)} /> }
             </Tabs>
-            <TabPanel value={value} index={0}>
-              {!loadingUserBooks
-                ? userBooks.map((value) => {
-                  return (
-                    <BookCard key={value.id} book={value} listBooks={getUserBooks} />
-                  )
-                })
-                : <LoadingSimple/>
-              }
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              {!loadingLikedBooks
-                ? likedBooks.map((value) => {
-                  return (
-                    <BookCard key={value.id} book={value} listBooks={getLikedBooks} />
-                  )
-                })
-                : <LoadingSimple/>
-              }
-            </TabPanel>
+            <TabMenu value={value} index={0}>
+              {renderUserBooks()}
+            </TabMenu>
+            {isProfileFromLoggedUser && <TabMenu value={value} index={1}>
+              {renderLikedBooks()}
+            </TabMenu>}
           </Box>
         </Grid>
+        </>
+          : <LoadingSimple/>}
       </Grid>
     </>
   )

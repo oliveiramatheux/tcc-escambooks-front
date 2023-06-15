@@ -32,3 +32,7 @@ export interface UpdateLikePayload {
   userLikedName?: string
   isVisualized?: boolean
 }
+
+export interface DeleteLikesByBookId {
+  totalItemsDeleted: number
+}

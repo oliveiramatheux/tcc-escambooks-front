@@ -18,11 +18,11 @@ export default makeStyles((theme: Theme) =>
       justifyContent: 'center'
     },
     formControl: {
-      margin: theme.spacing(2.5),
+      margin: `${theme.spacing(2.5)}px !important`,
       width: '35ch'
     },
     formControlWithoutWidth: {
-      margin: theme.spacing(2.5),
+      margin: `${theme.spacing(2.5)}px !important`,
       width: '35ch'
     },
     button: {
@@ -32,11 +32,11 @@ export default makeStyles((theme: Theme) =>
       display: 'flex'
     },
     errorHelperText: {
-      color: '#f50057'
+      color: '#f50057 !important'
     },
     dialog: {
-      width: '-webkit-fill-available',
-      padding: theme.spacing(2)
+      padding: theme.spacing(2),
+      width: '-webkit-fill-available'
     }
   })
 )

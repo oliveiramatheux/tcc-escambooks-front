@@ -59,6 +59,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
     getValues,
     clearErrors,
     setError,
+    setValue,
     formState: { errors, dirtyFields }
   } = useForm<BookFormState>({ mode: 'onBlur' })
 
@@ -111,16 +112,14 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
     }
   }
 
-  const handleKeyPressDown = (e: React.KeyboardEvent) => {
-    if (e.code === 'Enter') {
-      handleAddAuthor()
-    }
-  }
-
   const handleDeleteAuthor = (index: number) => {
     if (authors.length === 1) setError('authors', { message: 'O autor do livro é obrigatório.' })
-    setAuthors(authors.filter((item, i) => i !== index))
+    setAuthors(authors.filter((_item, i) => i !== index))
   }
+
+  useEffect(() => {
+    setValue('authors', '')
+  }, [authors.length])
 
   return (
     <>
@@ -175,7 +174,6 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                   id="authors"
                   labelWidth={55}
                   error={!!errors.authors}
-                  onKeyDown={handleKeyPressDown}
                   {...register('authors', {
                     validate: () => authors.length > 0 || 'O autor do livro é obrigatório.',
                     maxLength: {
@@ -266,8 +264,8 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.description && (<FormHelperText id="outlined-helper-text-publisher" className={classes.errorHelperText}>{errors.description.message}</FormHelperText>)}
               </FormControl>
-              <label htmlFor="icon-button-file">
-                <Input accept="image/*" id="icon-button-file" type="file"
+              <label htmlFor="icon-book-url">
+                <Input accept="image/*" id="icon-book-url" type="file"
                   {...register('image', {
                     required: 'Pelo menos uma imagem do livro é obrigatória.'
                   })}/>

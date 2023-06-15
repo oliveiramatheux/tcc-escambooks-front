@@ -29,8 +29,13 @@ const userCreate = async (payload: PayloadUserCreate): AxiosPromise => {
   return await axiosInstance.post('/users', payload)
 }
 
-const userUpdate = async (id: string, payload: PayloadUserUpdate): AxiosPromise => {
-  return await axiosInstance.patch(`/users/${id}`, payload)
+const updateUserById = async (id: string, payload: PayloadUserUpdate): Promise<User | undefined> => {
+  try {
+    const { data } = await axiosInstance.patch(`/users/${id}`, payload)
+    return data
+  } catch {
+    return undefined
+  }
 }
 
 const getUserById = async (id: string): Promise<User | undefined> => {
@@ -42,4 +47,4 @@ const getUserById = async (id: string): Promise<User | undefined> => {
   }
 }
 
-export { userCreate, getUserById, userUpdate }
+export { userCreate, getUserById, updateUserById }

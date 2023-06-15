@@ -22,7 +22,6 @@ const AppRoutes = (): JSX.Element => {
           <Route path="*" element={<NotFound/>} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile/:id?" element={<UserProfile />} />
-          <Route path="/home" element={<Home />} />
           <Route path="/verify-email" element={<CheckEmail />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
