@@ -63,6 +63,7 @@ const BookSettings = (props: IBookSettingsProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [openModalDelete, setOpenModalDelete] = useState<boolean>(false)
   const [openModalBookEdit, setOpenModalBookEdit] = useState<boolean>(false)
+  const [deleteLoading, setDeleteLoading] = useState(false)
   const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -82,12 +83,19 @@ const BookSettings = (props: IBookSettingsProps): JSX.Element => {
   }
 
   const onClickDeleteAction = async () => {
-    const response = await deleteBookById(bookData.id)
+    try {
+      setDeleteLoading(true)
+      const response = await deleteBookById(bookData.id)
 
-    if (response) {
-      const imageRef = getStorageRef(`images/user/${bookData.userEmail}/books/${bookData.id}/${bookData.imageName}`)
-      await deleteFile(imageRef)
-      listBooks()
+      if (response) {
+        const imageRef = getStorageRef(`images/user/${bookData.userEmail}/books/${bookData.id}/${bookData.imageName}`)
+        await deleteFile(imageRef)
+        listBooks()
+      }
+      setDeleteLoading(false)
+      handleCloseModalBookDelete()
+    } catch {
+      setDeleteLoading(false)
     }
   }
 
@@ -133,6 +141,7 @@ const BookSettings = (props: IBookSettingsProps): JSX.Element => {
         title={'Excluir Livro'}
         description={'Tem certeza que deseja excluir esse livro?'}
         confirmAction={onClickDeleteAction}
+        loading={deleteLoading}
       />
       <ModalBookEdit
         open={openModalBookEdit}

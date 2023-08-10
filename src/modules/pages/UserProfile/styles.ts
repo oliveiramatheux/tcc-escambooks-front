@@ -23,7 +23,11 @@ export default makeStyles((theme) =>
       border: '3px solid white'
     },
     photoButton: {
-      position: 'absolute'
+      position: 'absolute',
+      right: 0,
+      top: 0,
+      background: 'white',
+      borderRadius: '50%'
     },
     link: {
       textDecoration: 'none',

@@ -37,11 +37,11 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const [authors, setAuthors] = useState<string[]>(bookData.authors)
-  const { register, handleSubmit, reset, getValues, clearErrors, setError, setValue, formState: { errors, dirtyFields } } = useForm<BookFormState>({ mode: 'onBlur' })
+  const { register, handleSubmit, reset, getValues, clearErrors, setError, setValue, formState: { errors, dirtyFields, isDirty } } = useForm<BookFormState>({ mode: 'onBlur' })
 
   const [errorUploadBook, setErrorUploadBook] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
-  const [imageName, setImageName] = useState<string>('')
+  const [imageName, setImageName] = useState<string>(bookData.imageName || '')
   const [loading, setLoading] = useState(false)
 
   const handleClose = () => {
@@ -84,7 +84,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
       return
     }
 
-    await uploadBookImages(data.image[0], bookData.id)
+    if (data.image.length) await uploadBookImages(data.image[0], bookData.id)
 
     setLoading(false)
     setOpenModal(true)
@@ -105,6 +105,10 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   useEffect(() => {
     setValue('authors', '')
   }, [authors.length])
+
+  useEffect(() => {
+    setImageName(bookData.imageName || '')
+  }, [bookData])
 
   return (
     <>
@@ -258,7 +262,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
               <label htmlFor="icon-book-url-edit">
                 <Input accept="image/*" id="icon-book-url-edit" type="file"
                   {...register('image', {
-                    required: 'Pelo menos uma imagem do livro é obrigatória.'
+                    required: bookData.imageUrl && bookData.imageName ? undefined : 'Pelo menos uma imagem do livro é obrigatória.'
                   })}/>
                 <IconButton color="primary" aria-label="upload picture" component="span">
                   <PhotoCamera />
@@ -277,6 +281,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
                   loading={loading}
                   loadingPosition="start"
                   startIcon={<SaveIcon />}
+                  disabled={!isDirty}
                 >
                   Editar
                 </LoadingButton>
