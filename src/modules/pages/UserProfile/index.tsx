@@ -188,7 +188,7 @@ const UserProfile = () => {
           ? <>
           <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
-            <Box position="relative" display="flex" alignItems="center" justifyContent="center" >
+            <Box position="relative" display="flex" alignItems="center" justifyContent="center">
                 {uploadPhotoLoading ? <div className={classes.userPhoto} style={{ background: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}><CircularProgress /></div> : <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>}
                 {isProfileFromLoggedUser && (
                   <label htmlFor="icon-photo-user-url" className={classes.photoButton}>
