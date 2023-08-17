@@ -203,7 +203,7 @@ const UserProfile = () => {
             </div>
           </Paper>
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={9} lg={7} xl={6}>
           <Box p={5}>
             <Tabs
               value={value}
