@@ -86,9 +86,11 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
                     Ver mais
                   </Button>
                 )}
-                <Typography>Páginas: <Chip label={book.pageCount} size="small" /></Typography>
-                <Typography>Editora: <Chip label={book.publisher} size="small" /> </Typography>
-                <Typography>Ano da edição: <Chip label={book.publishedDate} size="small" /> </Typography>
+                <Box paddingTop={1}>
+                  <Typography>Páginas: <Chip label={book.pageCount} size="small" /></Typography>
+                  <Typography>Editora: <Chip label={book.publisher} size="small" /> </Typography>
+                  <Typography>Ano da edição: <Chip label={book.publishedDate} size="small" /> </Typography>
+                </Box>
               </CardContent>
             </Box>
             {book.userEmail !== user.email && (

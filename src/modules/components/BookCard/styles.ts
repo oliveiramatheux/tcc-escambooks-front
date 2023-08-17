@@ -47,7 +47,6 @@ export default makeStyles((theme: Theme) =>
     },
     seeMoreButton: {
       marginTop: theme.spacing(1 / 2),
-      marginBottom: theme.spacing(1 / 2),
       paddingLeft: 0,
       textTransform: 'none'
     },
