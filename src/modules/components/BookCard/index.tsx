@@ -1,5 +1,5 @@
 
-import { Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton, Typography } from '@material-ui/core'
+import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton, Typography } from '@material-ui/core'
 import userDefault from '../../../images/user-default.png'
 import { Book } from '../../../routes/services/books'
 import BookSettings from '../BookSettings'
@@ -11,7 +11,8 @@ import { differenceBetweenTwoDates } from '../../../utils/helpers'
 import useStyles from './styles'
 import { Link } from 'react-router-dom'
 import { createLike, deleteLike } from '../../../routes/services'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import Modal from '../ModalWithScroll'
 
 interface BookCardProps {
   book: Book
@@ -20,6 +21,8 @@ interface BookCardProps {
 
 const BookCard = ({ book, listBooks }: BookCardProps) => {
   const [likeId, setLikeId] = useState(book.alreadyLike?.likeId)
+  const [open, setOpen] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
   const classes = useStyles()
 
   const { user } = useSelector(
@@ -38,52 +41,79 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
     setLikeId(like?.id)
   }
 
+  const showSeeMore = (ref.current?.offsetHeight || 0) < (ref.current?.scrollHeight || 0)
+
   return (
-    <div>
+    <>
       <Card className={classes.card}>
-        <CardHeader
-          avatar={<Link to={headerLink} className={classes.link}><Avatar src={book.userImageUrl || userDefault} alt="User photo" className={classes.userPhoto} /></Link>}
-          action={
-            book.userEmail === user.email
-              ? <BookSettings listBooks={listBooks} bookData={book}/>
-              : ''
-          }
-          title={<Link to={headerLink} className={classes.link}>{book.userName}</Link>}
-          subheader={<div className={classes.publicationDate}>
-            <AccessTimeRoundedIcon fontSize="small"/>{differenceBetweenTwoDates(new Date(book.date))}
-          </div>}
-        />
-        {book.title}
-        <CardMedia
-          component="img"
-          width="600"
-          height="400"
-          image={book.imageUrl}
-          alt="Book image"
-        />
-        <CardContent>
-          Autores: {book.authors.map((author, index) => <Chip key={`${author}-${index}`} label={author} />)}
-          Gênero: <Chip label={book.categories} />
-          Páginas: <Chip label={book.pageCount} />
-          Editora: <Chip label={book.publisher} />
-          Ano da edição: <Chip label={book.publishedDate} />
-          <Typography variant="body2" color="textSecondary">
-            Descrição: {book.description}
-          </Typography>
-        </CardContent>
-        {book.userEmail !== user.email && (
-          <CardActions disableSpacing>
-              <IconButton
-                aria-label="add to favorites"
-                className={likeId ? classes.liked : undefined}
-                onClick={async () => { await onClickFavoriteButton(book) }}
+          <Box flex="1 0 50%" justifyContent="space-between" display="flex" flexDirection="column">
+            <Box>
+              <CardHeader
+                avatar={<Link to={headerLink} className={classes.link}><Avatar src={book.userImageUrl || userDefault} alt="User photo" className={classes.userPhoto} /></Link>}
+                action={
+                  book.userEmail === user.email
+                    ? <BookSettings listBooks={listBooks} bookData={book}/>
+                    : ''
+                }
+                title={<Link to={headerLink} className={classes.link}>{book.userName}</Link>}
+                subheader={<div className={classes.publicationDate}>
+                  <AccessTimeRoundedIcon fontSize="small"/>{differenceBetweenTwoDates(new Date(book.date))}
+                </div>}
+              />
+              <CardMedia
+                component="img"
+                className={classes.cardMediaMobile}
+                image={book.imageUrl}
+                alt="Book image"
+              />
+              <CardContent
+                className={classes.cardContent}
               >
-                <FavoriteIcon />
-              </IconButton>
-          </CardActions>
-        )}
+                <Typography variant="h5">{book.title}</Typography>
+                <Typography>por {book.authors.join(', ')} | {book.categories}</Typography> <br />
+                <div className={classes.description} ref={ref}>
+                  <Typography>
+                    Descrição: {book.description}
+                  </Typography>
+                </div>
+                {showSeeMore && (
+                  <Button
+                    className={classes.seeMoreButton}
+                    variant="text"
+                    color="primary"
+                    onClick={() => { setOpen(true) }}
+                  >
+                    Ver mais...
+                  </Button>
+                )}
+                <Typography>Páginas: <Chip label={book.pageCount} size="small" /></Typography>
+                <Typography>Editora: <Chip label={book.publisher} size="small" /> </Typography>
+                <Typography>Ano da edição: <Chip label={book.publishedDate} size="small" /> </Typography>
+              </CardContent>
+            </Box>
+            {book.userEmail !== user.email && (
+              <CardActions>
+                  <IconButton
+                    aria-label="add to favorites"
+                    className={likeId ? classes.liked : undefined}
+                    onClick={async () => { await onClickFavoriteButton(book) }}
+                  >
+                    <FavoriteIcon />
+                  </IconButton>
+              </CardActions>
+            )}
+          </Box>
+        <Box className={classes.cardItem}>
+          <CardMedia
+            component="img"
+            className={classes.cardMedia}
+            image={book.imageUrl}
+            alt="Book image"
+          />
+        </Box>
       </Card>
-    </div>
+      <Modal open={open} title={book.title} description={book.description} closeAction={() => { setOpen(false) }} />
+    </>
   )
 }
 

@@ -35,13 +35,11 @@ const Home = (): JSX.Element => {
         justifyContent="center"
         alignContent="center"
       >
-        <Grid item xs={12} md={3} lg={3}>
+        <Grid item xs={12} md={3} >
           <UserInfo/>
         </Grid>
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={9} lg={7} xl={6}>
           <BookPublication/>
-        </Grid>
-        <Grid item xs={12} md={3} lg={3}>
         </Grid>
       </Grid>
     </>
