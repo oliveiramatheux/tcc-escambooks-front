@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import useStyles from './styles'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -8,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Box, Chip } from '@material-ui/core'
-import { useTheme, styled } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { useForm } from 'react-hook-form'
 import { regexNumber } from '../../../utils/regex'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
@@ -19,10 +18,6 @@ import { Book, updateBookById } from '../../../routes/services/books'
 import { Add } from '@material-ui/icons'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
-
-const Input = styled('input')({
-  display: 'none'
-})
 
 interface InterfaceModalProps {
   open: boolean
@@ -37,28 +32,37 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'))
 
   const [authors, setAuthors] = useState<string[]>(bookData.authors)
-  const { register, handleSubmit, reset, getValues, clearErrors, setError, setValue, formState: { errors, dirtyFields } } = useForm<BookFormState>({ mode: 'onBlur' })
+  const { register, handleSubmit, reset, getValues, clearErrors, setError, setValue, formState: { errors, isDirty } } = useForm<BookFormState>({ mode: 'onBlur' })
 
   const [errorUploadBook, setErrorUploadBook] = useState<boolean>(false)
   const [openModal, setOpenModal] = useState<boolean>(false)
-  const [imageName, setImageName] = useState<string>('')
+  const [image, setImage] = useState<File | null>(null)
+  const [imageError, setImageError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const clearImageInfos = () => {
+    setImage(null)
+    setImageError(null)
+  }
+
   const handleClose = () => {
-    setImageName('')
-    setValue('image', undefined)
     reset({})
     setOpenModal(false)
     closeAction()
+    clearImageInfos()
   }
 
-  useEffect(() => {
-    if (getValues('image') && getValues('image')[0] && getValues('image')[0].name) {
-      setImageName(getValues('image')[0].name)
-    }
-  }, [getValues('image') || dirtyFields])
+  const imageName = useMemo((): string => image?.name || bookData.imageName || '', [bookData, image])
 
-  const uploadBookImages = async (image: any, bookId: string) => {
+  const onChangeInputFileElement = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files?.length) return
+    const arrayFiles = Array.from(files)
+    setImage(arrayFiles[0])
+    setImageError(null)
+  }
+
+  const uploadBookImages = async (image: File, bookId: string) => {
     const imageDeleteRef = getStorageRef(`images/user/${bookData.userEmail}/books/${bookData.id}/${bookData.imageName}`)
 
     await deleteFile(imageDeleteRef)
@@ -72,8 +76,12 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   }
 
   const onSubmit = async (data: BookFormState) => {
+    if ((!bookData.imageUrl || !bookData.imageName) && !image) {
+      setImageError('Pelo menos uma imagem do livro é obrigatória.')
+      return
+    }
     setLoading(true)
-    const payload = { ...data, image: undefined }
+    const payload = { ...data }
 
     const bookUpdateResponse = await updateBookById(bookData.id, { ...payload, authors, categories: [data.categories] })
 
@@ -84,7 +92,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
       return
     }
 
-    await uploadBookImages(data.image[0], bookData.id)
+    if (image) await uploadBookImages(image, bookData.id)
 
     setLoading(false)
     setOpenModal(true)
@@ -104,7 +112,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
 
   useEffect(() => {
     setValue('authors', '')
-  }, [authors.length])
+  }, [authors.length, setValue])
 
   return (
     <>
@@ -255,17 +263,17 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.description && (<FormHelperText id="outlined-helper-text-publisher" className={classes.errorHelperText}>{errors.description.message}</FormHelperText>)}
               </FormControl>
-              <label htmlFor="icon-book-url-edit">
-                <Input accept="image/*" id="icon-book-url-edit" type="file"
-                  {...register('image', {
-                    required: 'Pelo menos uma imagem do livro é obrigatória.'
-                  })}/>
-                <IconButton color="primary" aria-label="upload picture" component="span">
-                  <PhotoCamera />
-                </IconButton>
-                {imageName}
-                {errors.image && (<FormHelperText id="outlined-helper-text-images" className={classes.errorHelperText}><>{errors.image.message}</></FormHelperText>)}
-              </label>
+              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                <label htmlFor="icon-book-url-edit">
+                  <input style={{ display: 'none' }} accept="image/*" id="icon-book-url-edit" type="file" onChange={onChangeInputFileElement} />
+                  <IconButton color="primary" aria-label="upload picture" component="span">
+                    <PhotoCamera />
+                  </IconButton>
+                </label>
+                <p style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{imageName}</p>
+                {image && (<img src={URL.createObjectURL(image)} style={{ border: '1px solid black', marginLeft: '12px', maxHeight: '24px', maxWidth: '24px' }} alt="Imagem do livro" />)}
+                {imageError && (<FormHelperText id="outlined-helper-text-images" className={classes.errorHelperText}><>{imageError}</></FormHelperText>)}
+              </div>
             </DialogContent>
             <DialogActions>
               <div className={classes.divButtons}>
@@ -277,6 +285,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
                   loading={loading}
                   loadingPosition="start"
                   startIcon={<SaveIcon />}
+                  disabled={!isDirty && !image}
                 >
                   Editar
                 </LoadingButton>

@@ -6,6 +6,8 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { Button } from '@material-ui/core'
+import { LoadingButton } from '@mui/lab'
+import CheckIcon from '@mui/icons-material/Check'
 
 interface InterfaceModalProps {
   open: boolean
@@ -13,10 +15,11 @@ interface InterfaceModalProps {
   description: string
   closeAction: () => void
   confirmAction?: () => void
+  loading?: boolean
 }
 
 const Modal = (props: InterfaceModalProps): JSX.Element => {
-  const { open, title, description, closeAction, confirmAction } = props
+  const { open, title, description, closeAction, confirmAction, loading } = props
   const classes = useStyles()
   return (
     <>
@@ -39,9 +42,17 @@ const Modal = (props: InterfaceModalProps): JSX.Element => {
             Fechar
           </Button>
           {confirmAction &&
-            (<Button onClick={confirmAction} autoFocus>
+           <LoadingButton
+              variant="contained"
+              color="primary"
+              sx={{ margin: '16px' }}
+              onClick={confirmAction}
+              loading={loading}
+              loadingPosition="start"
+              startIcon={<CheckIcon />}
+            >
               Confirmar
-            </Button>)
+            </LoadingButton>
           }
         </DialogActions>
       </Dialog>

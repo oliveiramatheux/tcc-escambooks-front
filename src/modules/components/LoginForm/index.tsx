@@ -1,18 +1,17 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   Paper, FormControl,
   InputLabel, OutlinedInput,
   FormControlLabel,
-  InputAdornment, IconButton, Button,
+  InputAdornment, IconButton,
   Switch, Link, FormHelperText
 } from '@material-ui/core'
 import useStyles from './styles'
 import Visibility from '@material-ui/icons/Visibility'
 import VisibilityOff from '@material-ui/icons/VisibilityOff'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
-import iconGoogle from '../../../images/icons/google.png'
-import { auth, googleProvider, signInWithPopup } from '../../../config/firebase'
+import { auth } from '../../../config/firebase'
 import { ApplicationState } from '../../../store/rootReducer'
 import { useNavigate } from 'react-router-dom'
 import { checkUserAuthGoogle, userAuthLogin } from '../../../store/users/actions'
@@ -22,6 +21,7 @@ import { AxiosResponse, AxiosError } from 'axios'
 import { addInterceptor } from '../../../routes/services/axios'
 import { authSendEmailVerify } from '../../../routes/services/auth'
 import { errorHandler, errorInterface } from '../../../utils/errorHandler'
+import { LoadingButton } from '@mui/lab'
 
 interface LoginFormState {
   email: string
@@ -62,17 +62,6 @@ const LoginForm = (): JSX.Element => {
 
   const handleMouseDown = () => {
     clearErrorResponse()
-  }
-
-  const handleClickLoginWithGoogleButton = () => {
-    clearErrorResponse()
-    signInWithPopup(auth, googleProvider).then((res) => {
-      if (res.user) {
-        dispatch(checkUserAuthGoogle({ email: res.user.email, name: res.user.displayName, photoURL: res.user.photoURL }))
-      }
-    }).catch((error) => {
-      setErrorsResponse({ errorStatusCode: error.code, errorMessage: error.message })
-    })
   }
 
   useEffect(() => {
@@ -226,29 +215,20 @@ const LoginForm = (): JSX.Element => {
               Esqueceu sua senha?
             </Link>
             <div className={classes.divButtons}>
-              <Button
+              <LoadingButton
                 variant="contained"
                 color="primary"
                 id="buttonLogin"
                 size="large"
                 className={classes.button}
+                sx={{ margin: '16px' }}
                 startIcon={<ExitToAppIcon />}
                 type={'submit'}
-                disabled={user.loading}
+                loading={user.loading}
+                loadingPosition="start"
               >
                 Entrar
-              </Button>
-              <Button
-                variant="outlined"
-                color="default"
-                size="large"
-                className={classes.button}
-                startIcon={<img src={iconGoogle} alt="Icon google" />}
-                onClick={handleClickLoginWithGoogleButton}
-                disabled
-              >
-                Entrar com o Google
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </div>

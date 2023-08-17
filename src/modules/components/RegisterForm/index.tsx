@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import {
   Paper, FormControl, Link,
-  InputLabel, OutlinedInput, Button,
+  InputLabel, OutlinedInput,
   FormControlLabel, Switch, FormHelperText
 } from '@material-ui/core'
 import useStyles from './styles'
@@ -15,6 +15,7 @@ import { userCreate } from '../../../routes/services/user'
 import Modal from '../Modal'
 import TermsAndConditions from '../TermsAndConditions'
 import { FormDatePicker } from '../FormDatePicker'
+import { LoadingButton } from '@mui/lab'
 
 interface RegisterFormState {
   email: string
@@ -36,6 +37,7 @@ const RegisterForm = (): JSX.Element => {
   })
   const [open, setOpen] = useState<boolean>(false)
   const [openModalScroll, setOpenModalScroll] = useState<boolean>(false)
+  const [registerLoading, setRegisterLoading] = useState(false)
 
   const handleClose = () => {
     setOpen(false)
@@ -75,22 +77,29 @@ const RegisterForm = (): JSX.Element => {
   }, [])
 
   const onSubmit = async (data: RegisterFormState) => {
-    const payload = {
-      email: data.email,
-      name: data.name,
-      password: data.password,
-      birthDate: data.birthDate
-    }
-    const response = await userCreate(payload)
+    try {
+      setRegisterLoading(true)
+      const payload = {
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        birthDate: data.birthDate
+      }
+      const response = await userCreate(payload)
 
-    if (response.status === 201 && response.data) {
-      setValue('email', '')
-      setValue('name', '')
-      setValue('birthDate', '')
-      setValue('password', '')
-      setValue('confirmPassword', '')
-      setValue('acceptTerms', false)
-      setOpen(true)
+      if (response.status === 201 && response.data) {
+        setValue('email', '')
+        setValue('name', '')
+        setValue('birthDate', '')
+        setValue('password', '')
+        setValue('confirmPassword', '')
+        setValue('acceptTerms', false)
+        setOpen(true)
+      }
+
+      setRegisterLoading(false)
+    } catch {
+      setRegisterLoading(false)
     }
   }
 
@@ -216,17 +225,20 @@ const RegisterForm = (): JSX.Element => {
             {errors.acceptTerms && (<FormHelperText id="outlined-helper-text-acceptTerms" className={classes.errorHelperText}>{errors.acceptTerms.message}</FormHelperText>)}
             {errorsResponse.errorStatusCode && errorsResponse.errorMessage && (<span id="outlined-helper-text-apiError" className={classes.errorHelperText}>{errorHandler(errorsResponse.errorStatusCode, errorsResponse.errorMessage)}</span>)}
             <div className={classes.divButtons}>
-              <Button
+              <LoadingButton
                 variant="contained"
                 color="primary"
                 size="large"
                 className={classes.button}
+                sx={{ margin: '16px' }}
                 startIcon={<CreateRoundedIcon />}
                 type={'submit'}
                 id="buttonRegisterUser"
+                loading={registerLoading}
+                loadingPosition="start"
               >
                 Cadastrar
-              </Button>
+              </LoadingButton>
             </div>
           </form>
         </div>

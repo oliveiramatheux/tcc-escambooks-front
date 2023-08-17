@@ -32,6 +32,7 @@ const UserProfile = () => {
   const [loadingUser, setLoadingUser] = useState(true)
   const [loadingUserBooks, setLoadingUserBooks] = useState(true)
   const [loadingLikedBooks, setLoadingLikedBooks] = useState(true)
+  const [uploadPhotoLoading, setUploadPhotoLoading] = useState(false)
 
   const { user: userState } = useSelector(
     (state: ApplicationState) => state
@@ -84,23 +85,29 @@ const UserProfile = () => {
   }, [])
 
   const uploadUserImage = async (image: File) => {
-    if (user?.imageUrl) {
-      const imageDeleteRef = getStorageRef(`images/user/${user.email}/avatar/${user.imageName}`)
+    try {
+      setUploadPhotoLoading(true)
+      if (user?.imageUrl) {
+        const imageDeleteRef = getStorageRef(`images/user/${user.email}/avatar/${user.imageName}`)
 
-      await deleteFile(imageDeleteRef)
-    }
-
-    const imageRef = getStorageRef(`images/user/${userState.email}/avatar/${image.name}`)
-
-    await uploadBytes(imageRef, image, { contentType: image.type }).then(async (imageUploaded) => {
-      const imageUrl = await getDownloadURL(imageUploaded.ref)
-      const response = await updateUserById(userState.id, { imageUrl, imageName: image.name })
-
-      if (response) {
-        setUser(response)
-        getUserBooks()
+        await deleteFile(imageDeleteRef)
       }
-    })
+
+      const imageRef = getStorageRef(`images/user/${userState.email}/avatar/${image.name}`)
+
+      await uploadBytes(imageRef, image, { contentType: image.type }).then(async (imageUploaded) => {
+        const imageUrl = await getDownloadURL(imageUploaded.ref)
+        const response = await updateUserById(userState.id, { imageUrl, imageName: image.name })
+
+        if (response) {
+          setUser(response)
+          getUserBooks()
+        }
+      })
+      setUploadPhotoLoading(false)
+    } catch {
+      setUploadPhotoLoading(false)
+    }
   }
 
   const centeredLoading = () => {
@@ -181,8 +188,8 @@ const UserProfile = () => {
           ? <>
           <Grid item xs={12} md={3}>
           <Paper className={classes.paper}>
-            <Box position="relative" display="flex" alignItems="center" justifyContent="center" >
-                <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>
+            <Box position="relative" display="flex" alignItems="center" justifyContent="center">
+                {uploadPhotoLoading ? <div className={classes.userPhoto} style={{ background: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}><CircularProgress /></div> : <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>}
                 {isProfileFromLoggedUser && (
                   <label htmlFor="icon-photo-user-url" className={classes.photoButton}>
                     <Input
@@ -191,7 +198,7 @@ const UserProfile = () => {
                       type="file"
                       onChange={async (e) => await (e.target.files?.length && uploadUserImage(e.target.files[0])) }
                     />
-                    <IconButton color="primary" aria-label="upload picture" component="span">
+                    <IconButton color="primary" aria-label="upload picture" component="span" style={{ width: '32px', height: '32px', padding: 0 }}>
                       <PhotoCamera />
                     </IconButton>
                   </label>
