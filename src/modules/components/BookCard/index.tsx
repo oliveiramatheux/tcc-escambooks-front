@@ -83,7 +83,7 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
                     color="primary"
                     onClick={() => { setOpen(true) }}
                   >
-                    Ver mais...
+                    Ver mais
                   </Button>
                 )}
                 <Typography>Páginas: <Chip label={book.pageCount} size="small" /></Typography>
