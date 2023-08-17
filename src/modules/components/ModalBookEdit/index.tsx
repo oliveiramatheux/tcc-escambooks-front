@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Box, Chip } from '@material-ui/core'
-import { useTheme, styled } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 import { useForm } from 'react-hook-form'
 import { regexNumber } from '../../../utils/regex'
 import PhotoCamera from '@mui/icons-material/PhotoCamera'
@@ -18,10 +18,6 @@ import { Book, updateBookById } from '../../../routes/services/books'
 import { Add } from '@material-ui/icons'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
-
-const Input = styled('input')({
-  display: 'none'
-})
 
 interface InterfaceModalProps {
   open: boolean
@@ -44,11 +40,16 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
   const [imageError, setImageError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
+  const clearImageInfos = () => {
+    setImage(null)
+    setImageError(null)
+  }
+
   const handleClose = () => {
-    setValue('image', undefined)
     reset({})
     setOpenModal(false)
     closeAction()
+    clearImageInfos()
   }
 
   const imageName = useMemo((): string => image?.name || bookData.imageName || '', [bookData, image])
@@ -80,8 +81,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
       return
     }
     setLoading(true)
-    // todo tirar image
-    const payload = { ...data, image: undefined }
+    const payload = { ...data }
 
     const bookUpdateResponse = await updateBookById(bookData.id, { ...payload, authors, categories: [data.categories] })
 
@@ -265,7 +265,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
               </FormControl>
               <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                 <label htmlFor="icon-book-url-edit">
-                  <Input accept="image/*" id="icon-book-url-edit" type="file" onChange={onChangeInputFileElement} />
+                  <input style={{ display: 'none' }} accept="image/*" id="icon-book-url-edit" type="file" onChange={onChangeInputFileElement} />
                   <IconButton color="primary" aria-label="upload picture" component="span">
                     <PhotoCamera />
                   </IconButton>
