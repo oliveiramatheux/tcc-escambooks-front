@@ -9,11 +9,11 @@ export default makeStyles((theme: Theme) =>
     },
     paper: {
       margin: theme.spacing(5),
-      padding: theme.spacing(2),
       color: 'white',
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
-        margin: theme.spacing(0)
+        margin: theme.spacing(0),
+        padding: theme.spacing(2)
       }
     },
     card: {

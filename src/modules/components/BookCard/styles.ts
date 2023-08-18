@@ -42,8 +42,9 @@ export default makeStyles((theme: Theme) =>
       overflow: 'hidden',
       textOverflow: 'ellipsis',
       display: '-webkit-box',
-      WebkitLineClamp: 8,
-      WebkitBoxOrient: 'vertical'
+      lineClamp: 8,
+      boxOrient: 'vertical',
+      textAlign: 'justify'
     },
     seeMoreButton: {
       marginTop: theme.spacing(1 / 2),

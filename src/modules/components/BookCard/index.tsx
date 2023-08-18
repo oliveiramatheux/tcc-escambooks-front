@@ -114,7 +114,13 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
           />
         </Box>
       </Card>
-      <Modal open={open} title={book.title} description={book.description} closeAction={() => { setOpen(false) }} />
+      <Modal open={open} title={book.title}
+        description={
+          <Typography style={{ textAlign: 'justify' }}>
+            {book.description}
+          </Typography>}
+        closeAction={() => { setOpen(false) }}
+      />
     </>
   )
 }
