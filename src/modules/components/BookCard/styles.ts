@@ -1,5 +1,9 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 
+interface BookCardStylesProps {
+  hasMoreThanEightLines: boolean
+}
+
 export default makeStyles((theme: Theme) =>
   createStyles({
     userPhoto: {
@@ -40,16 +44,20 @@ export default makeStyles((theme: Theme) =>
     description: {
       position: 'relative',
       overflow: 'hidden',
-      textOverflow: 'ellipsis',
-      display: '-webkit-box',
-      lineClamp: 8,
-      boxOrient: 'vertical',
-      textAlign: 'justify'
+      maxHeight: '204px',
+      textAlign: 'justify',
+      '&:after': {
+        content: "''",
+        position: (props: BookCardStylesProps) => props.hasMoreThanEightLines ? 'absolute' : 'none',
+        bottom: 0,
+        left: 0,
+        width: '100%',
+        height: '48px',
+        background: 'linear-gradient(rgba(255, 255, 255, 0.001), white)'
+      }
     },
     seeMoreButton: {
-      marginTop: theme.spacing(1 / 2),
-      paddingLeft: 0,
-      textTransform: 'none'
+      cursor: 'pointer'
     },
     publicationDate: {
       display: 'flex',
