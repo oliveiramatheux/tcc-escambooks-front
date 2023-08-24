@@ -133,7 +133,7 @@ const UserProfile = () => {
     }
 
     if (likedBooks.length) {
-      return (likedBooks.map((book) => <BookCard key={book.id} book={book} listBooks={getLikedBooks} />))
+      return (likedBooks.map((book) => <BookCard id={book.id} key={book.id} book={book} listBooks={getLikedBooks} />))
     }
 
     return centeredLoading()
@@ -153,7 +153,7 @@ const UserProfile = () => {
     }
 
     if (userBooks.length) {
-      return (userBooks.map((book) => <BookCard key={book.id} book={book} listBooks={getUserBooks} />))
+      return (userBooks.map((book) => <BookCard id={book.id} key={book.id} book={book} listBooks={getUserBooks} />))
     }
 
     return centeredLoading()

@@ -53,7 +53,7 @@ const BookPublication = (): JSX.Element => {
         {books.length
           ? books.map((value) => {
             return (
-              <BookCard key={value.id} book={value} listBooks={listBooks} />
+              <BookCard id={value.id} key={value.id} book={value} listBooks={listBooks} />
             )
           })
           : <LoadingSimple/>}

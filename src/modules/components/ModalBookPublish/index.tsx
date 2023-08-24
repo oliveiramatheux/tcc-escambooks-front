@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useStyles from './styles'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Chip, Box } from '@material-ui/core'
+import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Chip, Box, Typography } from '@material-ui/core'
 import { useTheme } from '@mui/material/styles'
 import { useForm } from 'react-hook-form'
 import { regexNumber } from '../../../utils/regex'
@@ -19,6 +19,7 @@ import { bookCreateService, updateBookById } from '../../../routes/services/book
 import { Add } from '@material-ui/icons'
 import SaveIcon from '@mui/icons-material/Save'
 import { LoadingButton } from '@mui/lab'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 
 interface InterfaceModalProps {
   open: boolean
@@ -77,8 +78,6 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
     setAuthors([])
     clearImageInfos()
   }
-
-  const imageName = useMemo((): string => image?.name || '', [image])
 
   const onChangeInputFileElement = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
@@ -279,16 +278,30 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                 />
                 {errors.description && (<FormHelperText id="outlined-helper-text-publisher" className={classes.errorHelperText}>{errors.description.message}</FormHelperText>)}
               </FormControl>
-              <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                <label htmlFor="icon-book-url">
-                  <input style={{ display: 'none' }} accept="image/*" id="icon-book-url" type="file" onChange={onChangeInputFileElement} />
-                  <IconButton color="primary" aria-label="upload picture" component="span">
-                    <PhotoCamera />
-                  </IconButton>
-                </label>
-                <p style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>{imageName}</p>
-                {image && (<img src={URL.createObjectURL(image)} style={{ border: '1px solid black', marginLeft: '12px', maxHeight: '24px', maxWidth: '24px' }} alt="Imagem do livro" />)}
-                {imageError && (<FormHelperText id="outlined-helper-text-images" className={classes.errorHelperText}><>{imageError}</></FormHelperText>)}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                {image
+                  ? (
+                      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <img src={URL.createObjectURL(image)} style={{ border: '1px solid black', maxHeight: '24px', maxWidth: '24px' }} alt="Imagem do livro" />
+                        <Typography style={{ overflow: 'hidden', textOverflow: 'ellipsis', marginLeft: '12px', marginRight: '9px' }}>{image.name}</Typography>
+                        <IconButton size="small" onClick={() => { setImage(null) }}>
+                          <HighlightOffIcon />
+                        </IconButton>
+                      </div>
+                    )
+                  : (
+                      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        <label htmlFor="icon-book-url">
+                          <input style={{ display: 'none' }} accept="image/*" id="icon-book-url" type="file" onChange={onChangeInputFileElement} />
+                          <IconButton color="primary" aria-label="upload picture" component="span">
+                            <PhotoCamera />
+                          </IconButton>
+                        </label>
+                        {imageError
+                          ? (<FormHelperText id="outlined-helper-text-images" className={classes.errorHelperText}>{imageError}</FormHelperText>)
+                          : (<Typography style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>Anexe a imagem do seu livro</Typography >)}
+                      </div>
+                    )}
               </div>
             </DialogContent>
             <DialogActions>

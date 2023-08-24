@@ -1,5 +1,5 @@
 
-import { Avatar, Box, Button, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton, Typography } from '@material-ui/core'
+import { Avatar, Box, Card, CardActions, CardContent, CardHeader, CardMedia, Chip, IconButton, Typography } from '@material-ui/core'
 import userDefault from '../../../images/user-default.png'
 import { Book } from '../../../routes/services/books'
 import BookSettings from '../BookSettings'
@@ -11,19 +11,22 @@ import { differenceBetweenTwoDates } from '../../../utils/helpers'
 import useStyles from './styles'
 import { Link } from 'react-router-dom'
 import { createLike, deleteLike } from '../../../routes/services'
-import { useRef, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Modal from '../ModalWithScroll'
 
 interface BookCardProps {
   book: Book
   listBooks: () => void
+  id: string
 }
 
-const BookCard = ({ book, listBooks }: BookCardProps) => {
+const BookCard = ({ book, listBooks, id }: BookCardProps) => {
   const [likeId, setLikeId] = useState(book.alreadyLike?.likeId)
   const [open, setOpen] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
-  const classes = useStyles()
+  const [countLines, setCountLines] = useState(0)
+
+  const hasMoreThanEightLines = countLines > 8
+  const classes = useStyles({ hasMoreThanEightLines })
 
   const { user } = useSelector(
     (state: ApplicationState) => state
@@ -41,7 +44,22 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
     setLikeId(like?.id)
   }
 
-  const showSeeMore = (ref.current?.offsetHeight || 0) < (ref.current?.scrollHeight || 0)
+  const divBookDescriptionId = `div-book-description-${id}`
+
+  const calcTextBookDescription = useCallback(() => {
+    const textDescription = document.getElementById(divBookDescriptionId)
+    if (textDescription) {
+      const { height } = textDescription.getBoundingClientRect()
+      const { lineHeight } = textDescription.style
+
+      const countLines = height / Number(lineHeight.replace('px', ''))
+      setCountLines(countLines)
+    }
+  }, [divBookDescriptionId])
+
+  useEffect(() => {
+    calcTextBookDescription()
+  }, [calcTextBookDescription])
 
   return (
     <>
@@ -71,20 +89,18 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
               >
                 <Typography variant="h5">{book.title}</Typography>
                 <Typography>por {book.authors.join(', ')} | {book.categories}</Typography> <br />
-                <div className={classes.description} ref={ref}>
-                  <Typography>
+                <div className={classes.description} id={divBookDescriptionId} style={{ lineHeight: '24px' }}>
                     Descrição: {book.description}
-                  </Typography>
                 </div>
-                {showSeeMore && (
-                  <Button
+                {hasMoreThanEightLines && (
+                  <Typography
+                    variant='body2'
                     className={classes.seeMoreButton}
-                    variant="text"
                     color="primary"
                     onClick={() => { setOpen(true) }}
                   >
                     Ver mais
-                  </Button>
+                  </Typography>
                 )}
                 <Box paddingTop={1}>
                   <Typography>Páginas: <Chip label={book.pageCount} size="small" /></Typography>
@@ -114,7 +130,13 @@ const BookCard = ({ book, listBooks }: BookCardProps) => {
           />
         </Box>
       </Card>
-      <Modal open={open} title={book.title} description={book.description} closeAction={() => { setOpen(false) }} />
+      <Modal open={open} title={book.title}
+        description={
+          <Typography style={{ textAlign: 'justify' }}>
+            {book.description}
+          </Typography>}
+        closeAction={() => { setOpen(false) }}
+      />
     </>
   )
 }

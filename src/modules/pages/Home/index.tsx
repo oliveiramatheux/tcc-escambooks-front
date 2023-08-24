@@ -20,7 +20,7 @@ const Home = (): JSX.Element => {
     if (!user.isAuthenticated) {
       navigate('/login')
     }
-  }, [user])
+  }, [navigate, user])
 
   handleEventUserInfos(user)
   handleEventScreen('escambooks_home', 'home')
