@@ -27,7 +27,6 @@ export default makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: alpha(theme.palette.common.white, 0.25)
       },
-      marginRight: theme.spacing(2),
       marginLeft: 0,
       width: '100%',
       [theme.breakpoints.up('sm')]: {
@@ -53,7 +52,7 @@ export default makeStyles((theme: Theme) =>
       transition: theme.transitions.create('width'),
       width: '100%',
       [theme.breakpoints.up('md')]: {
-        width: '20ch'
+        width: '30ch'
       }
     },
     sectionDesktop: {

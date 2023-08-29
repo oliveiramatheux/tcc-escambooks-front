@@ -1,4 +1,4 @@
-import React, { useState, createRef, useEffect } from 'react'
+import React, { useState, createRef, useEffect, useCallback } from 'react'
 import {
   AppBar, Toolbar, IconButton,
   InputBase, Badge, MenuItem, Menu, Fab
@@ -38,6 +38,7 @@ const HeaderMenu = (): JSX.Element => {
   const [openModalScroll, setOpenModalScroll] = useState<boolean>(false)
   const [notifications, setNotifications] = useState<Like[]>([])
   const [notificationsNotVisualized, setNotificationsNotVisualized] = useState<number>(0)
+  const [searchBookTerm, setSearchBookTerm] = useState('')
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -221,6 +222,20 @@ const HeaderMenu = (): JSX.Element => {
     </Menu>
   )
 
+  const onChangeInputSearchBook = useCallback((event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = event.target
+    setSearchBookTerm(value)
+  }, [])
+
+  const onSubmitSearchBook = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    if (event.key.toLowerCase() !== 'enter' || !searchBookTerm) return
+    if (window.location.pathname === '/home') {
+      navigate('/home', { state: { searchBookTerm } })
+      return
+    }
+    navigate('/home', { state: { searchBookTerm } })
+  }, [navigate, searchBookTerm])
+
   useEffect(() => {
     if (user) listNotifications()
   }, [user])
@@ -250,6 +265,8 @@ const HeaderMenu = (): JSX.Element => {
                   root: classes.inputRoot,
                   input: classes.inputInput
                 }}
+                onChange={(event) => { onChangeInputSearchBook(event) }}
+                onKeyDown={(event) => { onSubmitSearchBook(event) }}
                 inputProps={{ 'aria-label': 'search' }}
               />
             </div>
