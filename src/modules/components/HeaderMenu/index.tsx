@@ -229,11 +229,8 @@ const HeaderMenu = (): JSX.Element => {
 
   const onSubmitSearchBook = useCallback((event: React.KeyboardEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     if (event.key.toLowerCase() !== 'enter' || !searchBookTerm) return
-    if (window.location.pathname === '/home') {
-      navigate('/home', { state: { searchBookTerm } })
-      return
-    }
     navigate('/home', { state: { searchBookTerm } })
+    setSearchBookTerm('')
   }, [navigate, searchBookTerm])
 
   useEffect(() => {
@@ -265,6 +262,7 @@ const HeaderMenu = (): JSX.Element => {
                   root: classes.inputRoot,
                   input: classes.inputInput
                 }}
+                value={searchBookTerm}
                 onChange={(event) => { onChangeInputSearchBook(event) }}
                 onKeyDown={(event) => { onSubmitSearchBook(event) }}
                 inputProps={{ 'aria-label': 'search' }}
