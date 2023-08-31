@@ -113,4 +113,13 @@ const deleteBookById = async (bookId: string): Promise<Book | undefined> => {
   }
 }
 
-export { bookCreateService, getAllBooks, updateBookById, deleteBookById, getAllBooksByUserId, getLikedBooks }
+const getBooksByTitle = async (title: string): Promise<Book[]> => {
+  try {
+    const { data } = await axiosInstance.get<BooksData>(`/books/title/${title}`)
+    return data.items || []
+  } catch {
+    return []
+  }
+}
+
+export { bookCreateService, getAllBooks, updateBookById, deleteBookById, getAllBooksByUserId, getLikedBooks, getBooksByTitle }

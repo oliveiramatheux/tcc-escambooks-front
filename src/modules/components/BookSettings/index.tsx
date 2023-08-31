@@ -135,19 +135,19 @@ const BookSettings = (props: IBookSettingsProps): JSX.Element => {
           Excluir
         </MenuItem>
       </StyledMenu>
-      <Modal
+      {openModalDelete && (<Modal
         open={openModalDelete}
         closeAction={handleCloseModalBookDelete}
         title={'Excluir Livro'}
         description={'Tem certeza que deseja excluir esse livro?'}
         confirmAction={onClickDeleteAction}
         loading={deleteLoading}
-      />
-      <ModalBookEdit
+      />)}
+      {openModalBookEdit && (<ModalBookEdit
         open={openModalBookEdit}
         closeAction={handleCloseModalBookEdit}
         bookData={bookData}
-      />
+      />)}
     </div>
   )
 }
