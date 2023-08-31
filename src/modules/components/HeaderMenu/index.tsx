@@ -257,7 +257,7 @@ const HeaderMenu = (): JSX.Element => {
                 <SearchIcon />
               </div>
               <InputBase
-                placeholder="Nome do livro..."
+                placeholder="Título do livro..."
                 classes={{
                   root: classes.inputRoot,
                   input: classes.inputInput

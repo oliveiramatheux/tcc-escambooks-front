@@ -16,7 +16,7 @@ const BookPublication = (): JSX.Element => {
 
   const [openModalBookPublish, setOpenModalBookPublish] = useState<boolean>(false)
   const [books, setBooks] = useState<Book[]>([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   const searchBookTermFromLocationState = useMemo((): string | undefined => state?.searchBookTerm, [state])
 
@@ -57,6 +57,50 @@ const BookPublication = (): JSX.Element => {
     listBooks()
   }
 
+  const emptyStateMessage = useMemo(() => searchBookTerm ? 'Nenhum resultado encontrado para esse título do livro, por favor verifique se escreveu corretamente e tente novamente.' : 'Nenhum resultado encontrado para a busca, por favor tente novamente.', [searchBookTerm])
+
+  const renderResult = () => {
+    if (loading) {
+      return (
+      <div style={{
+        height: '100%',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '40px',
+        width: '100%'
+      }}>
+        <CircularProgress />
+      </div>
+      )
+    }
+    if (books.length) {
+      return (
+        <Box>
+          {books.map((value) => {
+            return (
+              <BookCard id={value.id} key={value.id} book={value} listBooks={listBooks} />
+            )
+          })}
+        </Box>
+      )
+    }
+    return (
+      <div style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: '40px',
+        width: '100%'
+      }}>
+          <Typography fontWeight={700} color={'black'} textAlign={'center'} fontFamily={'system-ui'}>{emptyStateMessage}</Typography>
+          <Button variant="contained" size="large" color="primary" style={{ marginTop: '16px', fontFamily: 'system-ui' }} onClick={listBooks}>Refazer busca</Button>
+      </div>
+    )
+  }
+
   useEffect(() => {
     listBooks()
   }, [listBooks])
@@ -88,41 +132,20 @@ const BookPublication = (): JSX.Element => {
         </Paper>
         {searchBookTerm && (
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography color={'black'}>
+            <Typography color={'black'} fontWeight={700}>
                 {`Vendo resultados da busca: ${searchBookTerm}`}
             </Typography>
-            <Button onClick={() => { setSearchBookTerm('') }} variant="outlined" startIcon={<HighlightOffIcon />}>
+            <Button onClick={() => { setSearchBookTerm('') }} size="large" style={{ color: '#3f51b5', fontFamily: 'system-ui' }} variant="outlined" startIcon={<HighlightOffIcon />}>
               Limpar busca
             </Button>
           </Box>
         )}
-        {loading || !books.length
-          ? (
-            <div style={{
-              height: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '100%'
-            }}>
-              <CircularProgress />
-            </div>
-            )
-          : (
-              <Box>
-                {books.map((value) => {
-                  return (
-                    <BookCard id={value.id} key={value.id} book={value} listBooks={listBooks} />
-                  )
-                })}
-              </Box>
-            )
-        }
-        {openModalBookPublish && (<ModalBookPublish
-          open={openModalBookPublish}
-          closeAction={handleCloseModalBookPublish}
-        />)}
+        {renderResult()}
       </Paper>
+      {openModalBookPublish && (<ModalBookPublish
+        open={openModalBookPublish}
+        closeAction={handleCloseModalBookPublish}
+      />)}
     </div>
   )
 }
