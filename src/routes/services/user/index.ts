@@ -47,4 +47,13 @@ const getUserById = async (id: string): Promise<User | undefined> => {
   }
 }
 
-export { userCreate, getUserById, updateUserById }
+const deleteUserById = async (id: string): Promise<User | undefined> => {
+  try {
+    const { data } = await axiosInstance.delete(`/users/${id}`)
+    return data
+  } catch {
+    return undefined
+  }
+}
+
+export { userCreate, getUserById, updateUserById, deleteUserById }
