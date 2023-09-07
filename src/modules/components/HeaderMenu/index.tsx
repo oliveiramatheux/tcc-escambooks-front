@@ -141,13 +141,16 @@ const HeaderMenu = (): JSX.Element => {
       setDeleteUserLoading(true)
       const response = await deleteUserById(user.id)
 
-      if (response) {
-        const storageUserRef = getStorageRef(`images/user/${response.email}`)
-        try {
+      if (response?.imageName) {
+        const storageUserRef = getStorageRef(`images/user/${response.email}/avatar/${response.imageName}`)
+        await deleteFile(storageUserRef)
+      }
+
+      if (response?.userBooksImages?.length) {
+        response.userBooksImages.forEach(async userBookImageInfo => {
+          const storageUserRef = getStorageRef(`images/user/${response.email}/books/${userBookImageInfo.bookId}/${userBookImageInfo.bookImageName}`)
           await deleteFile(storageUserRef)
-        } catch {
-          setDeleteUserLoading(true)
-        }
+        })
       }
 
       setDeleteUserLoading(false)
@@ -381,7 +384,7 @@ const HeaderMenu = (): JSX.Element => {
         open={openModalDeleteUser}
         closeAction={handleCloseModalDeleteUser}
         title={'Exclusão de conta'}
-        description={'Tem certeza que deseja excluir sua conta? Essa ação é irreversível e irá excluir todas as suas publicações, curtidas e imagens.'}
+        description={'Tem certeza que deseja excluir sua conta? Esta ação é irreversível e irá excluir todas as suas publicações, curtidas e imagens.'}
         confirmAction={onClickDeleteUserAction}
         loading={deleteUserLoading}
       />)}

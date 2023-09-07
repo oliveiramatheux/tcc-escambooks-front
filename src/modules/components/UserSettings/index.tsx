@@ -1,13 +1,13 @@
 import useStyles from './styles'
 import ModalWithScroll from '../ModalWithScroll'
 
-interface InterfaceTermsAndConditionsProps {
+interface UserSettingsProps {
   open: boolean
   closeAction: () => void
   deleteUserAction: () => void
 }
 
-const UserSettings = (props: InterfaceTermsAndConditionsProps): JSX.Element => {
+const UserSettings = (props: UserSettingsProps): JSX.Element => {
   const { open, closeAction, deleteUserAction } = props
   const classes = useStyles()
   return (

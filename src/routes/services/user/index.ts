@@ -25,6 +25,15 @@ export interface User {
   imageName?: string
 }
 
+interface UserBookImageInfo {
+  bookId: string
+  bookImageName: string
+}
+
+export type DeletedUserResponse = User & {
+  userBooksImages: UserBookImageInfo[]
+}
+
 const userCreate = async (payload: PayloadUserCreate): AxiosPromise => {
   return await axiosInstance.post('/users', payload)
 }
@@ -47,7 +56,7 @@ const getUserById = async (id: string): Promise<User | undefined> => {
   }
 }
 
-const deleteUserById = async (id: string): Promise<User | undefined> => {
+const deleteUserById = async (id: string): Promise<DeletedUserResponse | undefined> => {
   try {
     const { data } = await axiosInstance.delete(`/users/${id}`)
     return data
