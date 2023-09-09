@@ -29,7 +29,6 @@ export default makeStyles((theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'space-around',
       [theme.breakpoints.between('xs', 'sm')]: {
-        margin: theme.spacing(0),
         flexDirection: 'column'
       }
     },

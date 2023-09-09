@@ -14,14 +14,16 @@ import useStyles from './styles'
 import { ApplicationState } from '../../../store/rootReducer'
 import { Link, useNavigate } from 'react-router-dom'
 import { userAuthLogout } from '../../../store/users/actions'
-import { auth } from '../../../config/firebase'
+import { auth, deleteFile, getStorageRef } from '../../../config/firebase'
 import { useDispatch, useSelector } from 'react-redux'
 import icon from '../../../images/icons/icon.png'
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import BackToTop from '../BackToTop'
 import TermsAndConditions from '../TermsAndConditions'
 import Tooltip from '@mui/material/Tooltip'
-import { getUserLikes, Like, updateLike } from '../../../routes/services'
+import { deleteUserById, getUserLikes, Like, updateLike } from '../../../routes/services'
+import UserSettings from '../UserSettings'
+import Modal from '../Modal'
 
 const HeaderMenu = (): JSX.Element => {
   const classes = useStyles()
@@ -39,6 +41,9 @@ const HeaderMenu = (): JSX.Element => {
   const [notifications, setNotifications] = useState<Like[]>([])
   const [notificationsNotVisualized, setNotificationsNotVisualized] = useState<number>(0)
   const [searchBookTerm, setSearchBookTerm] = useState('')
+  const [openUserSettings, setOpenUserSettings] = useState(false)
+  const [openModalDeleteUser, setOpenModalDeleteUser] = useState(false)
+  const [deleteUserLoading, setDeleteUserLoading] = useState(false)
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -60,20 +65,46 @@ const HeaderMenu = (): JSX.Element => {
     setOpenModalScroll(false)
   }
 
-  const logOut = async () => {
+  const logOut = useCallback(async () => {
     if (user.isGoogleLogin) await auth.signOut()
     dispatch(userAuthLogout())
     navigate('/login')
-  }
+  }, [dispatch, navigate, user.isGoogleLogin])
 
-  const handleClickLogOut = () => {
+  const listNotifications = useCallback(async () => {
+    const notifications = await getUserLikes(user.id)
+
+    if (!notifications) return
+
+    setNotifications(notifications.items)
+
+    setNotificationsNotVisualized(notifications.totalItemsNotVisualized)
+  }, [user.id])
+
+  const handleNotificationMenuClose = useCallback(() => {
+    setNotificationAnchorEl(null)
+    listNotifications()
+  }, [listNotifications])
+
+  const handleMenuClose = useCallback(() => {
+    setAnchorEl(null)
+    handleMobileMenuClose()
+    handleNotificationMenuClose()
+  }, [handleNotificationMenuClose])
+
+  const handleClickLogOut = useCallback(() => {
     handleMenuClose()
     logOut()
-  }
+  }, [handleMenuClose, logOut])
 
   const handleOpenTermsAndConditions = () => {
     handleMenuClose()
     setOpenModalScroll(true)
+  }
+
+  const handleOpenUserSettings = () => {
+    handleMenuClose()
+    setOpenUserSettings(true)
   }
 
   const handleClickProfile = () => {
@@ -85,16 +116,6 @@ const HeaderMenu = (): JSX.Element => {
   }
 
   const inputRef = createRef()
-
-  const listNotifications = async () => {
-    const notifications = await getUserLikes(user.id)
-
-    if (!notifications) return
-
-    setNotifications(notifications.items)
-
-    setNotificationsNotVisualized(notifications.totalItemsNotVisualized)
-  }
 
   const updateVisualizedNotifications = async () => {
     notifications.forEach(async notification => {
@@ -111,16 +132,34 @@ const HeaderMenu = (): JSX.Element => {
     updateVisualizedNotifications()
   }
 
-  const handleNotificationMenuClose = () => {
-    setNotificationAnchorEl(null)
-    listNotifications()
+  const handleCloseModalDeleteUser = () => {
+    setOpenModalDeleteUser(false)
   }
 
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-    handleMobileMenuClose()
-    handleNotificationMenuClose()
-  }
+  const onClickDeleteUserAction = useCallback(async () => {
+    try {
+      setDeleteUserLoading(true)
+      const response = await deleteUserById(user.id)
+
+      if (response?.imageName) {
+        const storageUserRef = getStorageRef(`images/user/${response.email}/avatar/${response.imageName}`)
+        await deleteFile(storageUserRef)
+      }
+
+      if (response?.userBooksImages?.length) {
+        response.userBooksImages.forEach(async userBookImageInfo => {
+          const storageUserRef = getStorageRef(`images/user/${response.email}/books/${userBookImageInfo.bookId}/${userBookImageInfo.bookImageName}`)
+          await deleteFile(storageUserRef)
+        })
+      }
+
+      setDeleteUserLoading(false)
+      localStorage.removeItem('email')
+      handleClickLogOut()
+    } catch {
+      setDeleteUserLoading(false)
+    }
+  }, [handleClickLogOut, user])
 
   const menuNotificationId = 'notification-menu'
 
@@ -161,7 +200,7 @@ const HeaderMenu = (): JSX.Element => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleClickProfile}>Perfil</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Configurações</MenuItem>
+      <MenuItem onClick={handleOpenUserSettings}>Configurações</MenuItem>
       <MenuItem onClick={handleOpenTermsAndConditions}>Termos e condições</MenuItem>
       <MenuItem onClick={handleClickLogOut}>Sair</MenuItem>
     </Menu>
@@ -332,10 +371,23 @@ const HeaderMenu = (): JSX.Element => {
           <KeyboardArrowUpIcon />
         </Fab>
       </BackToTop>
-      <TermsAndConditions
+      {openModalScroll && (<TermsAndConditions
         open={openModalScroll}
         closeAction={handleCloseModalScroll}
-      />
+      />)}
+      {openUserSettings && (<UserSettings
+        open={openUserSettings}
+        deleteUserAction={() => { setOpenModalDeleteUser(true) }}
+        closeAction={() => { setOpenUserSettings(false) }}
+      />)}
+      {openModalDeleteUser && (<Modal
+        open={openModalDeleteUser}
+        closeAction={handleCloseModalDeleteUser}
+        title={'Exclusão de conta'}
+        description={'Tem certeza que deseja excluir sua conta? Esta ação é irreversível e irá excluir todas as suas publicações, curtidas e imagens.'}
+        confirmAction={onClickDeleteUserAction}
+        loading={deleteUserLoading}
+      />)}
     </>
   )
 }
