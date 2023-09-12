@@ -24,6 +24,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { deleteUserById, getUserLikes, Like, updateLike } from '../../../routes/services'
 import UserSettings from '../UserSettings'
 import Modal from '../Modal'
+import { socket } from 'config/socket'
 
 const HeaderMenu = (): JSX.Element => {
   const classes = useStyles()
@@ -83,8 +84,7 @@ const HeaderMenu = (): JSX.Element => {
 
   const handleNotificationMenuClose = useCallback(() => {
     setNotificationAnchorEl(null)
-    listNotifications()
-  }, [listNotifications])
+  }, [])
 
   const handleMenuClose = useCallback(() => {
     setAnchorEl(null)
@@ -118,13 +118,17 @@ const HeaderMenu = (): JSX.Element => {
   const inputRef = createRef()
 
   const updateVisualizedNotifications = async () => {
-    notifications.forEach(async notification => {
+    notifications.forEach(notification => {
       if (!notification.isVisualized) {
-        await updateLike(notification.id, {
+        updateLike(notification.id, {
           isVisualized: true
         })
       }
     })
+
+    const notificationsMapped = notifications.map(notification => ({ ...notification, isVisualized: true }))
+    setNotifications(notificationsMapped)
+    setNotificationsNotVisualized(0)
   }
 
   const handleNotificationMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -272,9 +276,47 @@ const HeaderMenu = (): JSX.Element => {
     setSearchBookTerm('')
   }, [navigate, searchBookTerm])
 
+  const updateLikeReceived = useCallback((like: Like) => {
+    setNotifications(state => [...state, like])
+    if (!like.isVisualized) {
+      setNotificationsNotVisualized(state => state + 1)
+    }
+  }, [])
+
+  const updateLikeDeleted = useCallback((like: Like) => {
+    setNotifications(state => state.filter(stateLike => stateLike.id !== like.id))
+    if (!like.isVisualized) {
+      setNotificationsNotVisualized(state => state - 1)
+    }
+  }, [])
+
   useEffect(() => {
     if (user) listNotifications()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
+
+  useEffect(() => {
+    socket.connect()
+
+    return () => {
+      socket.disconnect()
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!user.id) return
+
+    const eventLikeReceived = `like-received-${user.id}`
+    const eventLikeDeleted = `like-deleted-${user.id}`
+
+    socket.on(eventLikeReceived, updateLikeReceived)
+    socket.on(eventLikeDeleted, updateLikeDeleted)
+
+    return () => {
+      socket.off(eventLikeReceived, updateLikeReceived)
+      socket.off(eventLikeDeleted, updateLikeDeleted)
+    }
+  }, [updateLikeDeleted, updateLikeReceived, user.id])
 
   return (
     <>
