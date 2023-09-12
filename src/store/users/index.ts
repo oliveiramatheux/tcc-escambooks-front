@@ -66,6 +66,7 @@ export default function userReducer (
         name: action.payload.name,
         email: action.payload.email,
         imageUrl: action.payload.imageUrl,
+        isAdmin: !!action.payload.adminToken,
         isAuthenticated: true,
         loading: false
       }

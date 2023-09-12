@@ -20,6 +20,10 @@ export function * userAuthLogin (action: IUserAuthLoginAction): Generator<Strict
 
     localStorage.setItem('token', data.token)
 
+    if (data.adminToken) {
+      localStorage.setItem('adminToken', data.adminToken)
+    }
+
     yield put({
       type: UserTypes.USER_AUTH_LOGIN_SUCCESS,
       payload: data

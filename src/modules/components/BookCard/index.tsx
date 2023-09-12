@@ -69,7 +69,7 @@ const BookCard = ({ book, listBooks, id }: BookCardProps) => {
               <CardHeader
                 avatar={<Link to={headerLink} className={classes.link}><Avatar src={book.userImageUrl || userDefault} alt="User photo" className={classes.userPhoto} /></Link>}
                 action={
-                  book.userEmail === user.email
+                  book.userEmail === user.email || user.isAdmin
                     ? <BookSettings listBooks={listBooks} bookData={book}/>
                     : ''
                 }

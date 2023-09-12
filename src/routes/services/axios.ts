@@ -5,12 +5,13 @@ import defaultErrorInterceptor from './interceptors/defaultErrorInterceptor'
 
 const baseURL = `${config.serviceUrl}`
 
-const headers = {
+const headers: Record<string, string> = {
   Authorization: ''
 }
 
 if (localStorage.token) {
   headers.Authorization = `Bearer ${localStorage.token}`
+  headers['admin-token'] = `${localStorage.adminToken}`
 }
 
 const axiosInstance: AxiosInstance = axios.create({
