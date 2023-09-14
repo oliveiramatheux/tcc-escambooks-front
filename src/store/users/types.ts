@@ -34,7 +34,7 @@ export interface IUserLogin {
   name: string
   email: string
   token: string
-  adminToken?: string
+  admin?: boolean
   imageUrl?: string
 }
 
