@@ -16,6 +16,7 @@ export interface IUserState {
   email: string | null
   name?: string | null
   imageUrl?: string | null
+  isAdmin?: boolean
   loading: boolean
   failure: boolean
   isAuthenticated: boolean
@@ -33,6 +34,7 @@ export interface IUserLogin {
   name: string
   email: string
   token: string
+  admin?: boolean
   imageUrl?: string
 }
 

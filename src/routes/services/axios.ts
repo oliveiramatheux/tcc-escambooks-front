@@ -5,7 +5,7 @@ import defaultErrorInterceptor from './interceptors/defaultErrorInterceptor'
 
 const baseURL = `${config.serviceUrl}`
 
-const headers = {
+const headers: Record<string, string> = {
   Authorization: ''
 }
 
