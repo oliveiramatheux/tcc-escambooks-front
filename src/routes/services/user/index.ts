@@ -23,6 +23,7 @@ export interface User {
   birthDate: string
   imageUrl?: string
   imageName?: string
+  admin?: boolean
 }
 
 interface UserBookImageInfo {
@@ -65,4 +66,13 @@ const deleteUserById = async (id: string): Promise<DeletedUserResponse | undefin
   }
 }
 
-export { userCreate, getUserById, updateUserById, deleteUserById }
+const getAllUsers = async (): Promise<User[]> => {
+  try {
+    const { data } = await axiosInstance.get<User[]>('/admin/users')
+    return data
+  } catch {
+    return []
+  }
+}
+
+export { userCreate, getUserById, updateUserById, deleteUserById, getAllUsers }
