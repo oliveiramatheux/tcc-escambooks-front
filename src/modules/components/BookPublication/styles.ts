@@ -9,7 +9,7 @@ export default makeStyles((theme: Theme) =>
     },
     paper: {
       margin: theme.spacing(5),
-      color: 'white',
+      color: theme.palette.background.paper,
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
         margin: theme.spacing(0),
@@ -21,8 +21,8 @@ export default makeStyles((theme: Theme) =>
     },
     paperPublish: {
       padding: theme.spacing(2),
-      color: 'white',
-      backgroundColor: '#3f51b5',
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
       border: 0,
       marginBottom: 40,
       display: 'flex',
@@ -43,6 +43,9 @@ export default makeStyles((theme: Theme) =>
       '&:hover': {
         backgroundColor: blueGrey[700]
       }
+    },
+    cleanSearchButton: {
+      fontFamily: 'system-ui'
     }
   })
 )

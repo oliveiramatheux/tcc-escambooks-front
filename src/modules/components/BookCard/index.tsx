@@ -116,7 +116,7 @@ const BookCard = ({ book, listBooks, id }: BookCardProps) => {
                     className={likeId ? classes.liked : undefined}
                     onClick={async () => { await onClickFavoriteButton(book) }}
                   >
-                    <FavoriteIcon />
+                    <FavoriteIcon/>
                   </IconButton>
               </CardActions>
             )}
@@ -132,7 +132,7 @@ const BookCard = ({ book, listBooks, id }: BookCardProps) => {
       </Card>
       <Modal open={open} title={book.title}
         description={
-          <Typography style={{ textAlign: 'justify' }}>
+          <Typography color="textSecondary" style={{ textAlign: 'justify' }}>
             {book.description}
           </Typography>}
         closeAction={() => { setOpen(false) }}

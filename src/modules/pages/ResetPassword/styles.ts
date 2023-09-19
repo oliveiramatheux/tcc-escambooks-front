@@ -20,7 +20,7 @@ export default makeStyles((theme: Theme) =>
       border: 0,
       marginTop: '7.5%',
       marginBottom: '7.5%',
-      backgroundColor: 'white',
+      backgroundColor: theme.palette.common.white,
       padding: '30px',
       maxWidth: '100%',
       width: '100%',

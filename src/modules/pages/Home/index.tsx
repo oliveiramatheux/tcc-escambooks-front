@@ -8,6 +8,7 @@ import PageDecorator from '../../components/PageDecorator'
 import UserInfo from '../../components/UserInfo'
 import BookPublication from '../../components/BookPublication'
 import { handleEventUserInfos, handleEventScreen } from 'utils/analytics/analytics'
+import PageTemplate from '../../components/PageTemplate'
 
 const Home = (): JSX.Element => {
   const { user } = useSelector(
@@ -26,7 +27,7 @@ const Home = (): JSX.Element => {
   handleEventScreen('escambooks_home', 'home')
 
   return (
-    <>
+    <PageTemplate>
       <PageDecorator title={'Escambooks'} description={'Escambooks - timeline'} />
       <HeaderMenu />
       <Grid
@@ -42,7 +43,7 @@ const Home = (): JSX.Element => {
           <BookPublication/>
         </Grid>
       </Grid>
-    </>
+    </PageTemplate>
   )
 }
 

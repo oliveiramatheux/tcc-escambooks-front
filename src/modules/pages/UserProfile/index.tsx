@@ -16,6 +16,7 @@ import { deleteFile, getDownloadURL, getStorageRef, uploadBytes } from '../../..
 import { PhotoCamera } from '@material-ui/icons'
 import { styled } from '@mui/material/styles'
 import { TabMenu } from 'modules/components'
+import PageTemplate from '../../components/PageTemplate'
 
 const Input = styled('input')({
   display: 'none'
@@ -176,7 +177,7 @@ const UserProfile = () => {
   }, [user?.id])
 
   return (
-    <>
+    <PageTemplate>
       <PageDecorator title={userFirstName ? `${userFirstName} | Escambooks - Perfil de usuário` : 'Escambooks - Perfil de usuário'} description={'Escambooks - profile'} />
       <HeaderMenu />
       <Grid
@@ -234,7 +235,7 @@ const UserProfile = () => {
         </>
           : <LoadingSimple/>}
       </Grid>
-    </>
+    </PageTemplate>
   )
 }
 

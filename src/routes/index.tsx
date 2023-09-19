@@ -18,13 +18,13 @@ const AppRoutes = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/login" element={<Login/>} />
+          <Route path="/verify-email" element={<CheckEmail />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/loading" element={<LoadingAnimation/>} />
           <Route path="*" element={<NotFound/>} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile/:id?" element={<UserProfile />} />
-          <Route path="/verify-email" element={<CheckEmail />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
