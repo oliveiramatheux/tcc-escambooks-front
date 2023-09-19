@@ -10,6 +10,7 @@ const UserProfile = React.lazy(async () => await import('../modules/pages/UserPr
 const CheckEmail = React.lazy(async () => await import('../modules/pages/CheckEmail'))
 const ForgotPassword = React.lazy(async () => await import('../modules/pages/ForgotPassword'))
 const ResetPassword = React.lazy(async () => await import('../modules/pages/ResetPassword'))
+const Admin = React.lazy(async () => await import('../modules/pages/Admin'))
 
 const AppRoutes = (): JSX.Element => {
   return (
@@ -25,6 +26,7 @@ const AppRoutes = (): JSX.Element => {
           <Route path="*" element={<NotFound/>} />
           <Route path="/home" element={<Home />} />
           <Route path="/profile/:id?" element={<UserProfile />} />
+          <Route path="/admin" element={<Admin/>}/>
         </Routes>
       </Suspense>
     </BrowserRouter>

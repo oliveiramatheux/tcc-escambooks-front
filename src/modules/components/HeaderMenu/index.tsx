@@ -26,7 +26,11 @@ import UserSettings from '../UserSettings'
 import Modal from '../Modal'
 import { socket } from 'config/socket'
 
-const HeaderMenu = (): JSX.Element => {
+interface HeaderMenuProps {
+  hideSearchBar?: boolean
+}
+
+const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -113,6 +117,10 @@ const HeaderMenu = (): JSX.Element => {
 
   const handleClickIcon = () => {
     navigate('/home')
+  }
+
+  const handleClickAdmin = () => {
+    navigate('/admin')
   }
 
   const inputRef = createRef()
@@ -206,6 +214,7 @@ const HeaderMenu = (): JSX.Element => {
       <MenuItem onClick={handleClickProfile}>Perfil</MenuItem>
       <MenuItem onClick={handleOpenUserSettings}>Configurações</MenuItem>
       <MenuItem onClick={handleOpenTermsAndConditions}>Termos e condições</MenuItem>
+      {user.isAdmin && <MenuItem onClick={handleClickAdmin}>Área de Administrador</MenuItem>}
       <MenuItem onClick={handleClickLogOut}>Sair</MenuItem>
     </Menu>
   )
@@ -333,7 +342,7 @@ const HeaderMenu = (): JSX.Element => {
             >
               <img src={icon} alt="Escambooks icon" className={classes.icon} />
             </IconButton>
-            <div className={classes.search}>
+            {!hideSearchBar && (<div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />
               </div>
@@ -348,7 +357,7 @@ const HeaderMenu = (): JSX.Element => {
                 onKeyDown={(event) => { onSubmitSearchBook(event) }}
                 inputProps={{ 'aria-label': 'search' }}
               />
-            </div>
+            </div>)}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <Tooltip title="Vestibulares">
