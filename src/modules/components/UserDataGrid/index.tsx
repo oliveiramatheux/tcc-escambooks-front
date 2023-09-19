@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { User, deleteUserById, getAllUsers } from '../../../routes/services/user'
-import { Avatar, IconButton } from '@material-ui/core'
+import { Avatar, IconButton, Paper } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { ApplicationState } from 'store/rootReducer'
 import useStyles from './styles'
@@ -129,14 +129,14 @@ const UserDataGrid = (): JSX.Element => {
 
   return (
     <>
-      <div style={{ height: 550, width: '100%' }}>
+      <Paper style={{ height: 550, width: '100%' }}>
          <DataGrid
           rows={users}
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[10]}
           disableSelectionOnClick/>
-      </div>
+      </Paper>
       {openModalDeleteUser && (<Modal
         open={openModalDeleteUser}
         closeAction={handleCloseModalDeleteUser}
