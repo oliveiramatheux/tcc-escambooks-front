@@ -95,7 +95,7 @@ const BookPublication = (): JSX.Element => {
         marginTop: '40px',
         width: '100%'
       }}>
-          <Typography fontWeight={700} color={'black'} textAlign={'center'} fontFamily={'system-ui'}>{emptyStateMessage}</Typography>
+          <Typography fontWeight={700} textAlign={'center'} fontFamily={'system-ui'}>{emptyStateMessage}</Typography>
           <Button variant="contained" size="large" color="primary" style={{ marginTop: '16px', fontFamily: 'system-ui' }} onClick={listBooks}>Refazer busca</Button>
       </div>
     )
@@ -132,7 +132,7 @@ const BookPublication = (): JSX.Element => {
         </Paper>
         {searchBookTerm && (
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography color={'black'} fontWeight={700}>
+            <Typography fontWeight={700}>
                 {`Vendo resultados da busca: ${searchBookTerm}`}
             </Typography>
             <Button

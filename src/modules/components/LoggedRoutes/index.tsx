@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@material-ui/core'
+import { CssBaseline, ThemeProvider } from '@material-ui/core'
 import { useEffect } from 'react'
 import { useTheme } from '../../../theme'
 import { Outlet, useNavigate } from 'react-router-dom'
@@ -23,12 +23,8 @@ const LoggedRoutes = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <div style={{
-        backgroundColor: theme.palette.background.default,
-        minHeight: '100vh'
-      }}>
-        <Outlet />
-      </div>
+      <CssBaseline />
+      <Outlet />
     </ThemeProvider>
   )
 }

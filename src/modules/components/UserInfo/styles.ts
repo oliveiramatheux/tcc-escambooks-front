@@ -6,8 +6,8 @@ export default makeStyles((theme) =>
       margin: theme.spacing(5),
       padding: theme.spacing(2),
       textAlign: 'center',
-      color: theme.palette.primary.contrastText,
-      backgroundColor: theme.palette.primary.main,
+      color: `${theme.palette.primary.contrastText}  !important`,
+      backgroundColor: `${theme.palette.primary.main}  !important`,
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
         marginRight: theme.spacing(0),
