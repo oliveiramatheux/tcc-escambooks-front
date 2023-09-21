@@ -10,11 +10,13 @@ export default function preferencesReducer (
 ): IPreferencesState {
   switch (action.type) {
     case PreferencesTypes.TOGGLE_DARK_MODE:
-      console.log(state, action)
       return {
         ...state,
         darkMode: !state.darkMode
       }
+
+    case PreferencesTypes.INIT_PREFERENCES:
+      return { ...state, ...action.payload }
 
     default:
       return state

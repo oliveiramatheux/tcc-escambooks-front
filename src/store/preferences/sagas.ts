@@ -1,16 +1,11 @@
-import { all, takeLatest, StrictEffect, put } from 'redux-saga/effects'
+import { all, takeLatest, StrictEffect, select } from 'redux-saga/effects'
+import { ApplicationState } from '../rootReducer'
 import { PreferencesTypes } from './types'
 
 export function * toggleDarkMode (): Generator<StrictEffect> {
-  try {
-    yield put({
-      type: PreferencesTypes.TOGGLE_DARK_MODE
-    })
-  } catch (error) {
-    console.log(error)
-  }
+  const preferences = yield select((state: ApplicationState) => state.preferences)
 
-  // localStorage.setItem('token', data.token)
+  localStorage.setItem('preferences', JSON.stringify(preferences))
 }
 
 export default function * preferencesSagas (): Generator<StrictEffect> {
