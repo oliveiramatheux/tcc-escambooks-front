@@ -1,5 +1,7 @@
 import { createTheme, useMediaQuery } from '@material-ui/core'
 import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { ApplicationState } from './store/rootReducer'
 
 declare module '@material-ui/core/styles/createBreakpoints' {
   interface BreakpointOverrides {
@@ -13,13 +15,16 @@ declare module '@material-ui/core/styles/createBreakpoints' {
 }
 
 export const useTheme = () => {
+  const { darkMode } = useSelector(
+    (state: ApplicationState) => state.preferences
+  )
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          type: prefersDarkMode ? 'dark' : 'light',
+          type: darkMode ? 'dark' : 'light',
           primary: {
             main: '#3f51b5'
           },
@@ -56,7 +61,7 @@ export const useTheme = () => {
           }
         }
       }),
-    [prefersDarkMode]
+    [darkMode]
   )
 
   return theme

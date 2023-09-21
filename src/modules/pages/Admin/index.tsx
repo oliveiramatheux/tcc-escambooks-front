@@ -4,13 +4,12 @@ import PageDecorator from '../../components/PageDecorator'
 import HeaderMenu from 'modules/components/HeaderMenu'
 import UserInfo from 'modules/components/UserInfo'
 import UserDataGrid from '../../components/UserDataGrid'
-import PageTemplate from '../../components/PageTemplate'
 
 const Admin = (): JSX.Element => {
   const classes = useStyles()
 
   return (
-    <PageTemplate>
+    <>
      <PageDecorator title={'Escambooks - Admin'} description={'Escambooks - Admin'} />
      <HeaderMenu hideSearchBar />
      <Grid
@@ -36,7 +35,7 @@ const Admin = (): JSX.Element => {
           </div>
         </Grid>
       </Grid>
-    </PageTemplate>
+    </>
 
   )
 }
