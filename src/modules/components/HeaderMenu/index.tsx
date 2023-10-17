@@ -21,13 +21,23 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import BackToTop from '../BackToTop'
 import TermsAndConditions from '../TermsAndConditions'
 import Tooltip from '@mui/material/Tooltip'
-import { deleteUserById, getUserLikes, Like, updateLike } from '../../../routes/services'
+import { deleteUserById, getUserLikes, Like, updateLike, getUsersByNameService } from '../../../routes/services'
 import UserSettings from '../UserSettings'
 import Modal from '../Modal'
 import { socket } from 'config/socket'
+import Autocomplete from '@mui/material/Autocomplete'
+import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+import UserAutocomplete from '../UserAutocomplete'
 
 interface HeaderMenuProps {
   hideSearchBar?: boolean
+}
+
+interface UserType {
+  id: string
+  name: string
+  imgUrl: string
 }
 
 const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
@@ -49,6 +59,8 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
   const [openUserSettings, setOpenUserSettings] = useState(false)
   const [openModalDeleteUser, setOpenModalDeleteUser] = useState(false)
   const [deleteUserLoading, setDeleteUserLoading] = useState(false)
+  const [searchUserTerm, setSearchUserTerm] = useState('')
+  const [options, setOptions] = useState([])
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -299,6 +311,17 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
     }
   }, [])
 
+  const onRedirectInputSearchUser = useCallback((event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = event.target
+    setSearchUserTerm(value)
+  }, [])
+
+  const onChangeInputSearchUser = (name: string) => {
+    useEffect(() => {
+      getUsersByNameService(name)
+    }, [name])
+  }
+
   useEffect(() => {
     if (user) listNotifications()
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -342,6 +365,42 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
             >
               <img src={icon} alt="Escambooks icon" className={classes.icon} />
             </IconButton>
+            {!hideSearchBar && (<div className={classes.search}>
+              <UserAutocomplete/>
+              {/* <Autocomplete
+                  id="user-select"
+                  sx={{ width: 300 }}
+                  options={}
+                  autoHighlight
+                  getOptionLabel={(option) => option.label}
+                  renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                      <img
+                        loading="lazy"
+                        width="20"
+                        srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                        src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                        alt=""
+                      />
+                      {option.label} ({option.code}) +{option.phone}
+                    </Box>
+                  )}
+                  renderInput={(params) => (
+                    <InputBase
+                      {...params}
+                      classes={{
+                        root: classes.inputRoot,
+                        input: classes.inputInput
+                      }}
+                      placeholder="Nome do Usuário"
+                      inputProps={{
+                        ...params.inputProps,
+                        autoComplete: 'new-password' // disable autocomplete and autofill
+                      }}
+                    />
+                  )}
+               /> */}
+            </div>)}
             {!hideSearchBar && (<div className={classes.search}>
               <div className={classes.searchIcon}>
                 <SearchIcon />

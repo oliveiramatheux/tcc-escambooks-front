@@ -75,4 +75,13 @@ const getAllUsers = async (): Promise<User[]> => {
   }
 }
 
-export { userCreate, getUserById, updateUserById, deleteUserById, getAllUsers }
+const getUsersByNameService = async (name: string): Promise<User[]> => {
+  try {
+    const { data } = await axiosInstance.get<User[]>(`/users/username/${name}`)
+    return data || []
+  } catch {
+    return []
+  }
+}
+
+export { userCreate, getUserById, updateUserById, deleteUserById, getAllUsers, getUsersByNameService }
