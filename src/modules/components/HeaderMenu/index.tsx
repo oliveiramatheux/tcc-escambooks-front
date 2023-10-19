@@ -145,7 +145,10 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
     matches.forEach(match => {
       if (!match.isVisualized) {
         updateMatch(match.id, {
-          isVisualized: true
+          users: match.users.map(userMap => {
+            if (userMap.userId === user.id) return { ...userMap, isVisualized: true }
+            return userMap
+          })
         })
       }
     })

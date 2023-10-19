@@ -1,10 +1,15 @@
+export interface MatchUser {
+  userId: string
+  isVisualized: boolean
+}
+
 export interface Match {
   id: string
   books: string[]
-  users: string[]
+  users: MatchUser[]
   likes: string[]
   usersConfirmed?: string[]
-  isVisualized?: boolean
+  isVisualized: boolean
   date?: string
 }
 
@@ -16,8 +21,7 @@ export interface MatchesResponse {
 
 export interface UpdateMatchPayload {
   books?: string[]
-  users?: string[]
+  users?: MatchUser[]
   likes?: string[]
   usersConfirmed?: string[]
-  isVisualized?: boolean
 }
