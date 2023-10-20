@@ -6,8 +6,8 @@ export default makeStyles((theme) =>
       margin: theme.spacing(5),
       padding: theme.spacing(2),
       textAlign: 'center',
-      color: 'white',
-      backgroundColor: '#3f51b5',
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
         marginRight: theme.spacing(0),
@@ -26,7 +26,7 @@ export default makeStyles((theme) =>
       position: 'absolute',
       right: 0,
       top: 0,
-      background: 'white',
+      background: theme.palette.common.white,
       borderRadius: '50%'
     },
     link: {

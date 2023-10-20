@@ -6,7 +6,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContentText from '@mui/material/DialogContentText'
 import useMediaQuery from '@mui/material/useMediaQuery'
-import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Box, Chip } from '@material-ui/core'
+import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Box, Chip, Typography } from '@material-ui/core'
 import { useTheme } from '@mui/material/styles'
 import { useForm } from 'react-hook-form'
 import { regexNumber } from '../../../utils/regex'
@@ -127,7 +127,9 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
           <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
             <DialogContent className={classes.root}>
               <DialogContentText>
-              Preencha as informações do Livro.
+                <Typography color="textPrimary">
+                  Preencha as informações do Livro.
+                </Typography>
               </DialogContentText>
               <FormControl className={classes.formControl} variant="outlined">
                 {!errors.title ? (<InputLabel htmlFor="outlined-title">Título</InputLabel>) : (<InputLabel htmlFor="outlined-title" className={classes.errorHelperText}>Título</InputLabel>)}
@@ -290,8 +292,7 @@ const ModalBookEdit = (props: InterfaceModalProps): JSX.Element => {
                   Editar
                 </LoadingButton>
                 <Button
-                  variant="outlined"
-                  color="default"
+                  variant="text"
                   size="medium"
                   className={classes.button}
                   onClick={() => {

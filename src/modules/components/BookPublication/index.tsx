@@ -95,7 +95,7 @@ const BookPublication = (): JSX.Element => {
         marginTop: '40px',
         width: '100%'
       }}>
-          <Typography fontWeight={700} color={'black'} textAlign={'center'} fontFamily={'system-ui'}>{emptyStateMessage}</Typography>
+          <Typography fontWeight={700} textAlign={'center'} fontFamily={'system-ui'}>{emptyStateMessage}</Typography>
           <Button variant="contained" size="large" color="primary" style={{ marginTop: '16px', fontFamily: 'system-ui' }} onClick={listBooks}>Refazer busca</Button>
       </div>
     )
@@ -113,8 +113,8 @@ const BookPublication = (): JSX.Element => {
   }, [clearSearchTerm, searchBookTermFromLocationState])
 
   return (
-    <div>
-      <Paper elevation={0} className={classes.paper}>
+    <>
+      <div className={classes.paper}>
         <Paper elevation={0} className={classes.paperPublish}>
           <Typography variant="h5" component="div">
             Qual livro deseja publicar?
@@ -132,21 +132,28 @@ const BookPublication = (): JSX.Element => {
         </Paper>
         {searchBookTerm && (
           <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <Typography color={'black'} fontWeight={700}>
+            <Typography fontWeight={700}>
                 {`Vendo resultados da busca: ${searchBookTerm}`}
             </Typography>
-            <Button onClick={() => { setSearchBookTerm('') }} size="large" style={{ color: '#3f51b5', fontFamily: 'system-ui' }} variant="outlined" startIcon={<HighlightOffIcon />}>
+            <Button
+              onClick={() => { setSearchBookTerm('') }}
+              size="large"
+              color="primary"
+              className={classes.cleanSearchButton}
+              variant="outlined"
+              startIcon={<HighlightOffIcon />}
+            >
               Limpar busca
             </Button>
           </Box>
         )}
         {renderResult()}
-      </Paper>
+      </div>
       {openModalBookPublish && (<ModalBookPublish
         open={openModalBookPublish}
         closeAction={handleCloseModalBookPublish}
       />)}
-    </div>
+    </>
   )
 }
 

@@ -1,28 +1,11 @@
-import { useEffect } from 'react'
 import { Grid } from '@material-ui/core'
-import { useNavigate } from 'react-router-dom'
-import { ApplicationState } from '../../../store/rootReducer'
-import { useSelector } from 'react-redux'
-import HeaderMenu from '../../components/HeaderMenu'
 import PageDecorator from '../../components/PageDecorator'
 import UserInfo from '../../components/UserInfo'
 import BookPublication from '../../components/BookPublication'
-import { handleEventUserInfos, handleEventScreen } from 'utils/analytics/analytics'
+import { handleEventScreen } from 'utils/analytics/analytics'
+import HeaderMenu from '../../components/HeaderMenu'
 
 const Home = (): JSX.Element => {
-  const { user } = useSelector(
-    (state: ApplicationState) => state
-  )
-
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!user.isAuthenticated) {
-      navigate('/login')
-    }
-  }, [navigate, user])
-
-  handleEventUserInfos(user)
   handleEventScreen('escambooks_home', 'home')
 
   return (

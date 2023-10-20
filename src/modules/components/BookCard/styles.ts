@@ -53,7 +53,7 @@ export default makeStyles((theme: Theme) =>
         left: 0,
         width: '100%',
         height: '48px',
-        background: 'linear-gradient(rgba(255, 255, 255, 0.001), white)'
+        background: `linear-gradient(rgba(255, 255, 255, 0.001), ${theme.palette.background.paper})`
       }
     },
     seeMoreButton: {
@@ -64,7 +64,8 @@ export default makeStyles((theme: Theme) =>
       alignItems: 'center'
     },
     link: {
-      textDecoration: 'none'
+      textDecoration: 'none',
+      color: 'inherit'
     },
     liked: {
       color: theme.palette.error.main

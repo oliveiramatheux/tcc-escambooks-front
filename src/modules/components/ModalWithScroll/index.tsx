@@ -26,6 +26,7 @@ const Modal = (props: InterfaceModalProps): JSX.Element => {
           scroll={'paper'}
           aria-labelledby="scroll-dialog-title"
           aria-describedby="scroll-dialog-description"
+          className={classes.dialog}
         >
           <DialogTitle id="scroll-dialog-title" className={classes.modalTitle}>{title}</DialogTitle>
           <DialogContent dividers id="scroll-dialog-description" tabIndex={-1}>

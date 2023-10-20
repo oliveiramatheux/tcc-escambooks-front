@@ -34,11 +34,15 @@ export default makeStyles((theme: Theme) =>
       alignItems: 'center'
     },
     errorHelperText: {
-      color: '#f50057 !important'
+      color: `${theme.palette.error[theme.palette.type]} !important`
     },
     dialog: {
       padding: theme.spacing(2),
-      width: '-webkit-fill-available'
+      width: '-webkit-fill-available',
+      '& .MuiDialog-paper': {
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary
+      }
     }
   })
 )

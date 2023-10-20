@@ -4,7 +4,6 @@ import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
-import DialogContentText from '@mui/material/DialogContentText'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { Button, FormControl, InputLabel, OutlinedInput, FormHelperText, IconButton, Chip, Box, Typography } from '@material-ui/core'
 import { useTheme } from '@mui/material/styles'
@@ -147,9 +146,9 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
           <DialogTitle id="scroll-dialog-title" className={classes.modalTitle}>Publicação</DialogTitle>
           <form onSubmit={handleSubmit(onSubmit)} className={classes.root}>
             <DialogContent className={classes.root}>
-              <DialogContentText>
-              Preencha as informações do Livro.
-              </DialogContentText>
+              <Typography color="textPrimary">
+                Preencha as informações do Livro.
+              </Typography>
               <FormControl className={classes.formControl} variant="outlined">
                 {!errors.title ? (<InputLabel htmlFor="outlined-title">Título</InputLabel>) : (<InputLabel htmlFor="outlined-title" className={classes.errorHelperText}>Título</InputLabel>)}
                 <OutlinedInput
@@ -318,8 +317,7 @@ const ModalBookPublish = (props: InterfaceModalProps): JSX.Element => {
                   Publicar
                 </LoadingButton>
                 <Button
-                  variant="outlined"
-                  color="default"
+                  variant="text"
                   size="medium"
                   className={classes.button}
                   onClick={() => {
