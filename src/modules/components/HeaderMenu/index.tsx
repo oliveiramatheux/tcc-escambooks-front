@@ -23,6 +23,7 @@ import UserSettings from '../UserSettings'
 import Modal from '../Modal'
 import { socket } from 'config/socket'
 import ThemeButton from '../ThemeButton'
+import { toggleDarkMode } from '../../../store/preferences/actions'
 
 interface HeaderMenuProps {
   hideSearchBar?: boolean
@@ -131,6 +132,8 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
   const handleClickAdmin = () => {
     navigate('/admin')
   }
+
+  const onClickThemeButton = useCallback(() => dispatch(toggleDarkMode()), [dispatch])
 
   const inputRef = createRef()
 
@@ -265,6 +268,10 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={onClickThemeButton} className={classes.menuItemThemeButton}>
+        <ThemeButton />
+        <p>Alterar tema</p>
+      </MenuItem>
       <MenuItem onClick={handleNotificationMenuOpen}>
         <IconButton aria-label="notifications" color="inherit" aria-controls={menuNotificationId}
           aria-haspopup="true">
