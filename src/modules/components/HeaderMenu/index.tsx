@@ -223,7 +223,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
           matches.map((match) => {
             return (
               <Link to={''} key={match.id} className={classes.link}>
-                <MenuItem>Novo match {match.id} - {match.date}</MenuItem>
+                <MenuItem>Novo match! clique para visualizar mais informações - {match.date}</MenuItem>
               </Link>
             )
           })
