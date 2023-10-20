@@ -22,17 +22,17 @@ const Admin = (): JSX.Element => {
           <UserInfo/>
         </Grid>
         <Grid item xs={12} md={9} lg={7} xl={6}>
-          <Paper elevation={0} className={classes.paperAdmin}>
+          <div className={classes.paperAdmin}>
             <Paper elevation={0} className={classes.paperAdminSub}>
               <Typography variant="h5" gutterBottom component="div">
                 Área de Administrador
               </Typography>
             </Paper>
-            <Typography className={classes.gridTitle} variant="h5" gutterBottom component="div">
+            <Typography color="textPrimary" className={classes.gridTitle} variant="h5" gutterBottom component="div">
               Usuários da plataforma
             </Typography>
-            <UserDataGrid/>
-          </Paper>
+            <UserDataGrid />
+          </div>
         </Grid>
       </Grid>
     </>

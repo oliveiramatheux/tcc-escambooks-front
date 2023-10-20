@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles(() =>
+export default makeStyles(theme =>
   createStyles({
     divContentModalScroll: {
       display: 'flex',
@@ -17,7 +17,7 @@ export default makeStyles(() =>
       textDecoration: 'underline',
       cursor: 'pointer',
       '&:hover': {
-        color: '#3f51b5'
+        color: theme.palette.primary.main
       }
     }
   })

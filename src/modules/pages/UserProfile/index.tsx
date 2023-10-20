@@ -166,12 +166,6 @@ const UserProfile = () => {
   }, [getUser, getUserBooks, getLikedBooks])
 
   useEffect(() => {
-    if (!userState.isAuthenticated) {
-      navigate('/login')
-    }
-  }, [userState])
-
-  useEffect(() => {
     setValue(0)
   }, [user?.id])
 

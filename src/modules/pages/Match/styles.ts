@@ -26,8 +26,8 @@ export default makeStyles((theme: Theme) =>
       margin: theme.spacing(5),
       padding: theme.spacing(2),
       textAlign: 'center',
-      color: 'white',
-      backgroundColor: '#3f51b5',
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
         marginRight: theme.spacing(0),

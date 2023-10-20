@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles(() =>
+export default makeStyles((theme) =>
   createStyles({
     divContentModalScroll: {
       display: 'flex',
@@ -14,7 +14,7 @@ export default makeStyles(() =>
       fontSize: '1rem',
       lineHeight: 1.5,
       letterSpacing: '0.00938em',
-      color: '#0009',
+      color: theme.palette.text.secondary,
       textAlign: 'justify'
     }
   })

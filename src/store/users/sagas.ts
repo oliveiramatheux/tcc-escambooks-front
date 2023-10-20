@@ -2,6 +2,7 @@ import { all, takeLatest, StrictEffect, put, call } from 'redux-saga/effects'
 import { UserTypes, IUserAuthGoogleAction, IUserAuthLoginAction, IUserLogin } from './types'
 import { authLogin } from '../../routes/services/auth'
 import { AxiosResponse } from 'axios'
+import { PreferencesTypes } from '../preferences/types'
 
 export function * checkUserAuthGoogle (action: IUserAuthGoogleAction): Generator<StrictEffect> {
   yield put({
@@ -24,6 +25,14 @@ export function * userAuthLogin (action: IUserAuthLoginAction): Generator<Strict
       type: UserTypes.USER_AUTH_LOGIN_SUCCESS,
       payload: data
     })
+
+    const preferences = localStorage.getItem('preferences')
+
+    yield put({
+      type: PreferencesTypes.INIT_PREFERENCES,
+      payload: preferences ? JSON.parse(preferences) : undefined
+    })
+
     window.location.reload()
   } catch {
     yield put({

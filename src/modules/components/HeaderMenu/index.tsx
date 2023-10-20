@@ -22,6 +22,7 @@ import { deleteUserById, getUserLikes, Like, updateLike, getUserMatches, Match, 
 import UserSettings from '../UserSettings'
 import Modal from '../Modal'
 import { socket } from 'config/socket'
+import ThemeButton from '../ThemeButton'
 
 interface HeaderMenuProps {
   hideSearchBar?: boolean
@@ -396,6 +397,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
             </div>)}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
+              <ThemeButton />
               <Tooltip title="Notificações">
                 <IconButton aria-label="show new notifications" color="inherit"
                   aria-controls={menuNotificationId}
