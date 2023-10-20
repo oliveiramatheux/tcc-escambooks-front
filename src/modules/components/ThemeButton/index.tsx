@@ -6,7 +6,7 @@ import DarkModeIcon from '@material-ui/icons/Brightness3'
 import { ApplicationState } from '../../../store/rootReducer'
 import { useCallback } from 'react'
 
-const DarkModeButton = () => {
+const ThemeButton = () => {
   const { darkMode } = useSelector(
     (state: ApplicationState) => state.preferences
   )
@@ -23,4 +23,4 @@ const DarkModeButton = () => {
   )
 }
 
-export default DarkModeButton
+export default ThemeButton

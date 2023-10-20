@@ -73,6 +73,10 @@ const BookSettings = (props: IBookSettingsProps): JSX.Element => {
         <MoreVertIcon color="inherit"/>
       </IconButton>
       <Menu
+        id="demo-customized-menu"
+        MenuListProps={{
+          'aria-labelledby': 'demo-customized-button'
+        }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
