@@ -5,11 +5,8 @@ import {
 } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 import SearchIcon from '@material-ui/icons/Search'
-import MailIcon from '@material-ui/icons/Mail'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import MoreIcon from '@material-ui/icons/MoreVert'
-import MenuBookRoundedIcon from '@material-ui/icons/MenuBookRounded'
-import CreateRoundedIcon from '@material-ui/icons/CreateRounded'
 import useStyles from './styles'
 import { ApplicationState } from '../../../store/rootReducer'
 import { Link, useNavigate } from 'react-router-dom'
@@ -21,11 +18,12 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp'
 import BackToTop from '../BackToTop'
 import TermsAndConditions from '../TermsAndConditions'
 import Tooltip from '@mui/material/Tooltip'
-import { deleteUserById, getUserLikes, Like, updateLike } from '../../../routes/services'
+import { deleteUserById, getUserLikes, Like, updateLike, getUserMatches, Match, updateMatch } from '../../../routes/services'
 import UserSettings from '../UserSettings'
 import Modal from '../Modal'
 import { socket } from 'config/socket'
 import ThemeButton from '../ThemeButton'
+import { toggleDarkMode } from '../../../store/preferences/actions'
 
 interface HeaderMenuProps {
   hideSearchBar?: boolean
@@ -45,6 +43,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
   const [notificationAnchorEl, setNotificationAnchorEl] = useState<null | HTMLElement>(null)
   const [openModalScroll, setOpenModalScroll] = useState<boolean>(false)
   const [notifications, setNotifications] = useState<Like[]>([])
+  const [matches, setMatches] = useState<Match[]>([])
   const [notificationsNotVisualized, setNotificationsNotVisualized] = useState<number>(0)
   const [searchBookTerm, setSearchBookTerm] = useState('')
   const [openUserSettings, setOpenUserSettings] = useState(false)
@@ -84,8 +83,18 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
 
     setNotifications(notifications.items)
 
-    setNotificationsNotVisualized(notifications.totalItemsNotVisualized)
+    setNotificationsNotVisualized(state => state + notifications.totalItemsNotVisualized)
   }, [user.id])
+
+  const listMatches = useCallback(async () => {
+    const matchesResponse = await getUserMatches()
+
+    if (!matchesResponse) return
+
+    setMatches(matchesResponse.items)
+
+    setNotificationsNotVisualized(state => state + matchesResponse.totalItemsNotVisualized)
+  }, [])
 
   const handleNotificationMenuClose = useCallback(() => {
     setNotificationAnchorEl(null)
@@ -124,6 +133,8 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
     navigate('/admin')
   }
 
+  const onClickThemeButton = useCallback(() => dispatch(toggleDarkMode()), [dispatch])
+
   const inputRef = createRef()
 
   const updateVisualizedNotifications = async () => {
@@ -135,8 +146,23 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
       }
     })
 
+    matches.forEach(match => {
+      if (!match.isVisualized) {
+        updateMatch(match.id, {
+          users: match.users.map(userMap => {
+            if (userMap.userId === user.id) return { ...userMap, isVisualized: true }
+            return userMap
+          })
+        })
+      }
+    })
+
     const notificationsMapped = notifications.map(notification => ({ ...notification, isVisualized: true }))
     setNotifications(notificationsMapped)
+
+    const matchesMapped = matches.map(match => ({ ...match, isVisualized: true }))
+    setMatches(matchesMapped)
+
     setNotificationsNotVisualized(0)
   }
 
@@ -186,17 +212,27 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={isNotificationMenuOpen}
         onClose={handleNotificationMenuClose}
+        className={classes.menuNotification}
       >
-        {notifications.length
-          ? notifications.map((notification) => {
+        {!!notifications.length &&
+          notifications.map((notification) => {
             return (
               <Link to={`/profile/${notification.userLikedId}`} key={notification.id} className={classes.link}>
                 <MenuItem>O usuário {notification.userLikedName} deu um like no seu livro {notification.bookTitle}</MenuItem>
               </Link>
             )
           })
-          : (<MenuItem onClick={handleNotificationMenuClose}>Nenhuma notificação</MenuItem>)}
-
+        }
+        {!!matches.length &&
+          matches.map((match) => {
+            return (
+              <Link to={''} key={match.id} className={classes.link}>
+                <MenuItem>Novo match! clique para visualizar mais informações - {match.date}</MenuItem>
+              </Link>
+            )
+          })
+        }
+        {(!notifications.length && !matches.length) && <MenuItem onClick={handleNotificationMenuClose}>Nenhuma notificação</MenuItem>}
       </Menu>)
   }
 
@@ -232,25 +268,9 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton aria-label="exams" color="inherit">
-          <MenuBookRoundedIcon />
-        </IconButton>
-        <p>Vestibulares</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="authors" color="inherit">
-          <CreateRoundedIcon />
-        </IconButton>
-        <p>Autores</p>
-      </MenuItem>
-      <MenuItem>
-        <IconButton aria-label="messages" color="inherit">
-          <Badge badgeContent={0} color="secondary">
-            <MailIcon />
-          </Badge>
-        </IconButton>
-        <p>Mensagens</p>
+      <MenuItem onClick={onClickThemeButton} className={classes.menuItemThemeButton}>
+        <ThemeButton />
+        <p>Alterar tema</p>
       </MenuItem>
       <MenuItem onClick={handleNotificationMenuOpen}>
         <IconButton aria-label="notifications" color="inherit" aria-controls={menuNotificationId}
@@ -300,8 +320,25 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
     }
   }, [])
 
+  const updateMatchReceived = useCallback((match: Match) => {
+    setMatches(state => [...state, match])
+    if (!match.isVisualized) {
+      setNotificationsNotVisualized(state => state + 1)
+    }
+  }, [])
+
+  const updateMatchDeleted = useCallback((match: Match) => {
+    setMatches(state => state.filter(stateMatch => stateMatch.id !== match.id))
+    if (!match.isVisualized) {
+      setNotificationsNotVisualized(state => state - 1)
+    }
+  }, [])
+
   useEffect(() => {
-    if (user) listNotifications()
+    if (user) {
+      listNotifications()
+      listMatches()
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user])
 
@@ -318,15 +355,21 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
 
     const eventLikeReceived = `like-received-${user.id}`
     const eventLikeDeleted = `like-deleted-${user.id}`
+    const eventMatchReceived = `match-received-${user.id}`
+    const eventMatchDeleted = `match-deleted-${user.id}`
 
     socket.on(eventLikeReceived, updateLikeReceived)
     socket.on(eventLikeDeleted, updateLikeDeleted)
+    socket.on(eventMatchReceived, updateMatchReceived)
+    socket.on(eventMatchDeleted, updateMatchDeleted)
 
     return () => {
       socket.off(eventLikeReceived, updateLikeReceived)
       socket.off(eventLikeDeleted, updateLikeDeleted)
+      socket.off(eventMatchReceived, updateMatchReceived)
+      socket.off(eventMatchDeleted, updateMatchDeleted)
     }
-  }, [updateLikeDeleted, updateLikeReceived, user.id])
+  }, [updateLikeDeleted, updateLikeReceived, updateMatchReceived, updateMatchDeleted, user.id])
 
   return (
     <>
@@ -361,23 +404,6 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
             </div>)}
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
-              <Tooltip title="Vestibulares">
-                <IconButton aria-label="exams" color="inherit">
-                  <MenuBookRoundedIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Autores">
-                <IconButton aria-label="authors" color="inherit">
-                  <CreateRoundedIcon />
-                </IconButton>
-              </Tooltip>
-              <Tooltip title="Mensagens">
-                <IconButton aria-label="show new messages" color="inherit">
-                  <Badge badgeContent={0} color="secondary">
-                    <MailIcon />
-                  </Badge>
-                </IconButton>
-              </Tooltip>
               <ThemeButton />
               <Tooltip title="Notificações">
                 <IconButton aria-label="show new notifications" color="inherit"

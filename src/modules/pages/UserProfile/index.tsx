@@ -205,7 +205,7 @@ const UserProfile = () => {
           </Paper>
         </Grid>
         <Grid item xs={12} md={9} lg={7} xl={6}>
-          <Box p={5}>
+          <Box paddingTop={5}>
             <Tabs
               value={value}
               onChange={handleChange}
