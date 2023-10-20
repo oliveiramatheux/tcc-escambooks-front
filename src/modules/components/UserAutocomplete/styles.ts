@@ -1,20 +1,36 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+import { makeStyles, Theme, createStyles, alpha } from '@material-ui/core/styles'
 
 export default makeStyles((theme: Theme) =>
   createStyles({
-    inputRoot: {
-      color: 'inherit'
+    profileImage: {
+      width: 40,
+      height: 40
     },
-    inputInput: {
-      color: 'inherit',
-      height: 50,
-      padding: theme.spacing(1, 1, 1, 0),
-      paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-      transition: theme.transitions.create('width'),
+    divRedirect: {
       width: '100%',
-      [theme.breakpoints.up('md')]: {
-        width: '30ch'
+      height: '100%',
+      backgroundSize: 'cover'
+    },
+    loadingIcon: {
+      color: 'white'
+    },
+    usernameSpan: {
+      paddingLeft: 10
+    },
+    userSearchBackground: {
+      backgroundColor: alpha(theme.palette.common.white, 0.15),
+      '&:hover': {
+        backgroundColor: alpha(theme.palette.common.white, 0.25)
       }
+    },
+    darkThemeStyles: {
+      backgroundColor: '#424242',
+      color: 'white'
+    },
+    lightThemeStyles: {
+      backgroundColor: 'white',
+      color: 'black',
+      size: '100%'
     }
   })
 )

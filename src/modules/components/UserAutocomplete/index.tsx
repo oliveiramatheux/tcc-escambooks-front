@@ -1,88 +1,112 @@
 import Box from '@mui/material/Box'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
+import CustomLabel from '../CustomLabel'
+import { useCallback, useEffect, useState } from 'react'
+import { User, getAllUsers, getUsersByNameService } from '../../../routes/services/user'
+import { Avatar, CircularProgress, Paper } from '@material-ui/core'
+import userDefault from '../../../images/user-default.png'
+import { useNavigate } from 'react-router-dom'
+import { ApplicationState } from 'store/rootReducer'
+import { useSelector } from 'react-redux'
 import useStyles from './styles'
-import { StylesProvider } from '@material-ui/core'
-import SearchIcon from '@material-ui/icons/Search'
 
 const UserAutocomplete = (): JSX.Element => {
   const classes = useStyles()
+  const navigate = useNavigate()
+
+  const { darkMode } = useSelector(
+    (state: ApplicationState) => state.preferences
+  )
+
+  const handleClickUser = (id: string) => {
+    navigate(`/profile/${id}`)
+  }
+
+  const [options, setOptions] = useState<User[]>([])
+  const [filteredOptions, setFilteredOptions] = useState<User[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [search, setSearch] = useState<string>('')
+
+  const listAllUsers = useCallback(async () => {
+    setIsLoading(true)
+    const userData = await getAllUsers()
+    setOptions(userData)
+    setIsLoading(false)
+  }, [])
+
+  const listUsersByName = useCallback(async (name: string) => {
+    setIsLoading(true)
+    const userDataByName = await getUsersByNameService(name)
+    setFilteredOptions(userDataByName)
+    setIsLoading(false)
+  }, [])
+
+  useEffect(() => {
+    listAllUsers()
+  }, [listAllUsers])
+
+  const handleInputChange = async (_: React.ChangeEvent<unknown>, searchValue: string) => {
+    setSearch(searchValue)
+
+    console.log(searchValue)
+
+    if (searchValue) {
+      listUsersByName(searchValue)
+    } else {
+      setFilteredOptions([])
+    }
+  }
 
   return (
     <Autocomplete
-      id="country-select-demo"
-      sx={{ width: 300, height: 40 }}
-      options={countries}
-      renderOption={(props, option) => (
-        <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-          <img
-            loading="lazy"
-            width="20"
-            srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-            src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-            alt=""
-          />
-          {option.label} ({option.code}) +{option.phone}
-        </Box>
+      id="search-user"
+      sx={{
+        width: 300,
+        '& .MuiAutocomplete-input': {
+          color: 'white'
+        }
+      }}
+      options={filteredOptions.length > 0 ? filteredOptions : options}
+      PaperComponent={(props) => (
+        <Paper {...props} className={darkMode ? classes.darkThemeStyles : classes.lightThemeStyles} />
+      )}
+      noOptionsText={'Leitor não encontrado...'}
+      autoHighlight
+      getOptionLabel={(option) => option.name}
+      inputValue={search} // Set the input value
+      popupIcon={isLoading ? <CircularProgress size={28} className={classes.loadingIcon}/> : undefined}
+      onInputChange={handleInputChange}
+      renderOption={(props, option: User) => (
+        <div className={classes.divRedirect} onClick={() => { handleClickUser(option.id) }}>
+          <Box onClick={() => { handleClickUser(option.id) }} component="span" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+            {option.imageUrl
+              ? <Avatar className={classes.profileImage} src={option.imageUrl} />
+              : <Avatar className={classes.profileImage} src={userDefault} /> }
+            <span className={classes.usernameSpan} onClick={() => { handleClickUser(option.id) }}>
+            {option.name}
+            </span>
+          </Box>
+        </div>
       )}
       renderInput={(params) => (
-        // const { InputLabelProps, inputProps, ...rest } = params
-        // return (
-        // <InputBase
-        //   classes={{
-        //     root: classes.inputRoot,
-        //     input: classes.inputInput
-        //   }}
-        //   placeholder="Nome do país"
-        //   {...params.InputProps} {...rest} />
-        <StylesProvider injectFirst>
-          <TextField
-              {...params}
-              id="filled-basic"
-              variant="filled"
-              InputLabelProps={{
-                shrink: true,
-                style: { transform: 'translate(0, 50%)', color: '#757575' }
-              }}
-              placeholder='Encontre um país...'
-              sx={{
-                height: 50,
-                padding: '1 1 1 0',
-                color: 'gray',
-                '& input': {
-                  height: 7,
-                  color: '#fff',
-                  padding: '1 1 1 0'
-                }
-              }}
-              inputProps={{
-                ...params.inputProps
-              }}
-            />
-        </StylesProvider>
+        <TextField
+            {...params}
+            id="filled-basic"
+            variant="filled"
+            label={<CustomLabel/>}
+            fullWidth
+            className={classes.userSearchBackground}
+            inputProps={{
+              ...params.inputProps
+            }}
+            InputLabelProps={{
+              style: { color: 'lightgray' }
+            }}
+          />
       )}
     />
   )
 }
-
-interface CountryType {
-  code: string
-  label: string
-  phone: string
-  suggested?: boolean
-}
-
-// From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
-const countries: readonly CountryType[] = [
-  { code: 'AI', label: 'Anguilla', phone: '1-264' },
-  { code: 'AL', label: 'Albania', phone: '355' },
-  { code: 'AM', label: 'Armenia', phone: '374' },
-  { code: 'AO', label: 'Angola', phone: '244' },
-  { code: 'AQ', label: 'Antarctica', phone: '672' },
-  { code: 'AR', label: 'Argentina', phone: '54' },
-  { code: 'AS', label: 'American Samoa', phone: '1-684' },
-  { code: 'AT', label: 'Austria', phone: '43' },
-  { code: 'JP', label: 'Japan', phone: '81', suggested: true }
-]
 
 export default UserAutocomplete

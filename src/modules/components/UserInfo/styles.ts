@@ -23,7 +23,21 @@ export default makeStyles((theme) =>
       border: '3px solid white'
     },
     link: {
-      textDecoration: 'none'
+      textDecoration: 'none',
+      color: 'white'
+    },
+    divUseSelector: {
+      display: 'flex',
+      margin: theme.spacing(5),
+      justifyContent: 'center',
+      color: 'white',
+      backgroundColor: '#3f51b5',
+      border: 0,
+      [theme.breakpoints.between('xs', 'sm')]: {
+        marginRight: theme.spacing(0),
+        marginBottom: theme.spacing(0),
+        marginLeft: theme.spacing(0)
+      }
     }
   })
 )
