@@ -1,30 +1,6 @@
-import { createStyles, makeStyles, createTheme } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-declare module '@material-ui/core/styles/createBreakpoints' {
-  interface BreakpointOverrides {
-    xs: true
-    sm: true
-    md: true
-    lg: true
-    xl: true
-    notWeb: true
-  }
-}
-
-const theme = createTheme({
-  breakpoints: {
-    values: {
-      xs: 0,
-      sm: 600,
-      md: 960,
-      lg: 1280,
-      xl: 1920,
-      notWeb: 960
-    }
-  }
-})
-
-export default makeStyles(() =>
+export default makeStyles((theme) =>
   createStyles({
     root: {
       maxWidth: '100%',
@@ -47,7 +23,7 @@ export default makeStyles(() =>
       border: 0,
       marginTop: '7.5% !important',
       marginBottom: '7.5% !important',
-      backgroundColor: 'white',
+      backgroundColor: theme.palette.common.white,
       padding: '30px',
       maxWidth: '100%',
       width: '100%',
@@ -73,7 +49,7 @@ export default makeStyles(() =>
       border: 0,
       marginTop: '7.5% !important',
       marginBottom: '7.5% !important',
-      backgroundColor: 'white',
+      backgroundColor: theme.palette.common.white,
       padding: '30px',
       maxWidth: '100%',
       width: '100%',

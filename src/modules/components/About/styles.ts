@@ -6,6 +6,7 @@ export default makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       textAlign: 'center',
       color: theme.palette.text.secondary,
+      backgroundColor: theme.palette.common.white,
       border: 0
     },
     about: {

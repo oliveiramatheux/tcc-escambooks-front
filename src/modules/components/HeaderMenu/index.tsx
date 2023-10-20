@@ -29,6 +29,7 @@ import Autocomplete from '@mui/material/Autocomplete'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import UserAutocomplete from '../UserAutocomplete'
+import ThemeButton from '../ThemeButton'
 
 interface HeaderMenuProps {
   hideSearchBar?: boolean
@@ -436,6 +437,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
                   </Badge>
                 </IconButton>
               </Tooltip>
+              <ThemeButton />
               <Tooltip title="Notificações">
                 <IconButton aria-label="show new notifications" color="inherit"
                   aria-controls={menuNotificationId}

@@ -1,5 +1,4 @@
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
-import { blueGrey } from '@mui/material/colors'
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -9,7 +8,6 @@ export default makeStyles((theme: Theme) =>
     },
     paper: {
       margin: theme.spacing(5),
-      color: 'white',
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
         margin: theme.spacing(0),
@@ -21,8 +19,8 @@ export default makeStyles((theme: Theme) =>
     },
     paperPublish: {
       padding: theme.spacing(2),
-      color: 'white',
-      backgroundColor: '#3f51b5',
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
       border: 0,
       marginBottom: 40,
       display: 'flex',
@@ -37,12 +35,10 @@ export default makeStyles((theme: Theme) =>
       alignItems: 'center'
     },
     button: {
-      margin: theme.spacing(2),
-      color: theme.palette.getContrastText(blueGrey[500]),
-      backgroundColor: blueGrey[500],
-      '&:hover': {
-        backgroundColor: blueGrey[700]
-      }
+      margin: theme.spacing(2)
+    },
+    cleanSearchButton: {
+      fontFamily: 'system-ui'
     }
   })
 )

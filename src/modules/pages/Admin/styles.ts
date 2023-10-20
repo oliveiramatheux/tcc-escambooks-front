@@ -3,22 +3,20 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
 export default makeStyles((theme: Theme) =>
   createStyles({
     paperAdmin: {
-      padding: theme.spacing(2),
-      marginTop: 16,
       textAlign: 'center',
-      color: theme.palette.text.secondary,
+      margin: theme.spacing(5),
       border: 0,
       [theme.breakpoints.between('xs', 'sm')]: {
-        padding: theme.spacing(0)
+        padding: theme.spacing(0),
+        marginLeft: theme.spacing(2),
+        marginRight: theme.spacing(2)
       }
     },
     paperAdminSub: {
       padding: theme.spacing(2),
-      color: 'white',
-      marginTop: 16,
-      backgroundColor: '#3f51b5',
+      color: theme.palette.primary.contrastText,
+      backgroundColor: theme.palette.primary.main,
       border: 0,
-      marginBottom: 40,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'space-around',

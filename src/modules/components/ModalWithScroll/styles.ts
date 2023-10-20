@@ -1,6 +1,6 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles(() =>
+export default makeStyles((theme) =>
   createStyles({
     modalTitle: {
       margin: 0,
@@ -19,10 +19,16 @@ export default makeStyles(() =>
       fontSize: '0.8rem',
       lineHeight: 1.5,
       letterSpacing: '0.00938em',
-      color: '#0009',
+      color: theme.palette.text.secondary,
       textAlign: 'left',
       justifyContent: 'flex-start',
       flex: '0 0 auto'
+    },
+    dialog: {
+      '& .MuiDialog-paper': {
+        backgroundColor: theme.palette.background.paper,
+        color: theme.palette.text.primary
+      }
     }
   })
 )

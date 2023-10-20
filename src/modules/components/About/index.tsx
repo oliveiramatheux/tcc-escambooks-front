@@ -9,7 +9,7 @@ const About = (): JSX.Element => {
   const classes = useStyles()
   return (
     <>
-      <Paper elevation={0} className={classes.paper}>
+      <Paper elevation={0} className={classes.paper} >
         <img src={logo} alt="Logo" className={classes.logo} />
       </Paper>
       <Paper elevation={0} className={classes.paper}>
