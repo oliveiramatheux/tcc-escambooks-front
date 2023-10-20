@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { Routes, Route, BrowserRouter } from 'react-router-dom'
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom'
 import LoadingSimple from '../modules/components/LoadingSimple'
 import LoggedRoutes from '../modules/components/LoggedRoutes'
 
@@ -18,7 +18,8 @@ const AppRoutes = (): JSX.Element => {
     <BrowserRouter>
       <Suspense fallback={<LoadingSimple />}>
         <Routes>
-          <Route path="/" element={<LoggedRoutes />}>
+          <Route path="/" element={<LoggedRoutes />} >
+            <Route index element={<Navigate to="/home" replace />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profile/:id?" element={<UserProfile />} />
             <Route path="/admin" element={<Admin/>}/>

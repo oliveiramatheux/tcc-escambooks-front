@@ -14,7 +14,7 @@ const DarkModeButton = () => {
   const onClick = useCallback(() => dispatch(toggleDarkMode()), [dispatch])
 
   return (
-    <Tooltip title="Alternar modo escuro">
+    <Tooltip title={`Alterar para modo ${darkMode ? 'claro' : 'escuro'}`}>
       <IconButton aria-label="toggle dark mode" color="inherit"
         onClick={onClick}>
           {darkMode ? <DarkModeIcon /> : <LightModeIcon />}
