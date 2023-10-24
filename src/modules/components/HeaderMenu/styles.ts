@@ -70,6 +70,17 @@ export default makeStyles((theme: Theme) =>
     link: {
       textDecoration: 'none',
       color: theme.palette.text.primary
+    },
+    menuNotification: {
+      '& div': {
+        overflow: 'auto',
+        display: 'flex'
+      }
+    },
+    menuItemThemeButton: {
+      '& span': {
+        pointerEvents: 'auto'
+      }
     }
   })
 )
