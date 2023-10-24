@@ -49,8 +49,6 @@ const UserAutocomplete = (): JSX.Element => {
   const handleInputChange = async (_: React.ChangeEvent<unknown>, searchValue: string) => {
     setSearch(searchValue)
 
-    console.log(searchValue)
-
     if (searchValue) {
       listUsersByName(searchValue)
     } else {
