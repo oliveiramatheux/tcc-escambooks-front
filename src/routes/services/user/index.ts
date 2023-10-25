@@ -66,9 +66,18 @@ const deleteUserById = async (id: string): Promise<DeletedUserResponse | undefin
   }
 }
 
-const getAllUsers = async (): Promise<User[]> => {
+const getAllUsersAdmin = async (): Promise<User[]> => {
   try {
     const { data } = await axiosInstance.get<User[]>('/admin/users')
+    return data
+  } catch {
+    return []
+  }
+}
+
+const getAllUsers = async (): Promise<User[]> => {
+  try {
+    const { data } = await axiosInstance.get<User[]>('/users/allUsers')
     return data
   } catch {
     return []
@@ -84,4 +93,4 @@ const getUsersByNameService = async (name: string): Promise<User[]> => {
   }
 }
 
-export { userCreate, getUserById, updateUserById, deleteUserById, getAllUsers, getUsersByNameService }
+export { userCreate, getUserById, updateUserById, deleteUserById, getAllUsers, getUsersByNameService, getAllUsersAdmin }

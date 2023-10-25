@@ -72,7 +72,7 @@ const UserAutocomplete = (): JSX.Element => {
       noOptionsText={'Leitor não encontrado...'}
       autoHighlight
       getOptionLabel={(option) => option.name}
-      inputValue={search} // Set the input value
+      inputValue={search}
       popupIcon={isLoading ? <CircularProgress size={28} className={classes.loadingIcon}/> : undefined}
       onInputChange={handleInputChange}
       renderOption={(props, option: User) => (
