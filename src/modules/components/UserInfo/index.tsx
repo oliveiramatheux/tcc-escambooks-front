@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux'
 import userDefault from '../../../images/user-default.png'
 import { Link } from 'react-router-dom'
 import { User, getUserById } from 'routes/services'
+import UserAutocomplete from '../UserAutocomplete'
 
 const UserInfo = (): JSX.Element => {
   const classes = useStyles()
@@ -26,14 +27,17 @@ const UserInfo = (): JSX.Element => {
   }, [getUser])
 
   return (
-    <Link to="/profile" className={classes.link} >
-      <Paper className={classes.paper}>
+    <Paper className={classes.paper}>
+      <Link to="/profile" className={classes.link} >
         <Avatar src={user?.imageUrl || userState.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>
           <div>
             <p>{userState.name}</p>
-          </div>
-      </Paper>
-    </Link>
+         </div>
+      </Link>
+        <div className={classes.divUserSelector}>
+          <UserAutocomplete/>
+        </div>
+    </Paper>
   )
 }
 
