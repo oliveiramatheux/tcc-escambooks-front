@@ -26,7 +26,7 @@ export default makeStyles((theme) =>
       textDecoration: 'none',
       color: 'white'
     },
-    divUseSelector: {
+    divUserSelector: {
       display: 'flex',
       margin: theme.spacing(5),
       justifyContent: 'center',

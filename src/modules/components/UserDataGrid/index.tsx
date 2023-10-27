@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from 'react'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { User, deleteUserById, getAllUsersAdmin } from '../../../routes/services/user'
+import { User, deleteUserById, getAllUsers } from '../../../routes/services/user'
 import { Avatar, IconButton, Paper } from '@material-ui/core'
 import { useSelector } from 'react-redux'
 import { ApplicationState } from 'store/rootReducer'
@@ -29,7 +29,7 @@ const UserDataGrid = (): JSX.Element => {
   }
 
   const listAllUsers = useCallback(async () => {
-    const userData = await getAllUsersAdmin()
+    const userData = await getAllUsers()
     setUsers(userData)
   }, [])
 

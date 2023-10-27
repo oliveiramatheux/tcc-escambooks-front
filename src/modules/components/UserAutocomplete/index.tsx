@@ -1,9 +1,9 @@
 import Box from '@mui/material/Box'
 import Autocomplete from '@mui/material/Autocomplete'
 import TextField from '@mui/material/TextField'
-import CustomLabel from '../CustomLabel'
-import { useCallback, useEffect, useState } from 'react'
-import { User, getAllUsers, getUsersByNameService } from '../../../routes/services/user'
+import UserAutocompleteLabel from '../UserAutocompleteLabel'
+import { useCallback, useState } from 'react'
+import { User, getUsersByName } from '../../../routes/services/user'
 import { Avatar, CircularProgress, Paper } from '@material-ui/core'
 import userDefault from '../../../images/user-default.png'
 import { useNavigate } from 'react-router-dom'
@@ -24,35 +24,21 @@ const UserAutocomplete = (): JSX.Element => {
   }
 
   const [options, setOptions] = useState<User[]>([])
-  const [filteredOptions, setFilteredOptions] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState<string>('')
 
-  const listAllUsers = useCallback(async () => {
-    setIsLoading(true)
-    const userData = await getAllUsers()
-    setOptions(userData)
-    setIsLoading(false)
-  }, [])
-
   const listUsersByName = useCallback(async (name: string) => {
     setIsLoading(true)
-    const userDataByName = await getUsersByNameService(name)
-    setFilteredOptions(userDataByName)
+    const userDataByName = await getUsersByName(name)
+    setOptions(userDataByName)
     setIsLoading(false)
   }, [])
 
-  useEffect(() => {
-    listAllUsers()
-  }, [listAllUsers])
-
-  const handleInputChange = async (_: React.ChangeEvent<unknown>, searchValue: string) => {
+  const handleInputChange = async (_event: React.SyntheticEvent<Element, Event>, searchValue: string) => {
     setSearch(searchValue)
 
     if (searchValue) {
       listUsersByName(searchValue)
-    } else {
-      setFilteredOptions([])
     }
   }
 
@@ -65,11 +51,11 @@ const UserAutocomplete = (): JSX.Element => {
           color: 'white'
         }
       }}
-      options={filteredOptions.length > 0 ? filteredOptions : options}
+      options={options}
       PaperComponent={(props) => (
         <Paper {...props} className={darkMode ? classes.darkThemeStyles : classes.lightThemeStyles} />
       )}
-      noOptionsText={'Leitor não encontrado...'}
+      noOptionsText={search ? 'Leitor não encontrado...' : 'Digite o nome do leitor...'}
       autoHighlight
       getOptionLabel={(option) => option.name}
       inputValue={search}
@@ -77,12 +63,10 @@ const UserAutocomplete = (): JSX.Element => {
       onInputChange={handleInputChange}
       renderOption={(props, option: User) => (
         <div className={classes.divRedirect} onClick={() => { handleClickUser(option.id) }}>
-          <Box onClick={() => { handleClickUser(option.id) }} component="span" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-            {option.imageUrl
-              ? <Avatar className={classes.profileImage} src={option.imageUrl} />
-              : <Avatar className={classes.profileImage} src={userDefault} /> }
-            <span className={classes.usernameSpan} onClick={() => { handleClickUser(option.id) }}>
-            {option.name}
+          <Box component="span" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+            <Avatar className={classes.profileImage} src={option.imageUrl || userDefault} />
+            <span className={classes.usernameSpan}>
+              {option.name}
             </span>
           </Box>
         </div>
@@ -92,7 +76,7 @@ const UserAutocomplete = (): JSX.Element => {
             {...params}
             id="filled-basic"
             variant="filled"
-            label={<CustomLabel/>}
+            label={<UserAutocompleteLabel/>}
             fullWidth
             className={classes.userSearchBackground}
             inputProps={{

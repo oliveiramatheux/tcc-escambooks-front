@@ -1,6 +1,6 @@
 import SearchIcon from '@material-ui/icons/Search'
 
-const CustomLabel = (): JSX.Element => {
+const UserAutocompleteLabel = (): JSX.Element => {
   return (
     <div style={{ display: 'flex', alignItems: 'flex-start' }}>
       <SearchIcon/>
@@ -9,4 +9,4 @@ const CustomLabel = (): JSX.Element => {
   )
 }
 
-export default CustomLabel
+export default UserAutocompleteLabel

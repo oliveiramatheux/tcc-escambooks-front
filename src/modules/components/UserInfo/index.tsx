@@ -34,7 +34,7 @@ const UserInfo = (): JSX.Element => {
             <p>{userState.name}</p>
          </div>
       </Link>
-        <div className={classes.divUseSelector}>
+        <div className={classes.divUserSelector}>
           <UserAutocomplete/>
         </div>
     </Paper>
