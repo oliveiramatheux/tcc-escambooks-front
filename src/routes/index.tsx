@@ -12,6 +12,7 @@ const ResetPassword = React.lazy(async () => await import('../modules/pages/Rese
 const Home = React.lazy(async () => await import('../modules/pages/Home'))
 const UserProfile = React.lazy(async () => await import('../modules/pages/UserProfile'))
 const Admin = React.lazy(async () => await import('../modules/pages/Admin'))
+const Match = React.lazy(async () => await import('../modules/pages/Match'))
 
 const AppRoutes = (): JSX.Element => {
   return (
@@ -23,6 +24,7 @@ const AppRoutes = (): JSX.Element => {
             <Route path="/home" element={<Home />} />
             <Route path="/profile/:id?" element={<UserProfile />} />
             <Route path="/admin" element={<Admin/>}/>
+            <Route path="/match" element={<Match />}/>
           </Route>
           <Route path="/login" element={<Login/>} />
           <Route path="/verify-email" element={<CheckEmail />} />
