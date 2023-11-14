@@ -275,7 +275,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
       <MenuItem onClick={handleNotificationMenuOpen}>
         <IconButton aria-label="notifications" color="inherit" aria-controls={menuNotificationId}
           aria-haspopup="true">
-          <Badge badgeContent={notificationsNotVisualized} color="secondary">
+          <Badge overlap={'rectangular'} badgeContent={notificationsNotVisualized} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -400,7 +400,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
                 value={searchBookTerm}
                 onChange={(event) => { onChangeInputSearchBook(event) }}
                 onKeyDown={(event) => { onSubmitSearchBook(event) }}
-                inputProps={{ 'aria-label': 'search' }}
+                inputProps={{ 'aria-label': 'search', inputMode: 'search' }}
               />
             </div>)}
             <div className={classes.grow} />
@@ -411,7 +411,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
                   aria-controls={menuNotificationId}
                   aria-haspopup="true"
                   onClick={handleNotificationMenuOpen}>
-                  <Badge badgeContent={notificationsNotVisualized} color="secondary">
+                  <Badge overlap={'rectangular'} badgeContent={notificationsNotVisualized} color="secondary">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>

@@ -1,4 +1,3 @@
-import React from 'react'
 import useStyles from './styles'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
@@ -28,12 +27,13 @@ const Modal = (props: InterfaceModalProps): JSX.Element => {
         onClose={closeAction}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        className={classes.dialog}
       >
         <DialogTitle id="alert-dialog-title" className={classes.modalTitle}>
           {title}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText className={classes.description} id="alert-dialog-description">
             {description}
           </DialogContentText>
         </DialogContent>

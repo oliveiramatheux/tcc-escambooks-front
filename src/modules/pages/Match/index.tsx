@@ -1,4 +1,4 @@
-import { Box, CardMedia, Grid, Typography } from '@material-ui/core'
+import { Avatar, Box, CardMedia, Grid, Typography } from '@material-ui/core'
 import PageDecorator from '../../components/PageDecorator'
 import { handleEventScreen } from 'utils/analytics/analytics'
 import HeaderMenu from '../../components/HeaderMenu'
@@ -6,10 +6,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Book, MatchDetails, User, getMatchDetails } from 'routes/services'
 import LoadingSimple from 'modules/components/LoadingSimple'
+import useStyles from './styles'
+import setasTroca from '../../../images/setas-troca.png'
 
 const Match = (): JSX.Element => {
   handleEventScreen('escambooks_match', 'match')
 
+  const classes = useStyles()
   const { state } = useLocation()
   const navigate = useNavigate()
 
@@ -45,23 +48,17 @@ const Match = (): JSX.Element => {
   const renderMatchPublication = (user: User, book: Book) => {
     return (
       <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'ceneter', alignItems: 'center' }}>
-        <Typography variant="h3">{book.title}</Typography>
+        <Typography variant="h3" style={{ marginBottom: '20px' }}>{book.title}</Typography>
         <CardMedia
             component="img"
             image={book.imageUrl}
             alt="Book image"
-            style={{
-              height: '500px',
-              width: '500px',
-              objectFit: 'cover'
-            }}
-          />
-        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'ceneter', alignItems: 'center' }}>
-          Foto do usuario
-          <Typography variant="h5">
-            {user.name}
-          </Typography>
-        </Box>
+            className={classes.bookImage}
+        />
+        <Avatar src={user.imageUrl} alt="User photo" className={classes.userPhoto} style={{ margin: '20px 0 10px 0' }}/>
+        <Typography variant="h5" style={{ marginBottom: '20px' }}>
+          {user.name}
+        </Typography>
         <Typography variant="h6">Contatos:</Typography>
         <Typography variant="body1">Email: {user.email}</Typography>
       </Box>
@@ -81,12 +78,24 @@ const Match = (): JSX.Element => {
                 direction="row"
                 justifyContent="center"
                 alignContent="center"
-                style={{ height: 'calc(100vh - 64px)' }}
+                className={classes.gridContainer}
               >
-                <Grid item xs={12} md={6} lg={6} xl={6}>
+                <Grid
+                  item
+                  xs={12} md={5} lg={5} xl={5}
+                  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   {!!matchDetails && renderMatchPublication(matchDetails.currentUser, matchDetails.currentUserBook)}
                 </Grid>
-                <Grid item xs={12} md={6} lg={6} xl={6}>
+                <Grid
+                  item
+                  xs={12} md={2} lg={2} xl={2}
+                  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <img src={setasTroca} style={{ maxHeight: '200px', maxWidth: '200px', padding: '40px' }} alt="Imagem de setas" />
+                </Grid>
+                <Grid
+                  item
+                  xs={12} md={5} lg={5} xl={5}
+                  style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                   {!!matchDetails && renderMatchPublication(matchDetails.otherUser, matchDetails.otherUserBook)}
                 </Grid>
               </Grid>
