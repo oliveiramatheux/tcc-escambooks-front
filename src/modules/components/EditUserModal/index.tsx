@@ -1,4 +1,3 @@
-
 import { updateUserById, User } from '../../../routes/services'
 import useStyles from './styles'
 import { useTheme } from '@mui/material/styles'
@@ -64,8 +63,6 @@ const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) 
     handleClose()
   }
 
-  console.log(fullScreen)
-
   return (
     <Dialog
       open={open}
@@ -109,7 +106,6 @@ const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) 
               error={!!errors.phone}
               defaultValue={user.phone}
               {...register('phone', {
-                required: 'O n° de celular é obrigatório.',
                 pattern: {
                   value: regexPhoneNumber,
                   message: 'O n° de celular deve ser válido.'
@@ -126,7 +122,6 @@ const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) 
               error={!!errors.address}
               defaultValue={user.address}
               {...register('address', {
-                required: 'O endereço é obrigatório.',
                 maxLength: {
                   value: 100,
                   message: 'O endereço deve conter no máximo 100 caracteres.'
