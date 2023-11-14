@@ -1,39 +1,24 @@
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 
-export default makeStyles((theme: Theme) =>
+export default makeStyles((theme) =>
   createStyles({
-    container: {
-      maxWidth: '100%',
-      width: '100%',
-      padding: 0,
-      margin: 0,
-      flexGrow: 1,
-      display: 'flex',
-      height: '100vh'
-    },
-    bookImage: {
-      maxWidth: '300px',
-      height: 'auto',
+    userPhoto: {
       display: 'flex',
       margin: 'auto',
-      borderRadius: 50,
-      border: '3px solid white',
-      [theme.breakpoints.down('md')]: {
-        maxWidth: '50%'
-      }
+      width: theme.spacing(12),
+      height: theme.spacing(12),
+      border: `3px solid ${theme.palette.text.primary}`
     },
-    paper: {
-      margin: theme.spacing(5),
-      padding: theme.spacing(2),
+    gridContainer: {
       textAlign: 'center',
-      color: theme.palette.primary.contrastText,
-      backgroundColor: theme.palette.primary.main,
-      border: 0,
-      [theme.breakpoints.between('xs', 'sm')]: {
-        marginRight: theme.spacing(0),
-        marginBottom: theme.spacing(0),
-        marginLeft: theme.spacing(0)
-      }
+      overflow: 'auto',
+      padding: '40px',
+      height: '100%'
+    },
+    bookImage: {
+      height: '600px',
+      maxWidth: '600px',
+      objectFit: 'contain'
     }
   })
 )

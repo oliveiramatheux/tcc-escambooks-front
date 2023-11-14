@@ -28,7 +28,7 @@ export default makeStyles((theme) =>
     },
     divUserSelector: {
       display: 'flex',
-      margin: theme.spacing(5),
+      marginTop: theme.spacing(4),
       justifyContent: 'center',
       color: 'white',
       backgroundColor: '#3f51b5',

@@ -123,7 +123,6 @@ const BookPublication = (): JSX.Element => {
             variant="contained"
             color="secondary"
             size="large"
-            className={classes.button}
             startIcon={<PublishRoundedIcon />}
             onClick={handleOpenModalBookPublish}
           >

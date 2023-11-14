@@ -1,7 +1,7 @@
 import React, { useState, createRef, useEffect, useCallback } from 'react'
 import {
   AppBar, Toolbar, IconButton,
-  InputBase, Badge, MenuItem, Menu, Fab
+  InputBase, Badge, MenuItem, Menu, Fab, Snackbar
 } from '@material-ui/core'
 import { AccountCircle } from '@material-ui/icons'
 import SearchIcon from '@material-ui/icons/Search'
@@ -24,6 +24,7 @@ import Modal from '../Modal'
 import { socket } from 'config/socket'
 import ThemeButton from '../ThemeButton'
 import { toggleDarkMode } from '../../../store/preferences/actions'
+import { Alert } from '@mui/material'
 
 interface HeaderMenuProps {
   hideSearchBar?: boolean
@@ -49,6 +50,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
   const [openUserSettings, setOpenUserSettings] = useState(false)
   const [openModalDeleteUser, setOpenModalDeleteUser] = useState(false)
   const [deleteUserLoading, setDeleteUserLoading] = useState(false)
+  const [currentMatch, setCurrentMatch] = useState<Match | undefined>()
 
   const isMenuOpen = Boolean(anchorEl)
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl)
@@ -226,9 +228,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
         {!!matches.length &&
           matches.map((match) => {
             return (
-              <Link to={''} key={match.id} className={classes.link}>
-                <MenuItem>Novo match! clique para visualizar mais informações - {match.date}</MenuItem>
-              </Link>
+              <MenuItem key={match.id} onClick={() => { navigate('/match', { state: { matchId: match.id } }) }}>Novo match! clique para visualizar mais informações - {match.date}</MenuItem>
             )
           })
         }
@@ -275,7 +275,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
       <MenuItem onClick={handleNotificationMenuOpen}>
         <IconButton aria-label="notifications" color="inherit" aria-controls={menuNotificationId}
           aria-haspopup="true">
-          <Badge badgeContent={notificationsNotVisualized} color="secondary">
+          <Badge overlap={'rectangular'} badgeContent={notificationsNotVisualized} color="secondary">
             <NotificationsIcon />
           </Badge>
         </IconButton>
@@ -325,6 +325,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
     if (!match.isVisualized) {
       setNotificationsNotVisualized(state => state + 1)
     }
+    setCurrentMatch(match)
   }, [])
 
   const updateMatchDeleted = useCallback((match: Match) => {
@@ -399,7 +400,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
                 value={searchBookTerm}
                 onChange={(event) => { onChangeInputSearchBook(event) }}
                 onKeyDown={(event) => { onSubmitSearchBook(event) }}
-                inputProps={{ 'aria-label': 'search' }}
+                inputProps={{ 'aria-label': 'search', inputMode: 'search' }}
               />
             </div>)}
             <div className={classes.grow} />
@@ -410,7 +411,7 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
                   aria-controls={menuNotificationId}
                   aria-haspopup="true"
                   onClick={handleNotificationMenuOpen}>
-                  <Badge badgeContent={notificationsNotVisualized} color="secondary">
+                  <Badge overlap={'rectangular'} badgeContent={notificationsNotVisualized} color="secondary">
                     <NotificationsIcon />
                   </Badge>
                 </IconButton>
@@ -467,6 +468,11 @@ const HeaderMenu = ({ hideSearchBar }: HeaderMenuProps): JSX.Element => {
         confirmAction={onClickDeleteUserAction}
         loading={deleteUserLoading}
       />)}
+      <Snackbar open={!!currentMatch} autoHideDuration={6000} onClose={() => { setCurrentMatch(undefined) }}>
+        <Alert onClose={() => { setCurrentMatch(undefined) }} severity="info" sx={{ width: '100%' }}>
+          <span style={{ cursor: 'pointer' }} onClick={() => { navigate('/match', { state: { matchId: currentMatch?.id } }) }}>Você acabou de dar um novo Match! Clique aqui para visualizar ou acesse a aba de notificações.</span>
+        </Alert>
+      </Snackbar>
     </>
   )
 }
