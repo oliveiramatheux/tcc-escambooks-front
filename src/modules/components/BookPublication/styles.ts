@@ -34,9 +34,6 @@ export default makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center'
     },
-    button: {
-      margin: theme.spacing(2)
-    },
     cleanSearchButton: {
       fontFamily: 'system-ui'
     }
