@@ -22,12 +22,28 @@ export default makeStyles((theme) =>
       height: theme.spacing(12),
       border: '3px solid white'
     },
-    photoButton: {
+    profileActionsContainer: {
       position: 'absolute',
       right: 0,
-      top: 0,
+      top: 0
+    },
+    photoButton: {
       background: theme.palette.common.white,
-      borderRadius: '50%'
+      display: 'block',
+      borderRadius: '50%',
+      width: theme.spacing(4),
+      height: theme.spacing(4)
+    },
+    editButton: {
+      '&:hover': {
+        backgroundColor: theme.palette.common.white
+      },
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.primary.main,
+      borderRadius: '50%',
+      width: theme.spacing(4),
+      height: theme.spacing(4),
+      marginTop: theme.spacing(1 / 2)
     },
     link: {
       textDecoration: 'none',

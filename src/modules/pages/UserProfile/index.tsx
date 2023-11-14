@@ -13,9 +13,11 @@ import { Book, getAllBooksByUserId, getLikedBooks as getLikedBooksRequest } from
 import BookCard from '../../components/BookCard'
 import LoadingSimple from '../../components/LoadingSimple'
 import { deleteFile, getDownloadURL, getStorageRef, uploadBytes } from '../../../config/firebase'
-import { PhotoCamera } from '@material-ui/icons'
+import { PhotoCamera, Edit } from '@material-ui/icons'
 import { styled } from '@mui/material/styles'
 import { TabMenu } from 'modules/components'
+import EditUserModal from '../../components/EditUserModal'
+import { formatPhoneNumber } from '../../../utils/formatters'
 
 const Input = styled('input')({
   display: 'none'
@@ -33,6 +35,7 @@ const UserProfile = () => {
   const [loadingUserBooks, setLoadingUserBooks] = useState(true)
   const [loadingLikedBooks, setLoadingLikedBooks] = useState(true)
   const [uploadPhotoLoading, setUploadPhotoLoading] = useState(false)
+  const [openEditModal, setOpenEditModal] = useState(false)
 
   const { user: userState } = useSelector(
     (state: ApplicationState) => state
@@ -179,55 +182,79 @@ const UserProfile = () => {
         alignContent="center"
       >
         {!loadingUser
-          ? <>
-          <Grid item xs={12} md={3}>
-          <Paper className={classes.paper}>
-            <Box position="relative" display="flex" alignItems="center" justifyContent="center">
-                {uploadPhotoLoading ? <div className={classes.userPhoto} style={{ background: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}><CircularProgress /></div> : <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>}
-                {isProfileFromLoggedUser && (
-                  <label htmlFor="icon-photo-user-url" className={classes.photoButton}>
-                    <Input
-                      accept="image/*"
-                      id="icon-photo-user-url"
-                      type="file"
-                      onChange={async (e) => await (e.target.files?.length && uploadUserImage(e.target.files[0])) }
-                    />
-                    <IconButton color="primary" aria-label="upload picture" component="span" style={{ width: '32px', height: '32px', padding: 0 }}>
-                      <PhotoCamera />
-                    </IconButton>
-                  </label>
-                )}
-            </Box>
-            <div>
-              <p>{user?.name}</p>
-              {user?.birthDate && <p>{calculateAge(user.birthDate)} anos</p>}
-            </div>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={9} lg={7} xl={6}>
-          <Box paddingTop={5}>
-            <Tabs
-              value={value}
-              onChange={handleChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="fullWidth"
-              aria-label="tabs"
-            >
-              <Tab label={booksTabLabel} {...tabProps(0)} />
-              {isProfileFromLoggedUser && <Tab label="Livros que curti" {...tabProps(1)} /> }
-            </Tabs>
-            <TabMenu value={value} index={0}>
-              {renderUserBooks()}
-            </TabMenu>
-            {isProfileFromLoggedUser && <TabMenu value={value} index={1}>
-              {renderLikedBooks()}
-            </TabMenu>}
-          </Box>
-        </Grid>
-        </>
-          : <LoadingSimple/>}
+          ? (
+          <>
+            <Grid item xs={12} md={3}>
+              <Paper className={classes.paper}>
+                <Box position="relative" display="flex" alignItems="center" justifyContent="center">
+                  {uploadPhotoLoading ? <div className={classes.userPhoto} style={{ background: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}><CircularProgress /></div> : <Avatar src={user?.imageUrl || userDefault} alt="User photo" className={classes.userPhoto}/>}
+                  {isProfileFromLoggedUser && (
+                    <Box className={classes.profileActionsContainer}>
+                      <label htmlFor="icon-photo-user-url" className={classes.photoButton}>
+                        <Input
+                          accept="image/*"
+                          id="icon-photo-user-url"
+                          type="file"
+                          onChange={async (e) => await (e.target.files?.length && uploadUserImage(e.target.files[0])) }
+                        />
+                        <IconButton color="primary" aria-label="upload picture" component="span" style={{ width: '32px', height: '32px', padding: 0 }}>
+                          <PhotoCamera />
+                        </IconButton>
+                      </label>
+                      <IconButton
+                        color="default"
+                        aria-label="edit profile"
+                        component="span"
+                        className={classes.editButton}
+                        onClick={() => { setOpenEditModal(true) }}
+                      >
+                        <Edit />
+                      </IconButton>
+                    </Box>
+                  )}
+                </Box>
+                <div>
+                  <p>{user?.name}</p>
+                  {user?.birthDate && <p>{calculateAge(user.birthDate)} anos</p>}
+                  {user?.phone && <p>{formatPhoneNumber(user.phone)}</p>}
+                  {user?.address && <p>{user.address}</p>}
+                </div>
+              </Paper>
+            </Grid>
+            <Grid item xs={12} md={9} lg={7} xl={6}>
+              <Box paddingTop={5}>
+                <Tabs
+                  value={value}
+                  onChange={handleChange}
+                  indicatorColor="primary"
+                  textColor="primary"
+                  variant="fullWidth"
+                  aria-label="tabs"
+                >
+                  <Tab label={booksTabLabel} {...tabProps(0)} />
+                  {isProfileFromLoggedUser && <Tab label="Livros que curti" {...tabProps(1)} /> }
+                </Tabs>
+                <TabMenu value={value} index={0}>
+                  {renderUserBooks()}
+                </TabMenu>
+                {isProfileFromLoggedUser && <TabMenu value={value} index={1}>
+                  {renderLikedBooks()}
+                </TabMenu>}
+              </Box>
+            </Grid>
+          </>
+            )
+          : <LoadingSimple/>
+        }
       </Grid>
+      {user && (
+        <EditUserModal
+          open={openEditModal}
+          onClose={() => { setOpenEditModal(false) }}
+          user={user}
+          onSuccess={setUser}
+        />
+      )}
     </>
   )
 }

@@ -28,6 +28,7 @@ const Modal = (props: InterfaceModalProps): JSX.Element => {
         onClose={closeAction}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        className={classes.dialog}
       >
         <DialogTitle id="alert-dialog-title" className={classes.modalTitle}>
           {title}

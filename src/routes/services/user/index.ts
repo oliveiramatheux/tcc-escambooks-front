@@ -12,6 +12,8 @@ export interface PayloadUserUpdate {
   email?: string
   name?: string
   birthDate?: string
+  phone?: string
+  address?: string
   imageUrl?: string
   imageName?: string
 }
@@ -20,7 +22,9 @@ export interface User {
   id: string
   name: string
   email: string
-  birthDate: string
+  birthDate?: string
+  phone?: string
+  address?: string
   imageUrl?: string
   imageName?: string
   admin?: boolean
