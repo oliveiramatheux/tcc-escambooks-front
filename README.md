@@ -31,7 +31,6 @@ Além disto é bom ter um editor para trabalhar com o código como o [Visual Stu
 
 ```bash
 # TODO
-
 ```
 
 ### 🛠 Tecnologias
