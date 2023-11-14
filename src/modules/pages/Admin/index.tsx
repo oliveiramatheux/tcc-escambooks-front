@@ -22,7 +22,7 @@ const Admin = (): JSX.Element => {
       >
         <Grid item xs={12} md={3}>
           <UserInfo/>
-          <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '40px 40px 0 40px' }}>
             <Button
               variant="contained"
               color="primary"
