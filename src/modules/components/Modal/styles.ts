@@ -10,14 +10,16 @@ export default makeStyles((theme: Theme) =>
       lineHeight: 1.6,
       letterSpacing: '0.0075em',
       padding: '16px 24px',
-      flex: '0 0 auto'
+      flex: '0 0 auto',
+      color: theme.palette.text.primary
     },
     dialog: {
       width: '-webkit-fill-available',
       '& .MuiDialog-paper': {
         backgroundColor: theme.palette.background.paper,
         color: `${theme.palette.text.primary} !important`
-      }
+      },
+      flex: '0 0 auto'
     },
     description: {
       color: `${theme.palette.text.primary} !important`

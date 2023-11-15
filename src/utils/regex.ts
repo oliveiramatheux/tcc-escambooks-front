@@ -4,4 +4,6 @@ const regexPassword = /^(?:(?=.*[a-z])(?:(?=.*[A-Z])(?=.*[\d\W])|(?=.*\W)(?=.*\d
 
 const regexNumber = /^[0-9]*$/
 
-export { regexEmail, regexPassword, regexNumber }
+const regexPhoneNumber = /^\(?\d{2}\)?[\s-]?[\s9]?\d{4}-?\d{4}$/
+
+export { regexEmail, regexPassword, regexNumber, regexPhoneNumber }
