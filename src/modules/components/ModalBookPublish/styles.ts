@@ -34,7 +34,7 @@ export default makeStyles((theme: Theme) =>
       alignItems: 'center'
     },
     errorHelperText: {
-      color: `#${theme.palette.error[theme.palette.type]} !important`
+      color: `${theme.palette.error[theme.palette.type]} !important`
     },
     dialog: {
       padding: theme.spacing(2),
