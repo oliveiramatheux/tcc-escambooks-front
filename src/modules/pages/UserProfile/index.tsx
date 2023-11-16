@@ -247,7 +247,7 @@ const UserProfile = () => {
           : <LoadingSimple/>
         }
       </Grid>
-      {user && (
+      {user && openEditModal && (
         <EditUserModal
           open={openEditModal}
           onClose={() => { setOpenEditModal(false) }}
