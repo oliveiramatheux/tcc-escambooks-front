@@ -14,7 +14,7 @@ import { useState } from 'react'
 import SaveIcon from '@mui/icons-material/Save'
 import { useSelector } from 'react-redux'
 import { ApplicationState } from '../../../store/rootReducer'
-import { regexEmail, regexPhoneNumber } from '../../../utils/regex'
+import { regexPhoneNumber } from '../../../utils/regex'
 
 interface IEditUserModalProps {
   open: boolean
@@ -26,7 +26,7 @@ interface IEditUserModalProps {
 export interface UserFormState {
   phone?: string
   address?: string
-  email?: string
+  name?: string
 }
 
 const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) => {
@@ -41,7 +41,7 @@ const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) 
 
   const defaultValues: UserFormState = {
     address: user.address,
-    email: user.email,
+    name: user.name,
     phone: user.phone
   }
 
@@ -54,7 +54,13 @@ const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) 
   const onSubmit = async (data: UserFormState) => {
     setLoading(true)
 
-    const response = await updateUserById(userState.id, data)
+    const payloadUser = {
+      name: data.name || undefined,
+      phone: data.phone || undefined,
+      address: data.address || undefined
+    }
+
+    const response = await updateUserById(userState.id, payloadUser)
 
     if (response) {
       onSuccess(response)
@@ -79,24 +85,20 @@ const EditUserModal = ({ open, user, onClose, onSuccess }: IEditUserModalProps) 
             </Typography>
           </DialogContentText>
           <FormControl className={classes.formControl} variant="outlined">
-            <InputLabel htmlFor="outlined-email" className={errors.email ? classes.errorHelperText : ''}>Email</InputLabel>
+            <InputLabel htmlFor="outlined-name" className={errors.name ? classes.errorHelperText : ''}>Nome</InputLabel>
               <OutlinedInput
-                id="outlined-email"
+                id="outlined-name"
                 labelWidth={40}
-                error={!!errors.email}
-                {...register('email', {
-                  required: 'O email é obrigatório.',
-                  pattern: {
-                    value: regexEmail,
-                    message: 'O email deve ser válido.'
-                  },
+                error={!!errors.name}
+                {...register('name', {
+                  required: 'O nome é obrigatório.',
                   maxLength: {
-                    value: 50,
-                    message: 'O email deve conter no máximo 50 caracteres.'
+                    value: 100,
+                    message: 'O nome deve conter no máximo 100 caracteres.'
                   }
                 })}
               />
-              {errors.email && (<FormHelperText id="outlined-helper-text-email" className={classes.errorHelperText}>{errors.email.message}</FormHelperText>)}
+              {errors.name && (<FormHelperText id="outlined-helper-text-name" className={classes.errorHelperText}>{errors.name.message}</FormHelperText>)}
             </FormControl>
           <FormControl className={classes.formControl} variant="outlined">
             <InputLabel htmlFor="outlined-phone" className={errors.phone ? classes.errorHelperText : ''}>Celular</InputLabel>

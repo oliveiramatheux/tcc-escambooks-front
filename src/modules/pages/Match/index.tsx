@@ -8,6 +8,7 @@ import { Book, MatchDetails, User, getMatchDetails } from 'routes/services'
 import LoadingSimple from 'modules/components/LoadingSimple'
 import useStyles from './styles'
 import setasTroca from '../../../images/setas-troca.png'
+import { formatPhoneNumber } from 'utils/formatters'
 
 const Match = (): JSX.Element => {
   handleEventScreen('escambooks_match', 'match')
@@ -61,6 +62,8 @@ const Match = (): JSX.Element => {
         </Typography>
         <Typography variant="h6">Contatos:</Typography>
         <Typography variant="body1">Email: {user.email}</Typography>
+        {!!user.phone && <Typography variant="body1">Telefone: {formatPhoneNumber(user.phone)}</Typography>}
+        {!!user.address && <Typography variant="body1">Endereço: {user.address}</Typography>}
       </Box>
     )
   }
