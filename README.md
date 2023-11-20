@@ -10,6 +10,7 @@
 
 - [Tabela de Conteudo](#Tabela-de-conteúdos)
 - [Pré-Requisitos Front-End](#Pré-requisitos-Front_End)
+- [Pré-Requisitos Back-End](#Pré-requisitos-Back_End)
 - [Configurações](#🎲-Configurações) -> [Firebase](#Firebase); [.env](#.env)
 - [Tecnologias](#🛠-Tecnologias)
 - [Autor](#Autores)
@@ -43,8 +44,21 @@ Não esqueça de assim que clonar o projeto localmente, executar YARN no termina
 - Na seção "Seus aplicativos" clice no ícone "</>" que indica um app web <br>
 - Nomeie o app <br>
 - Analize as informações do SDK e adicione-as no .env de acordo com o item nomeado (Somente REACT_APP_FIREBASE_CONFIG_DATABASE_URL
-não consta no SDK mas pode ser visto abrindo a seção real time database)
+não consta no SDK mas pode ser visto abrindo a seção real time database) <br>
+- No Menu lateral clieque em "Storage" e selecione "Rules" no menu horizontal logo abaixo de "Storage" <br>
+- Em rules defina essas regras:
 
+```bash
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read, write;
+    }
+  }
+}
+```
 
 #### .env
 
@@ -73,6 +87,9 @@ As seguintes ferramentas foram usadas na construção do projeto front-end:
 - [Axios](https://axios-http.com/ptbr/docs/intro)
 - [Firebase](https://firebase.google.com/?hl=pt)
 - [SocketIO](https://socket.io/)
+- [React.js](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Redux-Saga](https://redux-saga.js.org/)
 
 ## Autores
 
@@ -88,4 +105,4 @@ As seguintes ferramentas foram usadas na construção do projeto front-end:
 <a href="https://www.linkedin.com/in/joao-guis/">
 <sub><b>João Guilherme</b></sub></a>🚀
 
-Feito por Matheus de Oliveira, Eric Nielsen e João Guilherme 👋🏽 Entre em contato!
+Feito por Matheus de Oliveira, Eric França e João Guilherme 👋🏽 Entre em contato!
