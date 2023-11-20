@@ -76,17 +76,16 @@ As seguintes ferramentas foram usadas na construção do projeto front-end:
 
 ## Autores
 
+<div>
+  <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/C4D03AQEN5MndpcR7Rg/profile-displayphoto-shrink_800_800/0/1613396220155?e=1706140800&v=beta&t=wD-6BuaUEHSPPBVLZbQcSuMQjX3tQdU2D5W94x_K0jY" width="100px;" alt=""/> <!-- Matheus  -->
+  <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/C4D03AQE_XlWds1qORg/profile-displayphoto-shrink_800_800/0/1646512221130?e=1706140800&v=beta&t=SsnJRaf9MaFCpMUjBahLMSF02BmxBnDPkJU5q_NkCbE" width="100px;" alt=""/> <!-- Eric  -->
+  <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFSRHVNtz9Fjg/profile-displayphoto-shrink_800_800/0/1685025769328?e=1706140800&v=beta&t=fvz6PxqFlXbIEFdI50qQSzjn_CSAKtuku1rkjUyYIFs" width="100px;" alt=""/> <!-- João  -->
+</div>
 <a href="https://www.linkedin.com/in/oliveiramatheux/">
-<img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/C4D03AQEN5MndpcR7Rg/profile-displayphoto-shrink_800_800/0/1613396220155?e=1706140800&v=beta&t=wD-6BuaUEHSPPBVLZbQcSuMQjX3tQdU2D5W94x_K0jY" width="100px;" alt=""/>
-<br/>
 <sub><b>Matheus de Oliveira</b></sub></a>🚀
 <a href="https://www.linkedin.com/in/eric-nielsen-frança-65273914a/">
-<img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/C4D03AQE_XlWds1qORg/profile-displayphoto-shrink_800_800/0/1646512221130?e=1706140800&v=beta&t=SsnJRaf9MaFCpMUjBahLMSF02BmxBnDPkJU5q_NkCbE" width="100px;" alt=""/>
-<br/>
 <sub><b>Eric França</b></sub></a>🚀
 <a href="https://www.linkedin.com/in/joao-guis/">
-<img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFSRHVNtz9Fjg/profile-displayphoto-shrink_800_800/0/1685025769328?e=1706140800&v=beta&t=fvz6PxqFlXbIEFdI50qQSzjn_CSAKtuku1rkjUyYIFs" width="100px;" alt=""/>
-<br/>
 <sub><b>João Guilherme</b></sub></a>🚀
 
 Feito por Matheus de Oliveira, Eric Nielsen e João Guilherme 👋🏽 Entre em contato!
